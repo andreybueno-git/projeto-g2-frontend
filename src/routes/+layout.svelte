@@ -10,3 +10,21 @@
 </svelte:head>
 
 {@render children()}
+
+<style>
+	/* Estilo base de toda a aplicação: fonte do sistema e tema claro ou escuro conforme o aparelho. */
+	:global(:root) {
+		color-scheme: light dark;
+		font-family:
+			system-ui,
+			-apple-system,
+			'Segoe UI',
+			Roboto,
+			sans-serif;
+		line-height: 1.5;
+	}
+
+	:global(body) {
+		margin: 0;
+	}
+</style>
