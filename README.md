@@ -66,8 +66,8 @@ O atalho `npm run api` faz o mesmo que o comando do terminal 2. Para parar qualq
 | Comando | O que faz |
 | --- | --- |
 | `npm run check` | Confere os tipos do projeto com o `svelte-check` |
-| `npm run build` | Gera a versão de produção |
-| `npm run preview` | Abre a versão de produção gerada pelo `build` |
+| `npm run build` | Compila a aplicação para produção. O adaptador de publicação ainda não foi escolhido, então o comando termina com um aviso sobre isso |
+| `npm run preview` | Abre em <http://localhost:4173> o que o `build` compilou |
 
 ## Contrato de dados
 
@@ -132,11 +132,14 @@ curl -X POST http://localhost:3000/tarefas \
   -d '{"projetoId":"1","titulo":"Tarefa de teste","descricao":"Criada para testar o POST.","status":"a-fazer","prioridade":"baixa","responsavel":"Andrey Bueno Isoton","prazo":"2026-10-20"}'
 ```
 
-**Atenção:** cada `POST` grava no `db.json`. Ao gravar, o json-server também acrescenta a chave `$schema` no fim do arquivo. Depois de testar, volte ao arquivo original para não versionar dado de teste:
+**Atenção:** cada `POST` grava no `db.json`. Ao gravar, o json-server também acrescenta a chave `$schema` no fim do arquivo. Depois de testar, pare a API com `Ctrl + C`, volte ao arquivo original e ligue a API de novo, para não versionar dado de teste:
 
 ```sh
 git checkout db.json
+npx json-server db.json
 ```
+
+Pare a API antes: se ela ficar ligada durante o `git checkout`, continua servindo os dados de teste que estão na memória.
 
 Esta é a versão 1.x do json-server: usa `_per_page` no lugar de `_limit` e `_embed` no lugar de `_expand`. Tutoriais antigos usam a 0.x.
 
@@ -150,6 +153,9 @@ projeto-g2-frontend/
 ├── vite.config.ts           configuração do Vite e do SvelteKit
 ├── tsconfig.json            configuração do TypeScript
 ├── .npmrc                   faz o npm recusar versões do Node abaixo da exigida
+├── .gitignore               o que o Git não versiona (node_modules, .svelte-kit...)
+├── .vscode/
+│   └── extensions.json      recomenda a extensão do Svelte para o VS Code
 ├── static/
 │   └── robots.txt           arquivo servido como está
 └── src/
