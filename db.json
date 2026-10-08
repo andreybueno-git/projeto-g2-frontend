@@ -1,0 +1,124 @@
+{
+  "projetos": [
+    {
+      "id": "1",
+      "nome": "Interface Acadêmica",
+      "descricao": "Página do gerenciador de tarefas: HTML semântico, layout responsivo e dados carregados com fetch.",
+      "disciplina": "Desenvolvimento Frontend",
+      "criadoEm": "2026-08-12"
+    },
+    {
+      "id": "2",
+      "nome": "Sistema de Biblioteca",
+      "descricao": "Modelagem de um sistema de biblioteca: diagrama de classes e banco de dados relacional.",
+      "disciplina": "Engenharia de Software",
+      "criadoEm": "2026-08-17"
+    },
+    {
+      "id": "3",
+      "nome": "Fundamentos Python",
+      "descricao": "Revisão de funções e listas em Python e exercícios de lógica de programação.",
+      "disciplina": "Algoritmos e Programação",
+      "criadoEm": "2026-08-14"
+    },
+    {
+      "id": "4",
+      "nome": "Campus Conectado",
+      "descricao": "Projeto integrador: relatório do laboratório de redes e apresentação final.",
+      "disciplina": "Projeto Integrador",
+      "criadoEm": "2026-08-10"
+    }
+  ],
+  "tarefas": [
+    {
+      "id": "1",
+      "projetoId": "1",
+      "titulo": "Implementar layout responsivo com Flexbox e Grid",
+      "descricao": "Adaptar a página a telas de celular, tablet e computador usando Flexbox e Grid.",
+      "status": "a-fazer",
+      "prioridade": "alta",
+      "responsavel": "Andrey Bueno Isoton",
+      "prazo": "2026-08-26"
+    },
+    {
+      "id": "2",
+      "projetoId": "3",
+      "titulo": "Revisar funções e listas em Python",
+      "descricao": "Refazer os exercícios de funções e de listas antes da próxima aula.",
+      "status": "a-fazer",
+      "prioridade": "media",
+      "responsavel": "Gabriel Silva de Miranda",
+      "prazo": "2026-08-29"
+    },
+    {
+      "id": "3",
+      "projetoId": "2",
+      "titulo": "Ler capítulo sobre normalização de bancos de dados relacionais",
+      "descricao": "Ler o capítulo e anotar as três primeiras formas normais.",
+      "status": "a-fazer",
+      "prioridade": "baixa",
+      "responsavel": "Rayane Araujo Teles",
+      "prazo": "2026-09-01"
+    },
+    {
+      "id": "4",
+      "projetoId": "4",
+      "titulo": "Preparar apresentação do projeto integrador",
+      "descricao": "Montar os slides e ensaiar a apresentação do projeto integrador.",
+      "status": "em-andamento",
+      "prioridade": "alta",
+      "responsavel": "Pedro Herique Araujo",
+      "prazo": "2026-08-28"
+    },
+    {
+      "id": "5",
+      "projetoId": "2",
+      "titulo": "Modelar diagrama de classes do sistema",
+      "descricao": "Desenhar as classes do sistema de biblioteca, com atributos e relacionamentos.",
+      "status": "em-andamento",
+      "prioridade": "media",
+      "responsavel": "Gabriel Silva de Miranda",
+      "prazo": "2026-09-02"
+    },
+    {
+      "id": "6",
+      "projetoId": "4",
+      "titulo": "Corrigir relatório da aula de redes",
+      "descricao": "Ajustar o relatório do laboratório de redes conforme as observações da correção.",
+      "status": "em-revisao",
+      "prioridade": "media",
+      "responsavel": "Rayane Araujo Teles",
+      "prazo": "2026-08-27"
+    },
+    {
+      "id": "7",
+      "projetoId": "1",
+      "titulo": "Criar estrutura semântica da página",
+      "descricao": "Organizar a página com header, main, section e footer.",
+      "status": "concluida",
+      "prioridade": "alta",
+      "responsavel": "Andrey Bueno Isoton",
+      "prazo": "2026-08-19"
+    },
+    {
+      "id": "8",
+      "projetoId": "3",
+      "titulo": "Resolver lista de lógica de programação",
+      "descricao": "Resolver os exercícios da lista de lógica de programação.",
+      "status": "concluida",
+      "prioridade": "baixa",
+      "responsavel": "Pedro Herique Araujo",
+      "prazo": "2026-08-21"
+    },
+    {
+      "id": "9",
+      "projetoId": "1",
+      "titulo": "Consumir dados.json com fetch e tratar os quatro estados",
+      "descricao": "Carregar as tarefas com fetch e tratar os estados de carregando, sucesso, vazio e erro.",
+      "status": "em-andamento",
+      "prioridade": "alta",
+      "responsavel": "Andrey Bueno Isoton",
+      "prazo": "2026-09-08"
+    }
+  ]
+}
