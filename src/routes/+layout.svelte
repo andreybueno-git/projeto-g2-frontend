@@ -1,4 +1,3 @@
-
 <script lang="ts">
   import favicon from '#lib/assets/favicon.svg';
   import { page } from '$app/state';
@@ -19,6 +18,26 @@
     }
 
     return caminho === href || caminho.startsWith(`${href}/`);
+  }
+
+  // A posição do mouse define o deslocamento que o CSS vai animar.
+  function moverBotao(evento: PointerEvent) {
+    if (evento.pointerType !== 'mouse') return;
+    if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) return;
+
+    const botao = evento.currentTarget as HTMLAnchorElement;
+    const caixa = botao.getBoundingClientRect();
+    const x = (evento.clientX - caixa.left - caixa.width / 2) * 0.18;
+    const y = (evento.clientY - caixa.top - caixa.height / 2) * 0.3;
+
+    botao.style.setProperty('--x', `${x}px`);
+    botao.style.setProperty('--y', `${y}px`);
+  }
+
+  function soltarBotao(evento: Event) {
+    const botao = evento.currentTarget as HTMLAnchorElement;
+    botao.style.setProperty('--x', '0px');
+    botao.style.setProperty('--y', '0px');
   }
 </script>
 
@@ -43,6 +62,9 @@
           href={item.href}
           class:ativo={paginaAtiva(item.href)}
           aria-current={paginaAtiva(item.href) ? 'page' : undefined}
+          onpointermove={moverBotao}
+          onpointerleave={soltarBotao}
+          onblur={soltarBotao}
         >
           {item.nome}
         </a>
@@ -51,13 +73,13 @@
   </div>
 </header>
 
-<main id="conteudo" tabindex="-1">
+<div id="conteudo" tabindex="-1">
   {@render children()}
-</main>
+</div>
 
 <style>
   :global(:root) {
-    color-scheme: light dark;
+    color-scheme: light;
     font-family:
       system-ui,
       -apple-system,
@@ -148,7 +170,9 @@
     text-decoration: none;
     font-size: 0.95rem;
     font-weight: 500;
+    translate: var(--x, 0px) var(--y, 0px);
     transition:
+      translate 0.2s ease-out,
       background-color 0.2s ease,
       color 0.2s ease;
   }
@@ -165,11 +189,15 @@
   }
 
   :global(a:focus-visible) {
-    outline: 3px solid #facc15;
+    outline: 3px solid #2563eb;
     outline-offset: 3px;
   }
 
-  main {
+  .cabecalho a:focus-visible {
+    outline-color: #facc15;
+  }
+
+  #conteudo {
     width: 100%;
     min-height: calc(100vh - 75px);
   }
@@ -197,6 +225,7 @@
 
   @media (prefers-reduced-motion: reduce) {
     nav a {
+      translate: none;
       transition: none;
     }
   }
