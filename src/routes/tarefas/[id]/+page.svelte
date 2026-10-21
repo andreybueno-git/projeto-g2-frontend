@@ -40,6 +40,8 @@
     <p><strong>Prioridade:</strong> {tarefa.prioridade}</p>
     <p><strong>Responsável:</strong> {tarefa.responsavel}</p>
     <p><strong>Prazo:</strong> {tarefa.prazo}</p>
+
+    <p><a href="/tarefas/{tarefa.id}/editar">Editar tarefa</a></p>
   {:else}
     <p>Carregando tarefa...</p>
   {/if}
