@@ -25,3 +25,10 @@ export interface Tarefa {
 
 // Para criar uma tarefa sem id: quem gera o id é o json-server.
 export type NovaTarefa = Omit<Tarefa, 'id'>
+
+// A API gera o id; os demais campos do projeto vêm de quem faz o cadastro.
+export type NovoProjeto = Omit<Projeto, 'id'>
+
+// PATCH recebe somente os campos alterados, sem trocar o identificador.
+export type AtualizacaoTarefa = Partial<NovaTarefa>
+export type AtualizacaoProjeto = Partial<NovoProjeto>

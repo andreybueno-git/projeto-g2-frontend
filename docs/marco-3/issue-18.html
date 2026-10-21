@@ -4,7 +4,7 @@
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <meta name="color-scheme" content="light">
-  <title>Issue 18 | Entendendo a nova tarefa</title>
+  <title>Marco 3 | Issues 16 e 18: API e nova tarefa</title>
   <style>
     :root { --ink:#192d47; --muted:#52657b; --blue:#205ac0; --line:#dce4ef; --paper:#fff; --wash:#f3f6fb; --soft:#eaf1ff; font-family:system-ui,-apple-system,"Segoe UI",sans-serif; color:var(--ink); background:var(--wash); line-height:1.65; }
     * { box-sizing:border-box; }
@@ -62,27 +62,29 @@
 <body>
   <a class="skip" href="#conteudo">Pular para a explicação</a>
   <header class="cover">
-    <p class="eyebrow">Projeto G2 · Marco 3 · Issue 18</p>
-    <h1>Uma nova tarefa,<br>do clique até a lista.</h1>
-    <p class="intro">Este é o seu caderno para entender a tela de cadastro: onde ela está, como os dados chegam à API e por que cada parte do código existe.</p>
-    <div class="meta"><span>SvelteKit + TypeScript</span><span>Leitura guiada para iniciantes</span><span>HTML de estudo</span><a href="issue-18.pdf">Baixar o PDF</a></div>
+    <p class="eyebrow">Projeto G2 · Marco 3 · Issues 16 e 18</p>
+    <h1>Do formulário à API.<br>Entenda cada passo.</h1>
+    <p class="intro">Seu caderno para entender a tela de nova tarefa e as funções que criam e atualizam tarefas e projetos: onde estão, como usá-las e por que o código funciona assim.</p>
+    <div class="meta"><span>SvelteKit + TypeScript</span><span>API de escrita + nova tarefa</span><span>Leitura guiada para iniciantes</span><a href="issue-18.pdf">Baixar o PDF</a></div>
   </header>
   <div class="layout">
     <nav aria-label="Conteúdo do guia">
       <p>Neste caderno</p>
-      <a href="#objetivo">01 · O que a issue pede</a>
+      <a href="#objetivo">01 · O que as issues pedem</a>
       <a href="#arquivos">02 · Onde está cada parte</a>
       <a href="#rotas">03 · Rotas e projeto escolhido</a>
       <a href="#formulario">04 · Entender o formulário</a>
       <a href="#salvar">05 · O caminho para salvar</a>
-      <a href="#terminal">06 · Abrir pelo terminal</a>
-      <a href="#conferir">07 · Conferir o comportamento</a>
-      <a href="#perguntas">08 · Explique com suas palavras</a>
+      <a href="#api-escrita">06 · Criar e atualizar pela API</a>
+      <a href="#terminal">07 · Abrir pelo terminal</a>
+      <a href="#conferir">08 · Conferir o comportamento</a>
+      <a href="#perguntas">09 · Explique com suas palavras</a>
       <a href="#fontes">Documentação oficial</a>
     </nav>
     <main id="conteudo">
       <section id="objetivo">
         <h2><span class="number">01</span>O que estamos construindo?</h2>
+        <p>A <a href="https://github.com/andreybueno-git/projeto-g2-frontend/issues/16">issue #16</a> amplia o módulo da API: além de ler dados, ele passa a criar e atualizar tarefas e projetos com funções TypeScript. Essas funções podem ser chamadas pelas telas do projeto.</p>
         <p>A <a href="https://github.com/andreybueno-git/projeto-g2-frontend/issues/18">issue #18</a> pede uma página em <code>/tarefas/nova</code>. Nela, a pessoa preenche os dados, salva a tarefa na API e volta para a lista de tarefas.</p>
         <p>Também há um atalho: se a pessoa começar dentro de um projeto, esse projeto deve aparecer selecionado no formulário.</p>
         <ol class="flow" aria-label="Caminho de uma nova tarefa">
@@ -92,7 +94,7 @@
           <li>A API grava a tarefa e gera o ID.</li>
           <li>O site abre a lista de tarefas novamente.</li>
         </ol>
-        <div class="note"><p><strong>Limite desta entrega:</strong> o formulário fica nesta página. Transformá-lo em um componente reutilizável para criar e editar pertence à #17. A função de criação dá o suporte necessário à #18; isso não significa concluir toda a API de escrita da #16 nem toda a validação da #20.</p></div>
+        <div class="note"><p><strong>Como as duas entregas se conectam:</strong> a #16 fornece as quatro funções de escrita; a #18 usa <code>criarTarefa</code> na tela de cadastro. As funções para atualizar e para criar projetos ficam disponíveis para as próximas telas. O formulário reutilizável pertence à #17 e a validação completa à #20; essas duas issues continuam separadas.</p></div>
       </section>
 
       <section id="arquivos">
@@ -102,10 +104,11 @@
           <thead><tr><th>Arquivo, a partir da raiz do projeto</th><th>Responsabilidade</th></tr></thead>
           <tbody>
             <tr><td><code>src/routes/tarefas/nova/+page.svelte</code></td><td>Mostra o cadastro, guarda os valores preenchidos e coordena o envio.</td></tr>
-            <tr><td><code>src/lib/servicos/api.ts</code></td><td>Conversa com a API. A função <code>criarTarefa</code> faz a requisição de criação.</td></tr>
-            <tr><td><code>src/tipos.ts</code></td><td>Define os formatos <code>Tarefa</code> e <code>NovaTarefa</code>, usados pelo TypeScript.</td></tr>
+            <tr><td><code>src/lib/servicos/api.ts</code></td><td>Conversa com a API. Reúne as funções de leitura e as quatro funções de criação e atualização.</td></tr>
+            <tr><td><code>src/tipos.ts</code></td><td>Mantém o contrato de <code>Tarefa</code> e <code>Projeto</code> e define os tipos derivados usados para criar e atualizar.</td></tr>
             <tr><td><code>src/routes/+page.svelte</code></td><td>É a lista, no endereço <code>/</code>. Tem a entrada para criar uma tarefa.</td></tr>
             <tr><td><code>src/routes/projetos/[id]/+page.svelte</code></td><td>É o detalhe de um projeto. Seu link leva o ID do projeto até o cadastro.</td></tr>
+            <tr><td><code>tests/api.test.mjs</code></td><td>Verifica o comportamento das funções da API, como método, endereço, corpo JSON e tratamento de erros.</td></tr>
           </tbody>
         </table></div>
         <p>Um arquivo Svelte costuma juntar três partes:</p>
@@ -192,8 +195,93 @@ await goto('/');</code></pre>
         <p>Se a API já confirmou a criação, uma falha ao navegar não deve habilitar uma segunda gravação da mesma tarefa. A página reconhece o sucesso e permite voltar à lista. O <code>onDestroy</code> também marca quando você saiu desta tela, para uma resposta atrasada não forçar a navegação depois disso.</p>
       </section>
 
+      <section id="api-escrita">
+        <h2><span class="number">06</span>A API agora também escreve</h2>
+        <p>Antes, o módulo da API sabia ler: listar tarefas, buscar uma tarefa e carregar projetos. A #16 acrescenta quatro funções. A página passa os dados para elas; cada função monta a requisição correta e devolve a resposta da API.</p>
+        <div class="table-wrap"><table>
+          <thead><tr><th>Função e retorno</th><th>Pedido enviado</th></tr></thead>
+          <tbody>
+            <tr><td><code>criarTarefa(dados: NovaTarefa): Promise&lt;Tarefa&gt;</code></td><td><code>POST /tarefas</code>. Envia os campos da nova tarefa e recebe a tarefa criada, com ID.</td></tr>
+            <tr><td><code>atualizarTarefa(id: string, dados: AtualizacaoTarefa): Promise&lt;Tarefa&gt;</code></td><td><code>PATCH /tarefas/ID</code>. Envia os campos que devem mudar e recebe a tarefa atualizada.</td></tr>
+            <tr><td><code>criarProjeto(dados: NovoProjeto): Promise&lt;Projeto&gt;</code></td><td><code>POST /projetos</code>. Envia os campos do novo projeto e recebe o projeto criado, com ID.</td></tr>
+            <tr><td><code>atualizarProjeto(id: string, dados: AtualizacaoProjeto): Promise&lt;Projeto&gt;</code></td><td><code>PATCH /projetos/ID</code>. Envia os campos que devem mudar e recebe o projeto atualizado.</td></tr>
+          </tbody>
+        </table></div>
+        <p>Essas assinaturas são um mapa: o que está entre parênteses é a entrada; o que vem depois de <code>:</code> é o tipo do retorno.</p>
+        <h3><code>Omit</code>, <code>Partial</code> e <code>Promise&lt;T&gt;</code></h3>
+        <pre><code>export type NovaTarefa = Omit&lt;Tarefa, 'id'&gt;;
+export type AtualizacaoTarefa = Partial&lt;NovaTarefa&gt;;
+
+export type NovoProjeto = Omit&lt;Projeto, 'id'&gt;;
+export type AtualizacaoProjeto = Partial&lt;NovoProjeto&gt;;</code></pre>
+        <ul>
+          <li><code>Omit</code> retira um campo de um tipo. Na criação, retiramos <code>id</code> porque a API o gera.</li>
+          <li><code>Partial</code> torna os campos opcionais. Podemos atualizar só <code>status</code>, sem repetir o restante da tarefa.</li>
+          <li><code>Promise&lt;Tarefa&gt;</code> representa um resultado futuro. Depois do <code>await</code>, obtemos uma <code>Tarefa</code> se o pedido tiver sucesso. Uma falha precisa ser tratada.</li>
+        </ul>
+        <p>São tipos derivados: os campos e os nomes do contrato original de <code>Tarefa</code> e <code>Projeto</code> continuam os mesmos. A tipagem auxilia o desenvolvimento, mas não valida sozinha os dados recebidos pela rede.</p>
+        <h3>Quando usar GET, POST, PATCH ou PUT?</h3>
+        <div class="table-wrap"><table>
+          <thead><tr><th>Método</th><th>Ideia e uso aqui</th></tr></thead>
+          <tbody>
+            <tr><td><code>GET</code></td><td>Ler. Exemplo: carregar os projetos do seletor.</td></tr>
+            <tr><td><code>POST</code></td><td>Criar. Aqui, enviamos um novo registro à coleção <code>/tarefas</code> ou <code>/projetos</code>.</td></tr>
+            <tr><td><code>PATCH</code></td><td>Alterar parte de um registro existente. No json-server deste projeto, enviamos um objeto JSON com os campos que devem mudar.</td></tr>
+            <tr><td><code>PUT</code></td><td>Substituir a representação completa de um registro. Não é o método escolhido por estas funções, que aceitam atualizações parciais.</td></tr>
+          </tbody>
+        </table></div>
+        <p>O formato aceito por um PATCH depende da API. Aqui usamos o contrato do json-server; isso não significa que todo servidor aceite o mesmo corpo JSON. A distinção entre alteração parcial e substituição é descrita na <a href="https://www.rfc-editor.org/rfc/rfc5789">especificação de PATCH</a>.</p>
+        <h3>Atualizar uma tarefa: ID na URL, mudanças no corpo</h3>
+        <pre><code>const tarefa = await atualizarTarefa('2', {
+  status: 'em-andamento'
+});</code></pre>
+        <p>O <code>'2'</code> identifica qual tarefa queremos alterar. O objeto informa o que deve mudar. O pedido corresponde a <code>PATCH /tarefas/2</code> com o corpo <code>{ "status": "em-andamento" }</code>. Os demais campos são preservados pelo json-server.</p>
+        <p>A função usa <code>encodeURIComponent(id)</code> ao montar o endereço. Assim, caracteres especiais do ID não viram separadores de caminho ou de consulta da URL por acidente. O ID é recebido separadamente e não é um campo de <code>AtualizacaoTarefa</code>.</p>
+        <h3>Criar e depois atualizar um projeto</h3>
+        <pre><code>const projeto = await criarProjeto({
+  nome: 'Estudo de Svelte',
+  descricao: 'Exercícios da equipe',
+  disciplina: 'Desenvolvimento Front-end',
+  criadoEm: '2026-10-21'
+});
+
+const atualizado = await atualizarProjeto(projeto.id, {
+  descricao: 'Exercícios e revisão da equipe'
+});</code></pre>
+        <p>Quem chama <code>criarProjeto</code> fornece <code>criadoEm</code>, junto com os outros campos exigidos. A função de serviço não inventa essa data; a API gera somente o ID. A atualização do exemplo altera apenas a descrição.</p>
+        <h3>Por que existe o auxiliar <code>requisitar</code>?</h3>
+        <p>As funções precisam fazer tarefas em comum: chamar <code>fetch</code>, verificar a resposta e ler o JSON. O auxiliar centraliza esses passos para não repeti-los em cada operação.</p>
+        <pre><code>async function requisitar&lt;T&gt;(
+  caminho: string,
+  opcoes?: RequestInit
+): Promise&lt;T&gt;</code></pre>
+        <p><code>RequestInit</code> é o tipo das opções aceitas pelo <code>fetch</code>, como <code>method</code>, <code>headers</code> e <code>body</code>. O <code>?</code> torna esse argumento opcional. As leituras podem chamar apenas com o caminho; as escritas passam suas opções.</p>
+        <pre><code>return requisitar&lt;Tarefa&gt;(
+  `/tarefas/${encodeURIComponent(id)}`,
+  {
+    method: 'PATCH',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify(dados)
+  }
+);</code></pre>
+        <p>O <code>T</code> indica o tipo de resposta esperado por quem chama. Em <code>requisitar&lt;Tarefa&gt;</code>, esperamos uma tarefa; em <code>requisitar&lt;Projeto&gt;</code>, esperamos um projeto.</p>
+        <h3>Como <code>ErroApi</code> ajuda?</h3>
+        <p>Se a resposta HTTP não indicar sucesso, o auxiliar lança <code>ErroApi</code>, guardando o código em <code>status</code>. Uma tela pode distinguir, por exemplo, um registro não encontrado (<code>404</code>) de outra falha.</p>
+        <pre><code>try {
+  await atualizarTarefa('2', { prioridade: 'alta' });
+} catch (erro) {
+  if (erro instanceof ErroApi &amp;&amp; erro.status === 404) {
+    // Mostrar que a tarefa não foi encontrada.
+  } else {
+    // Mostrar que não foi possível salvar a alteração.
+  }
+}</code></pre>
+        <p>Uma falha de conexão pode ocorrer antes de existir resposta HTTP. Nesse caso, o erro original do <code>fetch</code> também chega ao <code>catch</code>; não presumimos que todo erro seja um <code>ErroApi</code>.</p>
+        <div class="note"><p><strong>Como chegar a esta parte no código:</strong> abra <code>src/lib/servicos/api.ts</code> e procure as quatro funções da tabela. Depois abra <code>src/tipos.ts</code> para ver seus tipos de entrada. Na tela de nova tarefa, procure a chamada de <code>criarTarefa</code>: ela é a ligação entre as issues #18 e #16.</p></div>
+      </section>
+
       <section id="terminal">
-        <h2><span class="number">06</span>Como abrir pelo terminal</h2>
+        <h2><span class="number">07</span>Como abrir pelo terminal</h2>
         <p>Esta entrega usa uma cópia de trabalho separada. A raiz dessa cópia é:</p>
         <pre><code>/Users/andreybuenoisoton/Documents/Codex/2026-10-14/create-a-new-site-with-sites-4/outputs/marco3-issue18</code></pre>
         <p>Abra essa pasta no VS Code. No terminal integrado, use <code>pwd</code> para confirmar onde você está. Todos os comandos abaixo partem da raiz do projeto, onde está <code>package.json</code>.</p>
@@ -212,10 +300,14 @@ await goto('/');</code></pre>
         <pre><code>npm run check
 npm run build</code></pre>
         <p>O primeiro procura problemas de tipos e de Svelte. O segundo gera a versão de produção. Eles ajudam a conferir o código, mas não substituem experimentar o formulário no navegador.</p>
+        <h3>Executar os testes das funções da API</h3>
+        <pre><code>node --test tests/api.test.mjs tests/api.integration.test.mjs
+npx tsc -p tests/tsconfig.json</code></pre>
+        <p>Execute na raiz do projeto. O primeiro comando usa o executor de testes do Node: confere os pedidos montados e faz operações HTTP contra um json-server com banco em memória, sem tocar no db.json da equipe. O segundo executa o TypeScript para conferir entradas e retornos: ele verifica também que id e campos inválidos sejam recusados. Leia o resultado impresso no terminal.</p>
       </section>
 
       <section id="conferir">
-        <h2><span class="number">07</span>O que você deve experimentar</h2>
+        <h2><span class="number">08</span>O que você deve experimentar</h2>
         <p>Use esta lista como roteiro de estudo. As caixas são suas marcações locais e não representam um relatório automático de testes.</p>
         <ul class="checklist">
           <li><label><input type="checkbox"><span>Abrir <code>/tarefas/nova</code> e identificar a tela de cadastro.</span></label></li>
@@ -225,11 +317,11 @@ npm run build</code></pre>
           <li><label><input type="checkbox"><span>Observar o botão durante o envio e explicar por que ele fica desabilitado.</span></label></li>
           <li><label><input type="checkbox"><span>Abrir um detalhe como <code>/tarefas/2</code> e perceber que continua sendo outra página.</span></label></li>
         </ul>
-        <h3>O que foi verificado nesta entrega</h3><p>O Svelte encontrou zero erros e avisos, a compilação passou e três testes automatizados da API passaram. No navegador, conferimos cadastro, projeto pré-selecionado, troca manual, campos obrigatórios, clique duplo e recuperação após falha de conexão, usando uma cópia do banco.</p><p class="small">Criar uma tarefa grava um registro no banco da API em uso. Para estudar sem alterar os dados da equipe, faça os testes em uma cópia do banco.</p>
+        <h3>Verificação da tela e da API</h3><p>Na verificação inicial da #18, o Svelte encontrou zero erros e avisos e a compilação passou. No navegador, conferimos cadastro, projeto pré-selecionado, troca manual, campos obrigatórios, clique duplo e recuperação após falha de conexão, usando uma cópia do banco.</p><p>Na entrega da #16, passaram 18 testes automatizados, a verificação dos contratos TypeScript, a checagem do Svelte sem erros nem avisos e a compilação. Foram conferidos POST e PATCH, ID no caminho, JSON no corpo, preservação de campos, erros HTTP e leituras existentes. Os testes de integração usaram banco em memória e encerraram seu próprio servidor. Nenhuma tela foi modificada nesta etapa da #16.</p><p class="small">Criar ou atualizar registros grava dados na API em uso. Para estudar sem alterar os dados da equipe, faça os testes em uma cópia do banco.</p>
       </section>
 
       <section id="perguntas">
-        <h2><span class="number">08</span>Agora explique com suas palavras</h2>
+        <h2><span class="number">09</span>Agora explique com suas palavras</h2>
         <p>Tente responder antes de abrir a resposta. Se travar, volte ao trecho do guia e procure a ligação entre a URL, o campo e a API.</p>
         <details><summary>1. Por que /tarefas/nova não abre o detalhe de uma tarefa chamada “nova”?</summary><p>Porque existe uma rota fixa em <code>tarefas/nova/+page.svelte</code>. O SvelteKit dá prioridade à rota fixa sobre <code>tarefas/[id]/+page.svelte</code>.</p></details>
         <details><summary>2. De onde vem o projeto que aparece selecionado?</summary><p>Do parâmetro <code>projetoId</code> na consulta da URL, enviado pelo link da página do projeto. O código lê essa sugestão e confere se ela corresponde a um projeto existente nas opções da API.</p></details>
@@ -237,6 +329,12 @@ npm run build</code></pre>
         <details><summary>4. Por que não enviamos um id junto com os campos?</summary><p>O ID é gerado pela API. O tipo <code>NovaTarefa</code> usa os campos de <code>Tarefa</code> sem <code>id</code>, deixando isso claro enquanto programamos.</p></details>
         <details><summary>5. O que aconteceria se voltássemos para a lista antes de esperar a API?</summary><p>A pessoa poderia ver a lista antes da gravação terminar ou sair do formulário sem perceber uma falha. A ordem correta é confirmar a criação e depois navegar.</p></details>
         <details><summary>6. O que bind:value faz quando você digita um título?</summary><p>Atualiza o estado ligado ao campo. A ligação também funciona no outro sentido: quando o código altera esse estado, o valor mostrado no campo acompanha a mudança.</p></details>
+        <details><summary>7. Para mudar só a prioridade, uso criarTarefa ou atualizarTarefa?</summary><p>Uso <code>atualizarTarefa</code>, passando o ID do registro e um objeto como <code>{ prioridade: 'alta' }</code>. O pedido usa PATCH. <code>criarTarefa</code> usa POST para acrescentar uma nova tarefa.</p></details>
+        <details><summary>8. Qual é a diferença entre Omit e Partial nesses tipos?</summary><p><code>Omit&lt;Tarefa, 'id'&gt;</code> retira o ID do tipo de criação. <code>Partial&lt;NovaTarefa&gt;</code> torna opcionais os campos da atualização, permitindo enviar apenas aqueles que devem mudar.</p></details>
+        <details><summary>9. No cadastro de um projeto, quem fornece criadoEm?</summary><p>O código que chama <code>criarProjeto</code> fornece esse campo no objeto <code>NovoProjeto</code>. A função envia os dados recebidos; a API gera o ID, sem inventar a data de criação.</p></details>
+        <details><summary>10. Onde vão o ID e os novos valores em uma atualização?</summary><p>O ID identifica o registro na URL, como <code>/tarefas/2</code>. Os valores que devem mudar vão no corpo JSON do PATCH. A função codifica o ID com <code>encodeURIComponent</code> ao montar o endereço.</p></details>
+        <details><summary>11. Promise&lt;Projeto&gt; quer dizer que já tenho um projeto pronto?</summary><p>Não. É um resultado que pode chegar depois. Ao usar <code>await</code>, esperamos a operação; se ela tiver sucesso, recebemos o projeto. Se falhar, tratamos o erro no <code>catch</code>.</p></details>
+        <details><summary>12. Por que todas as funções usam requisitar?</summary><p>Porque a chamada de rede, a leitura do JSON e a checagem de sucesso são passos comuns. O auxiliar recebe o caminho e opções <code>RequestInit</code>, evitando repetir esses passos em cada função.</p></details>
       </section>
 
       <section id="fontes">
@@ -249,10 +347,13 @@ npm run build</code></pre>
           <li><a href="https://svelte.dev/docs/kit/state-management#Component-and-page-state-is-preserved">SvelteKit: preservação da página ao navegar</a></li>
           <li><a href="https://svelte.dev/docs/svelte/$state">Svelte: estado com $state</a></li>
           <li><a href="https://svelte.dev/docs/svelte/bind">Svelte: ligação com bind</a></li>
+          <li><a href="https://www.typescriptlang.org/docs/handbook/utility-types.html#partialtype">TypeScript: Partial</a></li>
+          <li><a href="https://www.typescriptlang.org/docs/handbook/utility-types.html#omittype-keys">TypeScript: Omit</a></li>
+          <li><a href="https://www.rfc-editor.org/rfc/rfc5789">HTTP: especificação do método PATCH</a></li>
         </ul>
       </section>
     </main>
   </div>
-  <footer>Material de estudo da issue #18. Leia o código junto com este guia e use as perguntas para conferir o seu entendimento.</footer>
+  <footer>Caderno do Marco 3, issues #16 e #18. Leia o código junto com este guia e use as perguntas para conferir o seu entendimento.</footer>
 </body>
 </html>
