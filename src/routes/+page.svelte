@@ -23,6 +23,8 @@
 <main>
   <h1>Tarefas</h1>
 
+  <p><a href="/tarefas/nova">Nova tarefa</a></p>
+
   {#if carregando}
     <p>Carregando tarefas...</p>
   {:else if erro}

@@ -1,0 +1,258 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="color-scheme" content="light">
+  <title>Issue 18 | Entendendo a nova tarefa</title>
+  <style>
+    :root { --ink:#192d47; --muted:#52657b; --blue:#205ac0; --line:#dce4ef; --paper:#fff; --wash:#f3f6fb; --soft:#eaf1ff; font-family:system-ui,-apple-system,"Segoe UI",sans-serif; color:var(--ink); background:var(--wash); line-height:1.65; }
+    * { box-sizing:border-box; }
+    body { margin:0; }
+    a { color:var(--blue); text-underline-offset:.2em; }
+    a:hover { text-decoration-thickness:2px; }
+    a:focus-visible, summary:focus-visible { outline:3px solid #d17b00; outline-offset:4px; }
+    .skip { position:absolute; left:1rem; top:-5rem; padding:.7rem; background:white; z-index:10; }
+    .skip:focus { top:1rem; }
+    .cover { background:var(--paper); border-bottom:1px solid var(--line); padding:3rem max(1.25rem,calc((100vw - 1120px)/2)); }
+    .eyebrow { font-size:.8rem; color:var(--blue); font-weight:750; letter-spacing:.12em; text-transform:uppercase; margin:0 0 .75rem; }
+    h1 { max-width:760px; font-size:clamp(2.1rem,5vw,3.8rem); letter-spacing:-.055em; line-height:1.1; margin:0 0 1.2rem; }
+    .intro { max-width:760px; color:var(--muted); font-size:1.1rem; margin:0; }
+    .meta { display:flex; gap:.5rem 1.8rem; flex-wrap:wrap; margin-top:1.6rem; color:var(--muted); font-size:.9rem; }
+    .layout { display:grid; grid-template-columns:220px minmax(0,1fr); gap:3rem; max-width:1160px; padding:2rem 1.25rem 5rem; margin:auto; align-items:start; }
+    nav { position:sticky; top:1.4rem; border-left:2px solid var(--line); padding-left:1rem; font-size:.9rem; }
+    nav p { margin:0 0 .7rem; font-size:.75rem; font-weight:750; letter-spacing:.12em; text-transform:uppercase; color:var(--muted); }
+    nav a { display:block; padding:.3rem 0; text-decoration:none; }
+    main { background:var(--paper); min-width:0; padding:2rem 2.5rem; border:1px solid var(--line); border-radius:8px; }
+    section { padding-bottom:2rem; margin-bottom:2rem; border-bottom:1px solid var(--line); scroll-margin-top:1.5rem; }
+    section:last-child { border:0; margin-bottom:0; padding-bottom:0; }
+    h2 { font-size:1.65rem; letter-spacing:-.035em; line-height:1.2; margin:0 0 1.2rem; }
+    h2 .number { color:#8da2bc; font-size:.9rem; display:block; letter-spacing:.09em; margin-bottom:.4rem; }
+    h3 { font-size:1.1rem; margin:1.6rem 0 .6rem; }
+    p { margin:.8rem 0; }
+    li { margin:.45rem 0; }
+    ul,ol { padding-left:1.4rem; }
+    code { font: .9em ui-monospace,SFMono-Regular,Menlo,Consolas,monospace; overflow-wrap:anywhere; color:#173e7b; background:#eef3fa; padding:.1em .3em; border-radius:3px; }
+    pre { background:#12243d; color:#e8f0ff; padding:1.1rem 1.2rem; border-radius:6px; overflow-x:auto; line-height:1.7; font-size:.85rem; }
+    pre code { color:inherit; padding:0; background:none; overflow-wrap:normal; font-size:inherit; }
+    .note { border-left:3px solid var(--blue); padding:.15rem 1rem; background:var(--soft); margin:1.25rem 0; }
+    .note p { margin:.65rem 0; }
+    .table-wrap { overflow-x:auto; }
+    table { width:100%; border-collapse:collapse; font-size:.92rem; margin:1rem 0; }
+    th,td { padding:.8rem .65rem; text-align:left; vertical-align:top; border-bottom:1px solid var(--line); }
+    th { color:var(--muted); font-size:.8rem; font-weight:750; background:var(--wash); }
+    td:first-child { width:42%; }
+    .flow { margin:1.4rem 0; padding:0; list-style:none; counter-reset:flow; }
+    .flow li { position:relative; padding:.7rem .7rem .7rem 3rem; border-bottom:1px solid var(--line); counter-increment:flow; margin:0; }
+    .flow li::before { content:counter(flow); position:absolute; left:.5rem; top:.8rem; border:1px solid #9fb9df; color:var(--blue); border-radius:50%; width:1.6rem; height:1.6rem; display:grid; place-items:center; font-size:.8rem; font-weight:700; }
+    .label { font-size:.8rem; color:var(--muted); margin-bottom:-.3rem; }
+    details { margin:.9rem 0; border-top:1px solid var(--line); padding:.9rem 0 0; }
+    summary { cursor:pointer; font-weight:650; }
+    details p { color:var(--muted); padding-left:1.3rem; }
+    .checklist { list-style:none; padding:0; }
+    .checklist label { display:flex; align-items:flex-start; gap:.65rem; padding:.5rem 0; }
+    .checklist input { margin-top:.45rem; accent-color:var(--blue); }
+    .small { font-size:.86rem; color:var(--muted); }
+    footer { max-width:1120px; margin:0 auto 2rem; padding:0 1.25rem; color:var(--muted); font-size:.85rem; }
+    @media(max-width:850px) { .layout { grid-template-columns:1fr; gap:1.2rem; } nav { position:static; display:flex; flex-wrap:wrap; gap:.2rem 1rem; border-left:0; padding:0; } nav p { width:100%; } main { padding:1.5rem; } }
+    @media(max-width:480px) { .cover { padding:2rem 1.1rem; } .layout { padding:1.1rem .7rem 3rem; } main { padding:1.2rem; } td,th { padding:.65rem .4rem; } }
+    @media print { :root { background:#fff; } .cover { padding:0 0 1.5rem; } .layout { display:block; padding:1.5rem 0; } nav,.skip,.checklist input { display:none; } main { border:0; padding:0; } section { break-inside:auto; } h2,h3 { break-after:avoid; } pre,table,details { break-inside:avoid; } pre { white-space:pre-wrap; } a { color:inherit; } footer { padding:0; } }
+  </style>
+</head>
+<body>
+  <a class="skip" href="#conteudo">Pular para a explicação</a>
+  <header class="cover">
+    <p class="eyebrow">Projeto G2 · Marco 3 · Issue 18</p>
+    <h1>Uma nova tarefa,<br>do clique até a lista.</h1>
+    <p class="intro">Este é o seu caderno para entender a tela de cadastro: onde ela está, como os dados chegam à API e por que cada parte do código existe.</p>
+    <div class="meta"><span>SvelteKit + TypeScript</span><span>Leitura guiada para iniciantes</span><span>HTML de estudo</span><a href="issue-18.pdf">Baixar o PDF</a></div>
+  </header>
+  <div class="layout">
+    <nav aria-label="Conteúdo do guia">
+      <p>Neste caderno</p>
+      <a href="#objetivo">01 · O que a issue pede</a>
+      <a href="#arquivos">02 · Onde está cada parte</a>
+      <a href="#rotas">03 · Rotas e projeto escolhido</a>
+      <a href="#formulario">04 · Entender o formulário</a>
+      <a href="#salvar">05 · O caminho para salvar</a>
+      <a href="#terminal">06 · Abrir pelo terminal</a>
+      <a href="#conferir">07 · Conferir o comportamento</a>
+      <a href="#perguntas">08 · Explique com suas palavras</a>
+      <a href="#fontes">Documentação oficial</a>
+    </nav>
+    <main id="conteudo">
+      <section id="objetivo">
+        <h2><span class="number">01</span>O que estamos construindo?</h2>
+        <p>A <a href="https://github.com/andreybueno-git/projeto-g2-frontend/issues/18">issue #18</a> pede uma página em <code>/tarefas/nova</code>. Nela, a pessoa preenche os dados, salva a tarefa na API e volta para a lista de tarefas.</p>
+        <p>Também há um atalho: se a pessoa começar dentro de um projeto, esse projeto deve aparecer selecionado no formulário.</p>
+        <ol class="flow" aria-label="Caminho de uma nova tarefa">
+          <li>A pessoa abre <strong>Nova tarefa</strong>.</li>
+          <li>A página busca os projetos e mostra o formulário.</li>
+          <li>A pessoa preenche e envia os dados.</li>
+          <li>A API grava a tarefa e gera o ID.</li>
+          <li>O site abre a lista de tarefas novamente.</li>
+        </ol>
+        <div class="note"><p><strong>Limite desta entrega:</strong> o formulário fica nesta página. Transformá-lo em um componente reutilizável para criar e editar pertence à #17. A função de criação dá o suporte necessário à #18; isso não significa concluir toda a API de escrita da #16 nem toda a validação da #20.</p></div>
+      </section>
+
+      <section id="arquivos">
+        <h2><span class="number">02</span>Onde encontrar o código</h2>
+        <p>No VS Code, pressione <strong>⌘P</strong>, digite um dos caminhos abaixo e pressione Enter. O nome <code>+page.svelte</code> aparece várias vezes porque cada pasta representa uma página diferente.</p>
+        <div class="table-wrap"><table>
+          <thead><tr><th>Arquivo, a partir da raiz do projeto</th><th>Responsabilidade</th></tr></thead>
+          <tbody>
+            <tr><td><code>src/routes/tarefas/nova/+page.svelte</code></td><td>Mostra o cadastro, guarda os valores preenchidos e coordena o envio.</td></tr>
+            <tr><td><code>src/lib/servicos/api.ts</code></td><td>Conversa com a API. A função <code>criarTarefa</code> faz a requisição de criação.</td></tr>
+            <tr><td><code>src/tipos.ts</code></td><td>Define os formatos <code>Tarefa</code> e <code>NovaTarefa</code>, usados pelo TypeScript.</td></tr>
+            <tr><td><code>src/routes/+page.svelte</code></td><td>É a lista, no endereço <code>/</code>. Tem a entrada para criar uma tarefa.</td></tr>
+            <tr><td><code>src/routes/projetos/[id]/+page.svelte</code></td><td>É o detalhe de um projeto. Seu link leva o ID do projeto até o cadastro.</td></tr>
+          </tbody>
+        </table></div>
+        <p>Um arquivo Svelte costuma juntar três partes:</p>
+        <ul>
+          <li><code>&lt;script lang="ts"&gt;</code>: TypeScript, com dados e funções.</li>
+          <li>Marcação HTML/Svelte: os campos, textos e botões que aparecem.</li>
+          <li><code>&lt;style&gt;</code>: CSS, que organiza a aparência da página.</li>
+        </ul>
+        <p class="small">Os exemplos deste guia são recortes para estudar os conceitos; os arquivos do projeto são a referência para o código completo.</p>
+      </section>
+
+      <section id="rotas">
+        <h2><span class="number">03</span>Como o endereço encontra a página?</h2>
+        <pre><code>src/routes/tarefas/nova/+page.svelte
+                    ↓
+               /tarefas/nova
+
+src/routes/tarefas/[id]/+page.svelte
+                    ↓
+           /tarefas/2, /tarefas/abc...</code></pre>
+        <p><code>nova</code> é uma parte fixa do endereço. <code>[id]</code> é uma parte variável. O SvelteKit escolhe a rota fixa antes da variável; por isso, abrir <code>/tarefas/nova</code> deve mostrar o cadastro, sem tentar buscar uma tarefa cujo ID seja “nova”.</p>
+        <h3>E o projeto já selecionado?</h3>
+        <p>O link do projeto leva uma informação extra depois do ponto de interrogação:</p>
+        <pre><code>/tarefas/nova?projetoId=3</code></pre>
+        <p><code>/tarefas/nova</code> escolhe a página. <code>projetoId=3</code> sugere qual projeto selecionar. Isso é um <strong>parâmetro de consulta</strong>, também chamado de <em>query parameter</em>.</p>
+        <pre><code>import { page } from '$app/state';
+
+page.url.searchParams.get('projetoId'); // "3"</code></pre>
+        <p><code>page</code> vem do SvelteKit e informa a URL atual. Ele não é o roteador. Também não confundimos a consulta acima com <code>page.params.id</code>, que lê a parte <code>[id]</code> de uma rota dinâmica.</p>
+        <p>Antes de selecionar, o código confere se esse ID existe nos projetos que vieram da API. Se alguém escrever um ID inválido na URL, o formulário deve orientar a pessoa a escolher um projeto válido.</p>
+        <h3>Por que usar <code>$derived</code> e <code>$effect</code> aqui?</h3>
+        <p>O SvelteKit pode manter a mesma página aberta quando só a consulta muda. Por isso, observar a sugestão da URL permite atualizar o projeto ao ir de <code>?projetoId=1</code> para <code>?projetoId=2</code>. O efeito observa a sugestão e os projetos carregados; ele não deve observar o campo que a pessoa edita, para não desfazer a escolha manual dela.</p>
+      </section>
+
+      <section id="formulario">
+        <h2><span class="number">04</span>Como o formulário guarda o que eu digito?</h2>
+        <p>Os dados enviados são: <code>projetoId</code>, <code>titulo</code>, <code>descricao</code>, <code>status</code>, <code>prioridade</code>, <code>responsavel</code> e <code>prazo</code>. Os nomes precisam respeitar o contrato que a API usa.</p>
+        <h3><code>NovaTarefa</code>: o formato dos dados</h3>
+        <pre><code>export type NovaTarefa = Omit&lt;Tarefa, 'id'&gt;;</code></pre>
+        <p><code>Omit</code> significa “usar os campos de <code>Tarefa</code>, retirando <code>id</code>”. O usuário não inventa o ID. O <code>json-server</code> o gera quando grava a tarefa.</p>
+        <p>O TypeScript ajuda a detectar nomes e tipos errados enquanto programamos. Ele não substitui as verificações do formulário nem a validação de um servidor real.</p>
+        <h3><code>$state</code>: um valor que atualiza a tela</h3>
+        <pre><code>let titulo = $state('');</code></pre>
+        <p>Esse recorte começa com um título vazio. Quando o estado muda, o Svelte atualiza a parte da tela que depende dele. Na página completa, os campos podem estar agrupados em um objeto.</p>
+        <h3><code>bind:value</code>: ligar o campo ao estado</h3>
+        <pre><code>&lt;label for="titulo"&gt;Título&lt;/label&gt;
+&lt;input id="titulo" bind:value={titulo} required /&gt;</code></pre>
+        <p>Ao digitar no campo, <code>titulo</code> recebe o valor. Se o código mudar <code>titulo</code>, o campo também muda. O <code>label</code> dá nome ao campo; o <code>for</code> aponta para seu <code>id</code>. <code>required</code> pede ao navegador que não envie esse campo vazio.</p>
+        <h3><code>onMount</code>: buscar as opções depois de abrir</h3>
+        <p><code>listarProjetos()</code> fornece as opções do seletor. <code>onMount</code> executa a busca quando a página é montada no navegador. Enquanto a resposta não chega, mostramos carregamento; se falhar, mostramos uma mensagem e permitimos tentar de novo.</p>
+        <div class="note"><p><strong>Duas ideias diferentes:</strong> <code>onMount</code> inicia essa busca. O efeito acompanha a sugestão de projeto da URL. Um não substitui automaticamente o outro.</p></div>
+      </section>
+
+      <section id="salvar">
+        <h2><span class="number">05</span>O que acontece ao clicar em Salvar?</h2>
+        <p>Um formulário trata seu envio com uma função. Ela impede o envio tradicional do navegador, prepara os dados e aguarda a API.</p>
+        <div class="table-wrap"><table>
+          <thead><tr><th>Operação</th><th>O que ela faz no projeto</th></tr></thead>
+          <tbody>
+            <tr><td><code>GET /projetos</code></td><td>Lê os projetos para o seletor.</td></tr>
+            <tr><td><code>POST /tarefas</code></td><td>Envia os dados para criar uma tarefa.</td></tr>
+            <tr><td><code>goto('/')</code></td><td>Abre a página da lista depois da confirmação de criação.</td></tr>
+          </tbody>
+        </table></div>
+        <p class="label">Recorte do formato de uma requisição de criação:</p>
+        <pre><code>fetch('http://localhost:3000/tarefas', {
+  method: 'POST',
+  headers: { 'Content-Type': 'application/json' },
+  body: JSON.stringify(dados)
+});</code></pre>
+        <ul>
+          <li><code>method: 'POST'</code> informa que queremos criar um registro.</li>
+          <li><code>Content-Type</code> informa que o corpo usa JSON.</li>
+          <li><code>JSON.stringify(dados)</code> transforma o objeto TypeScript/JavaScript em texto JSON para enviar.</li>
+          <li><code>criarTarefa(dados)</code> reúne essa conversa com a API em uma função que a página chama.</li>
+        </ul>
+        <h3>Por que <code>async</code> e <code>await</code>?</h3>
+        <pre><code>const tarefaCriada = await criarTarefa(dados);
+await goto('/');</code></pre>
+        <p>A API leva algum tempo para responder. <code>await</code> espera o resultado dentro de uma função <code>async</code>. Só depois de criar a tarefa a navegação é iniciada.</p>
+        <p>A lista fica em <code>/</code>, e não em <code>/tarefas</code>. Ao voltar para ela, a busca da lista carrega os registros, incluindo a tarefa nova.</p>
+        <h3>E se der erro?</h3>
+        <p><code>try</code> tenta a operação e <code>catch</code> trata uma falha. Se a gravação falhar, os campos continuam preenchidos para a pessoa tentar novamente. Durante o envio, o botão fica desabilitado para evitar pedidos repetidos.</p>
+        <p>Se a API já confirmou a criação, uma falha ao navegar não deve habilitar uma segunda gravação da mesma tarefa. A página reconhece o sucesso e permite voltar à lista. O <code>onDestroy</code> também marca quando você saiu desta tela, para uma resposta atrasada não forçar a navegação depois disso.</p>
+      </section>
+
+      <section id="terminal">
+        <h2><span class="number">06</span>Como abrir pelo terminal</h2>
+        <p>Esta entrega usa uma cópia de trabalho separada. A raiz dessa cópia é:</p>
+        <pre><code>/Users/andreybuenoisoton/Documents/Codex/2026-10-14/create-a-new-site-with-sites-4/outputs/marco3-issue18</code></pre>
+        <p>Abra essa pasta no VS Code. No terminal integrado, use <code>pwd</code> para confirmar onde você está. Todos os comandos abaixo partem da raiz do projeto, onde está <code>package.json</code>.</p>
+        <h3>1. Instalar as dependências, quando necessário</h3>
+        <pre><code>npm ci</code></pre>
+        <p>Instala as versões registradas no <code>package-lock.json</code>. É necessário em uma cópia recém-baixada ou quando as dependências precisam ser reinstaladas. O projeto pede Node.js 24 ou superior; <code>node --version</code> mostra sua versão.</p>
+        <h3>2. Abrir a API em uma aba do terminal</h3>
+        <pre><code>npm run api</code></pre>
+        <p>Inicia o <code>json-server</code> usando o <code>db.json</code> dessa pasta. O endereço esperado pela aplicação é <code>http://localhost:3000</code>. Esse terminal continua ocupado atendendo à API.</p>
+        <h3>3. Abrir o site em outra aba do terminal</h3>
+        <pre><code>npm run dev</code></pre>
+        <p>Inicia o servidor de desenvolvimento. Abra o endereço <strong>Local</strong> que ele imprimir, normalmente <code>http://localhost:5173</code>, e acrescente <code>/tarefas/nova</code>.</p>
+        <div class="note"><p><strong>Não copie o prompt.</strong> Um trecho como <code>andrey@Mac projeto-g2-frontend %</code> apenas mostra o usuário e a pasta atual. Você digita somente o comando depois do <code>%</code>.</p><p>Com um servidor rodando, aquela aba não está pronta para comandos Git. Abra outra aba. Para encerrar um servidor que você iniciou, use <strong>Ctrl+C</strong> na aba dele.</p></div>
+        <p>O site e a API são dois programas. A porta <strong>5173</strong> mostra a interface; a porta <strong>3000</strong> responde com os dados. Abrir a API diretamente no navegador pode mostrar JSON, o que é esperado.</p>
+        <h3>Conferir os tipos e preparar a aplicação</h3>
+        <pre><code>npm run check
+npm run build</code></pre>
+        <p>O primeiro procura problemas de tipos e de Svelte. O segundo gera a versão de produção. Eles ajudam a conferir o código, mas não substituem experimentar o formulário no navegador.</p>
+      </section>
+
+      <section id="conferir">
+        <h2><span class="number">07</span>O que você deve experimentar</h2>
+        <p>Use esta lista como roteiro de estudo. As caixas são suas marcações locais e não representam um relatório automático de testes.</p>
+        <ul class="checklist">
+          <li><label><input type="checkbox"><span>Abrir <code>/tarefas/nova</code> e identificar a tela de cadastro.</span></label></li>
+          <li><label><input type="checkbox"><span>Abrir um projeto e usar seu link de nova tarefa. Conferir qual opção já vem selecionada.</span></label></li>
+          <li><label><input type="checkbox"><span>Trocar o projeto manualmente e perceber que sua escolha é mantida.</span></label></li>
+          <li><label><input type="checkbox"><span>Preencher todos os campos e salvar uma tarefa de teste. Conferir se ela aparece na lista.</span></label></li>
+          <li><label><input type="checkbox"><span>Observar o botão durante o envio e explicar por que ele fica desabilitado.</span></label></li>
+          <li><label><input type="checkbox"><span>Abrir um detalhe como <code>/tarefas/2</code> e perceber que continua sendo outra página.</span></label></li>
+        </ul>
+        <h3>O que foi verificado nesta entrega</h3><p>O Svelte encontrou zero erros e avisos, a compilação passou e três testes automatizados da API passaram. No navegador, conferimos cadastro, projeto pré-selecionado, troca manual, campos obrigatórios, clique duplo e recuperação após falha de conexão, usando uma cópia do banco.</p><p class="small">Criar uma tarefa grava um registro no banco da API em uso. Para estudar sem alterar os dados da equipe, faça os testes em uma cópia do banco.</p>
+      </section>
+
+      <section id="perguntas">
+        <h2><span class="number">08</span>Agora explique com suas palavras</h2>
+        <p>Tente responder antes de abrir a resposta. Se travar, volte ao trecho do guia e procure a ligação entre a URL, o campo e a API.</p>
+        <details><summary>1. Por que /tarefas/nova não abre o detalhe de uma tarefa chamada “nova”?</summary><p>Porque existe uma rota fixa em <code>tarefas/nova/+page.svelte</code>. O SvelteKit dá prioridade à rota fixa sobre <code>tarefas/[id]/+page.svelte</code>.</p></details>
+        <details><summary>2. De onde vem o projeto que aparece selecionado?</summary><p>Do parâmetro <code>projetoId</code> na consulta da URL, enviado pelo link da página do projeto. O código lê essa sugestão e confere se ela corresponde a um projeto existente nas opções da API.</p></details>
+        <details><summary>3. Qual é a diferença entre GET e POST nesta tela?</summary><p><code>GET</code> lê os projetos. <code>POST</code> envia os dados para criar a tarefa. A requisição de criação leva um corpo JSON.</p></details>
+        <details><summary>4. Por que não enviamos um id junto com os campos?</summary><p>O ID é gerado pela API. O tipo <code>NovaTarefa</code> usa os campos de <code>Tarefa</code> sem <code>id</code>, deixando isso claro enquanto programamos.</p></details>
+        <details><summary>5. O que aconteceria se voltássemos para a lista antes de esperar a API?</summary><p>A pessoa poderia ver a lista antes da gravação terminar ou sair do formulário sem perceber uma falha. A ordem correta é confirmar a criação e depois navegar.</p></details>
+        <details><summary>6. O que bind:value faz quando você digita um título?</summary><p>Atualiza o estado ligado ao campo. A ligação também funciona no outro sentido: quando o código altera esse estado, o valor mostrado no campo acompanha a mudança.</p></details>
+      </section>
+
+      <section id="fontes">
+        <h2>Para consultar quando precisar</h2>
+        <ul>
+          <li><a href="https://svelte.dev/docs/kit/routing">SvelteKit: páginas e rotas</a></li>
+          <li><a href="https://svelte.dev/docs/kit/advanced-routing#Sorting">SvelteKit: prioridade entre rotas</a></li>
+          <li><a href="https://svelte.dev/docs/kit/$app-state#page">SvelteKit: informações da página atual</a></li>
+          <li><a href="https://svelte.dev/docs/kit/$app-navigation#goto">SvelteKit: navegar com goto</a></li>
+          <li><a href="https://svelte.dev/docs/kit/state-management#Component-and-page-state-is-preserved">SvelteKit: preservação da página ao navegar</a></li>
+          <li><a href="https://svelte.dev/docs/svelte/$state">Svelte: estado com $state</a></li>
+          <li><a href="https://svelte.dev/docs/svelte/bind">Svelte: ligação com bind</a></li>
+        </ul>
+      </section>
+    </main>
+  </div>
+  <footer>Material de estudo da issue #18. Leia o código junto com este guia e use as perguntas para conferir o seu entendimento.</footer>
+</body>
+</html>

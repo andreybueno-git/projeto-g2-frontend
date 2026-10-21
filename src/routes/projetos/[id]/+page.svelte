@@ -69,6 +69,7 @@
 
     <section aria-labelledby="titulo-tarefas">
       <h2 id="titulo-tarefas">Tarefas do projeto</h2>
+      <p><a href={`/tarefas/nova?projetoId=${encodeURIComponent(projeto.id)}`}>Nova tarefa neste projeto</a></p>
 
       {#if projeto.tarefas.length === 0}
         <p>Este projeto ainda não tem tarefas.</p>
