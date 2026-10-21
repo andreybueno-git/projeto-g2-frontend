@@ -20,6 +20,7 @@
   
   <main>
     <h1>Projetos</h1>
+    <p><a href="/projetos/novo">Novo projeto</a></p>
   
     {#if carregando}
       <p>Carregando projetos...</p>
