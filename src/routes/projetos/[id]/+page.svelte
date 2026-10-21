@@ -51,6 +51,7 @@
     <header>
       <h1>{projeto.nome}</h1>
       <p class="descricao">{projeto.descricao}</p>
+      <p><a href={`/projetos/${encodeURIComponent(projeto.id)}/editar`}>Editar projeto</a></p>
       <dl>
         <div>
           <dt>Disciplina</dt>
