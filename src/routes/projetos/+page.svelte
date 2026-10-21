@@ -1,6 +1,6 @@
 <script lang="ts">
     import { onMount } from 'svelte';
-    import { listarProjetos } from '../../lib/api';
+    import { listarProjetos } from '../../lib/servicos/api';
     import type { Projeto } from '../../tipos';
   
     let projetos = $state<Projeto[]>([]);

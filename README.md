@@ -147,28 +147,42 @@ Esta é a versão 1.x do json-server: usa `_per_page` no lugar de `_limit` e `_e
 
 ```text
 projeto-g2-frontend/
-├── db.json                  dados da API local (projetos e tarefas)
+├── db.json                  dados da API local
 ├── package.json             scripts e dependências
 ├── package-lock.json        versões exatas das dependências
 ├── vite.config.ts           configuração do Vite e do SvelteKit
 ├── tsconfig.json            configuração do TypeScript
-├── .npmrc                   faz o npm recusar versões do Node abaixo da exigida
-├── .gitignore               o que o Git não versiona (node_modules, .svelte-kit...)
+├── .npmrc
+├── .gitignore
 ├── .vscode/
-│   └── extensions.json      recomenda a extensão do Svelte para o VS Code
-├── static/
-│   └── robots.txt           arquivo servido como está
+│   └── extensions.json
+├── static/                  arquivos servidos sem transformação
+│   └── robots.txt
 └── src/
-    ├── app.html             esqueleto HTML da aplicação (lang="pt-BR")
+    ├── app.html             esqueleto HTML da aplicação
     ├── app.d.ts             tipos globais do SvelteKit
-    ├── tipos.ts             contrato de dados da disciplina
+    ├── tipos.ts             contrato de dados da disciplina (mantido neste caminho)
     ├── lib/                 código reutilizável, importado por #lib
     │   ├── index.ts
-    │   └── assets/
-    │       └── favicon.svg
-    └── routes/
-        ├── +layout.svelte   moldura comum a todas as páginas
-        └── +page.svelte     página inicial
+    │   ├── assets/
+    │   │   └── favicon.svg
+    │   ├── componentes/
+    │   │   └── CartaoTarefa.svelte
+    │   ├── servicos/
+    │   │   └── api.ts       acesso à API local
+    │   └── utils/
+    │       └── rotulos.ts   rótulos e formatação de datas
+    └── routes/             páginas e rotas do SvelteKit
+        ├── +layout.svelte
+        ├── +error.svelte
+        ├── +page.svelte
+        ├── projetos/
+        │   ├── +page.svelte
+        │   └── [id]/
+        │       └── +page.svelte
+        └── tarefas/
+            └── [id]/
+                └── +page.svelte
 ```
 
 ## Marco 1

@@ -1,8 +1,8 @@
 <script lang="ts">
   import { page } from "$app/state";
-  import { buscarProjetoComTarefas, ErroApi } from "../../../lib/api";
-  import type { ProjetoComTarefas } from "../../../lib/api";
-  import { formatarPrazo } from "../../../lib/rotulos";
+  import { buscarProjetoComTarefas, ErroApi } from "../../../lib/servicos/api";
+  import type { ProjetoComTarefas } from "../../../lib/servicos/api";
+  import { formatarPrazo } from "../../../lib/utils/rotulos";
   import CartaoTarefa from "../../../lib/componentes/CartaoTarefa.svelte";
 
   let projeto = $state<ProjetoComTarefas | null>(null);

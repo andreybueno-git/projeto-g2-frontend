@@ -1,7 +1,7 @@
 <script lang="ts">
   import { onMount } from "svelte";
   import type { Tarefa } from "../tipos";
-  import { listarTarefas } from "../lib/api";
+  import { listarTarefas } from "../lib/servicos/api";
   import CartaoTarefa from "../lib/componentes/CartaoTarefa.svelte";
 
   let tarefas = $state<Tarefa[]>([]);

@@ -1,4 +1,4 @@
-import type { Tarefa, Projeto } from "../tipos";
+import type { Tarefa, Projeto } from "../../tipos";
 
 // Endereço do json-server. No Marco 6 isso vira variável de ambiente.
 const API_URL = "http://localhost:3000";
