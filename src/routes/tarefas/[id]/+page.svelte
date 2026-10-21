@@ -1,6 +1,6 @@
 <script lang="ts">
     import { page } from '$app/state';
-    import { buscarTarefa } from '../../../lib/api';
+    import { buscarTarefa } from '../../../lib/servicos/api';
     import type { Tarefa } from '../../../tipos';
   
     let tarefa = $state<Tarefa | null>(null);

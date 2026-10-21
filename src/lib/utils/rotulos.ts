@@ -1,4 +1,4 @@
-import type { Status, Prioridade } from "../tipos";
+import type { Status, Prioridade } from "../../tipos";
 
 export const ROTULOS_STATUS: Record<Status, string> = {
   "a-fazer": "A fazer",

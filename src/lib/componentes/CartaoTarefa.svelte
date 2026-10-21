@@ -5,7 +5,7 @@
     ROTULOS_STATUS,
     ROTULOS_PRIORIDADE,
     formatarPrazo
-  } from "../rotulos";
+  } from "../utils/rotulos";
 
   let { tarefa }: { tarefa: Tarefa } = $props();
 
