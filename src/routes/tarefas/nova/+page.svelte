@@ -6,6 +6,7 @@
   import type { NovaTarefa, Projeto } from '../../../tipos';
 
   import { acessibilidadeFormulario } from '../../../lib/utils/acessibilidadeFormulario';
+  import { validarObrigatorios } from '../../../lib/utils/validarObrigatorios';
 
   let projetos = $state<Projeto[]>([]);
   let carregando = $state(true);
@@ -50,6 +51,7 @@
   async function salvar(evento: SubmitEvent) {
     evento.preventDefault();
     if (salvando || tarefaCriada || carregando || erroProjetos || projetos.length === 0) return;
+    if (!(evento.currentTarget as HTMLFormElement).reportValidity()) return;
     if (!projetos.some((projeto) => projeto.id === dados.projetoId)) return;
 
     salvando = true;
@@ -89,7 +91,7 @@
     <p role="status">Tarefa criada com sucesso. <a href="/">Ir para a lista de tarefas</a></p>
   {:else}
     {#if avisoProjeto}<p role="status">{avisoProjeto}</p>{/if}
-    <form onsubmit={salvar} aria-busy={salvando} use:acessibilidadeFormulario>
+    <form onsubmit={salvar} aria-busy={salvando} use:validarObrigatorios use:acessibilidadeFormulario>
       <p>Todos os campos são obrigatórios.</p>
       <fieldset disabled={salvando}>
         <legend>Dados da tarefa</legend>
@@ -135,7 +137,7 @@
 
         {#if erroSalvar}<p class="erro" role="alert">{erroSalvar}</p>{/if}
         <div class="acoes">
-          <button type="submit">{salvando ? 'Salvando...' : 'Salvar tarefa'}</button>
+          <button type="submit" disabled={salvando}>{salvando ? 'Salvando...' : 'Salvar tarefa'}</button>
           <a href="/">Cancelar</a>
         </div>
         {#if salvando}<p role="status">Salvando tarefa...</p>{/if}

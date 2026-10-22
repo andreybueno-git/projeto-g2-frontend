@@ -5,6 +5,7 @@
   import { ROTULOS_STATUS, ROTULOS_PRIORIDADE } from "../utils/rotulos";
 
   import { acessibilidadeFormulario } from "../utils/acessibilidadeFormulario";
+  import { validarObrigatorios } from "../utils/validarObrigatorios";
 
   type Props = {
     // Valores de partida: vazio para criar, a tarefa atual para editar.
@@ -58,6 +59,8 @@
 
   function aoEnviar(evento: SubmitEvent) {
     evento.preventDefault();
+    if (enviando || carregandoProjetos || erroProjetos) return;
+    if (!(evento.currentTarget as HTMLFormElement).reportValidity()) return;
     // Monta o objeto campo a campo para nunca enviar o id junto.
     onenviar({
       projetoId: dados.projetoId,
@@ -71,7 +74,7 @@
   }
 </script>
 
-<form onsubmit={aoEnviar} use:acessibilidadeFormulario aria-busy={enviando}>
+<form onsubmit={aoEnviar} use:validarObrigatorios use:acessibilidadeFormulario aria-busy={enviando}>
   <p>Os campos indicados como obrigatórios precisam ser preenchidos.</p>
   <div class="campo">
     <label for="tarefa-titulo">Título (obrigatório)</label>
@@ -147,7 +150,7 @@
     <p class="mensagem-erro" role="alert">{erro}</p>
   {/if}
 
-  <button type="submit" disabled={enviando || carregandoProjetos}>
+  <button type="submit" disabled={enviando || carregandoProjetos || Boolean(erroProjetos)}>
     {enviando ? "Salvando..." : textoEnvio}
   </button>
 </form>
