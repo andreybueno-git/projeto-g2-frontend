@@ -6,10 +6,10 @@
   'use strict';
   const data = global.MARCO3_CODE;
   if (!data) return;
-  const SIZE_KEY = 'marco3.code.size', WRAP_KEY = 'marco3.code.wrap';
+  const SIZE_KEY = 'marco3.code.size', WRAP_KEY = 'marco3.code.wrap', ONLY_KEY = 'marco3.code.only';
   const read = (k, d) => { try { const v = localStorage.getItem(k); return v === null ? d : JSON.parse(v); } catch (e) { return d; } };
   const save = (k, v) => { try { localStorage.setItem(k, JSON.stringify(v)); } catch (e) { /* armazenamento opcional */ } };
-  let size = null, wrap = read(WRAP_KEY, true), current = null, returnFocus = null;
+  let size = null, wrap = read(WRAP_KEY, true), onlyNew = read(ONLY_KEY, true), current = null, currentFind = null, currentSpan = null, openGaps = new Set(), returnFocus = null;
   const esc = (s) => s.replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;');
   const groupOf = (f) => data.groups.find(g => g.id === f.group);
 
@@ -60,9 +60,9 @@
     const groups = data.groups.map(g => '<section class="cv-group"><h3><b>' + esc(g.issue) + '</b> ' + esc(g.title) + '</h3><ul>' +
       data.files.filter(f => f.group === g.id).map(f => { const i = data.files.indexOf(f); const parts = f.path.split('/'); return '<li><button type="button" data-cv-file="' + i + '"><span>' + esc(parts.pop()) + '</span><small>' + esc(parts.join('/') || '/') + '</small></button></li>'; }).join('') + '</ul></section>').join('');
     dialog.innerHTML = '<div class="cv-shell"><header class="cv-head"><div class="cv-title"><p class="cv-kicker">O código do Marco 3 · ' + esc(data.repo) + ' · commit ' + esc(data.head) + '</p><h2 id="code-title"></h2><p class="cv-meta" data-cv-meta></p></div>' +
-      '<div class="cv-tools" role="group" aria-label="Leitura"><button type="button" data-cv-size="-1" aria-label="Diminuir a fonte">A−</button><button type="button" data-cv-size="1" aria-label="Aumentar a fonte">A+</button><button type="button" data-cv-wrap aria-pressed="true">Quebrar linhas</button><button type="button" data-cv-step="-1" aria-label="Arquivo anterior">←</button><button type="button" data-cv-step="1" aria-label="Próximo arquivo">→</button><button type="button" class="cv-close" data-cv-close aria-label="Fechar o código">×</button></div></header>' +
+      '<div class="cv-tools" role="group" aria-label="Leitura"><button type="button" data-cv-size="-1" aria-label="Diminuir a fonte">A−</button><button type="button" data-cv-size="1" aria-label="Aumentar a fonte">A+</button><button type="button" data-cv-only aria-pressed="true">Só o Marco 3</button><button type="button" data-cv-wrap aria-pressed="true">Quebrar linhas</button><button type="button" data-cv-step="-1" aria-label="Arquivo anterior">←</button><button type="button" data-cv-step="1" aria-label="Próximo arquivo">→</button><button type="button" class="cv-close" data-cv-close aria-label="Fechar o código">×</button></div></header>' +
       '<nav class="cv-files" aria-label="Arquivos do Marco 3"><label class="cv-select"><span>Arquivo</span><select data-cv-select>' + data.files.map((f, i) => '<option value="' + i + '">' + esc(f.path) + '</option>').join('') + '</select></label>' + groups + '</nav>' +
-      '<div class="cv-main"><p class="cv-focus" data-cv-focus hidden></p><div class="cv-code" data-cv-code tabindex="0" role="region" aria-label="Código do arquivo"></div><p class="cv-legend"><i></i> linha criada ou alterada no Marco 3 <i class="cv-legend-focus"></i> trecho explicado no capítulo</p></div></div>';
+      '<div class="cv-main"><p class="cv-focus" data-cv-focus hidden></p><div class="cv-code" data-cv-code tabindex="0" role="region" aria-label="Código do arquivo"></div><p class="cv-legend"><i></i> linha criada ou alterada no Marco 3 <i class="cv-legend-focus"></i> trecho explicado no capítulo <span data-cv-legend-only></span></p></div></div>';
     document.body.appendChild(dialog);
     list = dialog.querySelector('.cv-files'); codeEl = dialog.querySelector('[data-cv-code]'); meta = dialog.querySelector('[data-cv-meta]'); title = dialog.querySelector('#code-title'); focusNote = dialog.querySelector('[data-cv-focus]');
     dialog.addEventListener('click', e => {
@@ -70,6 +70,8 @@
       if (e.target === dialog) { close(); return; }
       if (!b) return;
       if (b.dataset.cvFile) show(Number(b.dataset.cvFile));
+      if (b.hasAttribute('data-cv-only')) { onlyNew = !onlyNew; save(ONLY_KEY, onlyNew); applyLook(); show(current, currentFind, currentSpan, true); }
+      if (b.dataset.cvGap) { openGaps.add(b.dataset.cvGap); show(current, currentFind, currentSpan, true); }
       if (b.dataset.cvSize) setSize(size + Number(b.dataset.cvSize) * 2);
       if (b.hasAttribute('data-cv-wrap')) { wrap = !wrap; save(WRAP_KEY, wrap); applyLook(); }
       if (b.dataset.cvStep) show((current + Number(b.dataset.cvStep) + data.files.length) % data.files.length);
@@ -81,26 +83,40 @@
     applyLook();
   }
   function setSize(v) { size = Math.max(13, Math.min(32, v)); save(SIZE_KEY, size); applyLook(); }
-  function applyLook() { dialog.style.setProperty('--cv-size', size + 'px'); dialog.classList.toggle('cv-wrap', wrap); dialog.querySelector('[data-cv-wrap]').setAttribute('aria-pressed', String(wrap)); }
+  function applyLook() { dialog.style.setProperty('--cv-size', size + 'px'); dialog.classList.toggle('cv-wrap', wrap); dialog.querySelector('[data-cv-wrap]').setAttribute('aria-pressed', String(wrap)); dialog.querySelector('[data-cv-only]').setAttribute('aria-pressed', String(onlyNew)); }
   function findFocus(f, find, span) {
     if (!find) return null;
     const lines = f.text.split('\n'), start = lines.findIndex(l => l.includes(find));
     if (start < 0) return null;
     return { from: start + 1, to: Math.min(lines.length, start + (Number(span) || 1)) };
   }
-  function show(i, find, span) {
-    const f = data.files[i]; if (!f) return; current = i;
+  function show(i, find, span, keepGaps) {
+    const f = data.files[i]; if (!f) return; if (!keepGaps || i !== current) openGaps = new Set(); current = i; currentFind = find; currentSpan = span;
     const g = groupOf(f), lines = f.text.replace(/\n$/, '').split('\n'), added = new Set(f.status === 'novo' ? lines.map((_, k) => k + 1) : f.added);
     const focus = findFocus(f, find, span);
     title.textContent = f.path;
     const how = f.status === 'novo' ? 'arquivo novo' : f.status === 'movido' ? 'movido de ' + f.from : 'alterado';
     meta.innerHTML = '<span>' + esc(g.issue) + (g.pr ? ' · PR ' + esc(g.pr) : '') + '</span><span>' + esc(how) + '</span><span>' + esc(f.authors.join(', ')) + '</span><span>' + lines.length + ' linhas · ' + added.size + ' do Marco 3</span>';
     const html = highlight(lines, f.path);
-    codeEl.innerHTML = html.map((h, k) => { const n = k + 1, cls = (added.has(n) ? ' is-added' : '') + (focus && n >= focus.from && n <= focus.to ? ' is-focus' : ''); return '<div class="cv-line' + cls + '"><span class="cv-n" aria-hidden="true">' + n + '</span><code>' + (h || ' ') + '</code></div>'; }).join('');
+    const inFocus = (n) => focus && n >= focus.from && n <= focus.to;
+    const visibleLine = (n) => !onlyNew || added.has(n) || inFocus(n);
+    let rows = '', k = 0;
+    while (k < html.length) {
+      const n = k + 1;
+      if (visibleLine(n)) { rows += '<div class="cv-line' + (added.has(n) ? ' is-added' : '') + (inFocus(n) ? ' is-focus' : '') + '" data-n="' + n + '"><span class="cv-n" aria-hidden="true">' + n + '</span><code>' + (html[k] || ' ') + '</code></div>'; k++; continue; }
+      let end = k; while (end < html.length && !visibleLine(end + 1)) end++;
+      const key = (k + 1) + '-' + end;
+      if (openGaps.has(key)) { for (let j = k; j < end; j++) rows += '<div class="cv-line is-old" data-n="' + (j + 1) + '"><span class="cv-n" aria-hidden="true">' + (j + 1) + '</span><code>' + (html[j] || ' ') + '</code></div>'; }
+      else rows += '<button type="button" class="cv-gap" data-cv-gap="' + key + '">⋯ ' + (end - k) + (end - k === 1 ? ' linha que já existia' : ' linhas que já existiam') + ' antes do Marco 3 (linhas ' + (k + 1) + '–' + end + ', clique para ver)</button>';
+      k = end;
+    }
+    codeEl.innerHTML = rows;
+    dialog.querySelector('[data-cv-legend-only]').textContent = onlyNew && f.status !== 'novo' ? '· mostrando só o que o Marco 3 acrescentou' : '';
     focusNote.hidden = !focus; if (focus) focusNote.textContent = 'Linhas ' + focus.from + '–' + focus.to + ': o trecho explicado no capítulo.';
     list.querySelectorAll('[data-cv-file]').forEach(b => b.setAttribute('aria-current', String(Number(b.dataset.cvFile) === i)));
     dialog.querySelector('[data-cv-select]').value = String(i);
-    const target = focus ? codeEl.children[focus.from - 1] : null;
+    const target = focus ? codeEl.querySelector('[data-n="' + focus.from + '"]') : null;
+    if (keepGaps) return;
     requestAnimationFrame(() => { codeEl.scrollTop = target ? Math.max(0, target.offsetTop - codeEl.clientHeight * .18) : 0; codeEl.scrollLeft = 0; const active = list.querySelector('[aria-current="true"]'); if (active) active.scrollIntoView({ block: 'nearest' }); });
   }
   function open(path, find, span) {
@@ -116,5 +132,14 @@
     if (!t || (dialog && dialog.contains(t))) return;
     e.preventDefault(); open(t.dataset.code, t.dataset.find, t.dataset.span);
   });
+  // Colore os trechos estáticos dos capítulos (o texto já vem certo do build).
+  function paintSnippets() {
+    document.querySelectorAll('.code-snippet[data-path]').forEach(fig => {
+      const codes = [...fig.querySelectorAll('.cs-line code')];
+      const html = highlight(codes.map(c => c.textContent), fig.dataset.path);
+      codes.forEach((c, k) => { c.innerHTML = html[k] || ' '; });
+    });
+  }
+  if (document.readyState === 'loading') document.addEventListener('DOMContentLoaded', paintSnippets); else paintSnippets();
   global.MarcoCode = { open, close, get isOpen() { return !!(dialog && dialog.open); } };
 })(window);

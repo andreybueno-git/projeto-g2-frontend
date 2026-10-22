@@ -25,7 +25,9 @@ Abra http://127.0.0.1:8843/. Use HTTP, não `file://`, para o modelo 3D carregar
 
 ## Ler o código
 
-Cada capítulo tem um botão **Ler o código**, que abre o arquivo inteiro em tela cheia, com o trecho explicado destacado em amarelo. As linhas criadas ou alteradas no Marco 3 ficam marcadas em azul.
+Cada capítulo mostra, em letra grande, o trecho de código que o Marco 3 acrescentou, copiado do Git. **Ver o arquivo** abre o leitor em tela cheia com o trecho destacado em amarelo.
+
+O leitor começa em **Só o Marco 3**: aparecem só as linhas criadas ou alteradas no marco (em azul), e o código que já existia fica recolhido numa faixa "⋯ N linhas que já existiam", que abre com um clique. Desligue o botão para ver o arquivo inteiro.
 
 - **A−** e **A+** (ou `−` e `+`) mudam o tamanho da letra; a escolha fica salva no navegador.
 - **Quebrar linhas** evita rolagem horizontal no projetor.

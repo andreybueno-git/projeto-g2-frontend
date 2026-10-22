@@ -61,3 +61,24 @@
 .code-open:hover{border-color:var(--accent);color:var(--accent)}
 .code-open code{font-family:ui-monospace,SFMono-Regular,Menlo,monospace;font-size:12px;font-weight:500}
 .dialog-content .code-open{color:#1d4ed8;border-color:#bfdbfe;margin:4px 8px 4px 0}
+
+#code-dialog .cv-gap{display:block;width:100%;text-align:left;margin:4px 0;padding:8px 0 8px calc(4.2em + 4px);border:0;border-top:1px dashed #334155;border-bottom:1px dashed #334155;background:#0f172a;color:#94a3b8;font:500 15px Manrope,sans-serif;cursor:pointer}
+#code-dialog .cv-gap:hover{color:#e2e8f0;background:#1e293b}
+#code-dialog .cv-line.is-old code{color:#94a3b8}
+
+/* Trecho de código dentro do capítulo: o código acrescentado no Marco 3 */
+.code-snippet{margin:24px 0 0;max-width:min(66ch,100%);background:#0f172a;border-radius:10px;overflow:hidden;box-shadow:0 14px 40px #0f172a24}
+.code-snippet figcaption{display:flex;flex-wrap:wrap;align-items:center;justify-content:space-between;gap:6px 12px;padding:9px 14px;background:#1e293b;color:#cbd5e1;font-size:13px}
+.code-snippet figcaption b{font:600 13.5px ui-monospace,SFMono-Regular,Menlo,monospace;color:#f8fafc;overflow-wrap:anywhere}
+.code-snippet figcaption span{color:#93c5fd}
+.code-snippet figcaption button{border:1px solid #475569;background:none;color:#e2e8f0;border-radius:6px;padding:5px 10px;font:600 13px Manrope,sans-serif;cursor:pointer}
+.code-snippet figcaption button:hover{border-color:#93c5fd;color:#93c5fd}
+.code-snippet pre{margin:0;padding:10px 0 12px;font:clamp(14px,1.08vw,17px)/1.55 ui-monospace,SFMono-Regular,Menlo,Consolas,monospace;color:#e2e8f0;max-height:none}
+.cs-line{display:grid;grid-template-columns:3.2em 1fr;border-left:3px solid transparent}
+.cs-line.is-added{border-left-color:#3b82f6;background:#1e3a8a2e}
+.cs-line .cs-n{text-align:right;padding-right:.9em;color:#64748b;user-select:none}
+.cs-line.is-added .cs-n{color:#93c5fd}
+.cs-line code{font:inherit;white-space:pre-wrap;overflow-wrap:anywhere;padding-right:14px}
+.code-snippet .tk-c{color:#94a3b8;font-style:italic}.code-snippet .tk-s{color:#a7f3d0}.code-snippet .tk-k{color:#93c5fd}.code-snippet .tk-t{color:#fca5a5}.code-snippet .tk-r{color:#fdba74;font-weight:600}.code-snippet .tk-n{color:#fcd34d}.code-snippet .tk-y{color:#c4b5fd}
+.code-snippet+.code-snippet{margin-top:14px}
+#code-dialog .cv-line.is-old{opacity:.5}
