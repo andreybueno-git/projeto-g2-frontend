@@ -67,7 +67,7 @@
 #code-dialog .cv-line.is-old code{color:#94a3b8}
 
 /* Trecho de código dentro do capítulo: o código acrescentado no Marco 3 */
-.code-snippet{margin:24px 0 0;max-width:min(66ch,100%);background:#0f172a;border-radius:10px;overflow:hidden;box-shadow:0 14px 40px #0f172a24}
+.code-snippet{margin:24px 0 0;max-width:min(560px,100%);background:#0f172a;border-radius:10px;overflow:hidden;box-shadow:0 14px 40px #0f172a24}
 .code-snippet figcaption{display:flex;flex-wrap:wrap;align-items:center;justify-content:space-between;gap:6px 12px;padding:9px 14px;background:#1e293b;color:#cbd5e1;font-size:13px}
 .code-snippet figcaption b{font:600 13.5px ui-monospace,SFMono-Regular,Menlo,monospace;color:#f8fafc;overflow-wrap:anywhere}
 .code-snippet figcaption span{color:#93c5fd}

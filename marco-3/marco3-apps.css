@@ -143,3 +143,20 @@ body[data-tone='rust'] .story-body code,body[data-tone='dark'] .story-body code,
 .code-chip small{font-size:12.5px;color:var(--muted)}
 #codigo{min-height:auto;padding-top:140px;padding-bottom:160px}
 @media(max-width:760px){.chapter-wide .chapter-copy{width:100%!important;padding:20px}.code-map{grid-template-columns:1fr}#codigo{padding-top:64svh}}
+
+/* Capítulo Svelte: seis cartões, cada um com uma linha real do código */
+.svelte-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:18px 22px;margin-top:22px}
+.svelte-grid article{min-width:0}
+.svelte-grid h3{margin:0 0 6px;font-size:18px;font-weight:650;color:var(--ink)}
+.svelte-grid p{margin:0;font-size:15px;line-height:1.55;color:var(--muted)}
+.svelte-grid p code,.chapter-wide .chapter-note code{font-family:ui-monospace,SFMono-Regular,Menlo,monospace;font-size:.88em;background:#2563eb10;border:1px solid #2563eb24;border-radius:4px;padding:0 4px}
+.svelte-grid .code-snippet{margin-top:10px;max-width:100%}
+.svelte-grid .code-snippet figcaption{font-size:12px;padding:7px 11px}
+.svelte-grid .code-snippet figcaption b{font-size:12px}
+.svelte-grid .code-snippet figcaption span{display:none}
+.svelte-grid .code-snippet pre{font-size:clamp(13.5px,1vw,15.5px);padding:8px 0}
+#svelte{min-height:auto;padding-top:140px;padding-bottom:160px}
+@media(max-width:760px){.svelte-grid{grid-template-columns:1fr}#svelte{padding-top:64svh}}
+
+/* O atalho flutuante do celular só aparece onde o notebook é o assunto */
+body:not([data-chapter="0"]):not([data-chapter="3"]):not([data-chapter="7"]) .mobile-studio-launch{display:none!important}

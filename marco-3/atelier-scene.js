@@ -74,7 +74,7 @@
   },undefined,()=>{document.body.dataset.assets='fallback';window.dispatchEvent(new CustomEvent('vereda:asset',{detail:{name:'scene',status:'error'}}));});
 
   // ---------- json-server e as pilhas do db.json ----------
-  const SERVER_X=.92, NOTE_X=-1.5;
+  const SERVER_X=.95, NOTE_X=-1.32;
   const server=new T.Group();server.position.x=SERVER_X;world.add(server);
   const base=box(1.5,.46,.95,'#1e293b',{roughness:.45,metalness:.35});base.position.y=.23;base.castShadow=true;base.receiveShadow=true;server.add(base);
   const front=canvasTexture(768,224,(x,w,h)=>{x.fillStyle='#0f172a';x.fillRect(0,0,w,h);x.fillStyle='#e2e8f0';x.font=font(700,56);x.fillText('json-server',36,92);x.fillStyle='#93c5fd';x.font=font(600,40);x.fillText(':3000 · db.json',36,160);x.fillStyle='#22c55e';x.beginPath();x.arc(w-60,72,16,0,Math.PI*2);x.fill();});front.draw();
@@ -102,8 +102,8 @@
   const taskEdited={kicker:'PATCH /tarefas/eQxa…',title:'Estudar rotas do SvelteKit',status:'em-andamento',foot:'Pedro · prioridade média · 31/10'};
   const taskCard=makeCard(1.2,.76,task);
   const projectCard=makeCard(1.2,.76,{kind:'projeto',kicker:'POST /projetos',title:'Projeto G2',foot:'Desenvolvimento Front-end · hoje'});
-  const invalidCard=makeCard(1.2,.76,{invalid:true,kicker:'Validação',title:'"      "',status:'erro',foot:'Só espaços não passam'});
-  const fixedCard=makeCard(1.2,.76,{kicker:'POST /tarefas',title:'Revisar acessibilidade',status:'a-fazer',foot:'Rayane · prioridade alta · 05/11'});
+  const invalidCard=makeCard(.9,.57,{invalid:true,kicker:'Validação',title:'"      "',status:'erro',foot:'Só espaços não passam'});
+  const fixedCard=makeCard(.9,.57,{kicker:'POST /tarefas',title:'Revisar acessibilidade',status:'a-fazer',foot:'Rayane · prioridade alta · 05/11'});
   const flyCard=makeCard(.7,.44,{kicker:'POST · simulação',title:'Tarefa do notebook',status:'a-fazer',foot:'Formulário do notebook'});
   let taskFlipped=false;
   function cardOnPath(m,u,lift,toX,toY){
@@ -115,17 +115,18 @@
 
   // ---------- Entregas: oito issues ----------
   const ISSUES=[['#16','API de escrita','Andrey'],['#17','Formulário de tarefa','Pedro'],['#18','Nova tarefa','Andrey'],['#19','Edição de tarefa','Pedro'],['#20','Validação','Andrey'],['#21','Acessibilidade','Rayane'],['#22','Projetos','Gabriel'],['#23','Apresentação','Rayane']];
-  const issueCards=ISSUES.map(([n,t,who],i)=>{const m=makeCard(.9,.57,{kicker:'Issue '+n+' · entregue',title:t,foot:who});m.userData.slot=new T.Vector3(-1.62+(i%4)*.93,2.18-Math.floor(i/4)*.66,.3-Math.floor(i/4)*.1);return m;});
+  const issueCards=ISSUES.map(([n,t,who],i)=>{const m=makeCard(.9,.57,{kicker:'Issue '+n+' · entregue',title:t,foot:who});m.userData.slot=new T.Vector3(-1.38+(i%4)*.92,2.18-Math.floor(i/4)*.66,.3-Math.floor(i/4)*.1);return m;});
 
   // ---------- Validação: a barreira ----------
-  const barrier=new T.Group();barrier.position.set(-.38,1.05,.2);world.add(barrier);
-  const ring=new T.Mesh(new T.TorusGeometry(.48,.035,12,90),new T.MeshStandardMaterial({color:'#ea580c',emissive:'#ea580c',emissiveIntensity:.35,roughness:.4}));ring.rotation.y=Math.PI/2;barrier.add(ring);
+  // O portão fica entre o notebook e o servidor, virado para a câmera: um anel visto de frente, não de lado.
+  const BARRIER_X=-.18;const barrier=new T.Group();barrier.position.set(BARRIER_X,1.08,.25);world.add(barrier);
+  const ring=new T.Mesh(new T.TorusGeometry(.4,.045,14,90),new T.MeshStandardMaterial({color:'#ea580c',emissive:'#ea580c',emissiveIntensity:.35,roughness:.4}));ring.rotation.y=-.62;barrier.add(ring);
   const ringTag=canvasTexture(420,96,(x,w,h)=>{x.fillStyle='#9a3412';roundRect(x,0,8,w,h-16,24);x.fill();x.fillStyle='#fff';x.font=font(700,40);x.textAlign='center';x.fillText('validarObrigatorios',w/2,62);});ringTag.draw();
-  const ringLabel=new T.Mesh(new T.PlaneGeometry(.7,.16),new T.MeshBasicMaterial({map:ringTag.texture,transparent:true,depthWrite:false}));ringLabel.position.y=.68;barrier.add(ringLabel);
+  const ringLabel=new T.Mesh(new T.PlaneGeometry(.7,.16),new T.MeshBasicMaterial({map:ringTag.texture,transparent:true,depthWrite:false}));ringLabel.position.set(0,.62,.05);barrier.add(ringLabel);
 
   // ---------- Testes: 22 marcas ----------
   const tickTex=canvasTexture(128,128,(x,w,h)=>{x.fillStyle='#2563eb';roundRect(x,6,6,w-12,h-12,26);x.fill();x.strokeStyle='#fff';x.lineWidth=13;x.lineCap='round';x.lineJoin='round';x.beginPath();x.moveTo(34,66);x.lineTo(56,88);x.lineTo(96,42);x.stroke();});tickTex.draw();
-  const ticks=[];for(let i=0;i<22;i++){const m=new T.Mesh(new T.PlaneGeometry(.2,.2),new T.MeshBasicMaterial({map:tickTex.texture,transparent:true,depthWrite:false}));m.position.set(-1.55+(i%11)*.25,2.05-Math.floor(i/11)*.28,.3);m.visible=false;world.add(m);ticks.push(m);}
+  const ticks=[];for(let i=0;i<22;i++){const m=new T.Mesh(new T.PlaneGeometry(.2,.2),new T.MeshBasicMaterial({map:tickTex.texture,transparent:true,depthWrite:false}));m.position.set(-1.3+(i%11)*.25,2.05-Math.floor(i/11)*.28,.3);m.visible=false;world.add(m);ticks.push(m);}
 
   // ---------- Estado e controles ----------
   let current=0,target=0,progressInitialized=false,reduced=matchMedia('(prefers-reduced-motion: reduce)').matches,paused=false,last=0,sendTime=-10,drag=0,dragTarget=0,framing=1,aimX=0,aimY=0,leanX=0,leanY=0;
@@ -194,7 +195,7 @@
     // 06 · Validação: o vazio é barrado no anel e volta; o texto real passa.
     const vOn=presence(p,6,6.95)*W;barrier.visible=vOn>.01;barrier.scale.setScalar(Math.max(.001,vOn));ring.material.emissiveIntensity=.35+.9*presence(p,6.25,6.32);
     const bad=p>5.95&&p<6.5,good=p>=6.5&&p<6.95;invalidCard.visible=bad&&W>.05;fixedCard.visible=good&&W>.05;
-    if(bad){const go=range(p,6.05,6.25),back=range(p,6.32,6.48),u=.47*go*(1-back);cardOnPath(invalidCard,u,.35,STACK.tarefas.x,tTop(1));invalidCard.position.x+=(!reduced&&!paused&&go>.98&&back<.02)?Math.sin(now*40)*.02:0;}
+    if(bad){const ax=NOTE_X+.05,bx=SERVER_X+STACK.tarefas.x,stop=clamp((BARRIER_X-.36-.45*.9-ax)/(bx-ax),.05,.9),go=range(p,6.05,6.25),back=range(p,6.32,6.48),u=stop*go*(1-back);cardOnPath(invalidCard,u,.25,STACK.tarefas.x,tTop(1));invalidCard.position.z+=.15;invalidCard.position.x+=(!reduced&&!paused&&go>.98&&back<.02)?Math.sin(now*40)*.02:0;}
     if(good)cardOnPath(fixedCard,range(p,6.52,6.88),.35,STACK.tarefas.x,tTop(1));
     out('valid-log',p<6.25?'título: "      "':p<6.5?'bloqueado · Erro: Preencha este campo com texto, sem usar somente espaços.':p<6.88?'título: "Revisar acessibilidade"  →  POST':'201 Created  ·  nada vazio chegou à API');
 

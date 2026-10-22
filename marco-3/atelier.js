@@ -3,9 +3,9 @@
   document.documentElement.classList.remove('no-js');
   const chapters=window.VEREDA_CONTENT,els=[...document.querySelectorAll('.chapter')],dots=[...document.querySelectorAll('.timeline-dots button')],indexButtons=[...document.querySelectorAll('.index-grid button')],LAST=els.length-1;
   const reducedQuery=matchMedia('(prefers-reduced-motion: reduce)'),indexDialog=document.querySelector('#index-dialog'),contentDialog=document.querySelector('#content-dialog');
-  const captions=['Notebook interativo','Oito issues entregues','POST e PATCH no db.json','Notebook interativo','PATCH no mesmo registro','Duas pilhas no db.json','A barreira de validarObrigatorios','Notebook interativo','22 testes','24 arquivos do marco','json-server e notebook'];
+  const captions=['Notebook interativo','Oito issues entregues','POST e PATCH no db.json','Notebook interativo','PATCH no mesmo registro','Duas pilhas no db.json','A barreira de validarObrigatorios','Notebook interativo','22 testes','Svelte 5 no projeto','24 arquivos do marco','json-server e notebook'];
   const subtitles={0:'Clique na tela para usar o computador',2:'Role para enviar o cartão',3:'Abra o formulário no notebook',4:'Role para editar a tarefa',6:'Role: o vazio volta, o texto passa',7:'Envie vazio e ouça os erros',8:'Role para acender os testes'};
-  let active=0,paused=false,raf=0,positions=[],resizeTimer=0,toastTimer=0;
+  let active=0,paused=false,raf=0,positions=[],resizeTimer=0,toastTimer=0,scrollSafety=0;
   function refreshPositions(){positions=els.map(e=>e.offsetTop);update();}
   function update(){raf=0;const focus=scrollY+innerHeight*.43;let i=0;for(let k=0;k<positions.length;k++){if(positions[k]<=focus)i=k;}
     let p=i+(scrollY-positions[i])/Math.max(1,els[i].offsetHeight);p=Math.max(0,Math.min(LAST,p));
@@ -29,12 +29,19 @@
   document.querySelector('#replay')?.addEventListener('click',()=>go(0));
   document.addEventListener('keydown',e=>{if(window.VeredaEntry&&VeredaEntry.state!=='story')return;if(window.MarcoCode?.isOpen)return;if(e.target.closest('#notebook-ui')||document.querySelector('dialog[open]')||/INPUT|TEXTAREA|SELECT/.test(e.target.tagName))return;if(['ArrowDown','ArrowRight','PageDown',' '].includes(e.key)){e.preventDefault();go(active+1);}if(['ArrowUp','ArrowLeft','PageUp'].includes(e.key)){e.preventDefault();go(active-1);}if(e.key==='Home'){e.preventDefault();go(0);}if(e.key==='End'){e.preventDefault();go(LAST);}if(e.key.toLowerCase()==='i')indexDialog.showModal();if(e.key.toLowerCase()==='n')showDetails(active);});
   addEventListener('hashchange',()=>{const i=chapters.findIndex(c=>c.id===decodeURIComponent(location.hash.slice(1)));if(i>=0){clearTimeout(resizeTimer);window.scrollTo({top:els[i].offsetTop,behavior:'instant'});update();}});
-  addEventListener('scroll',()=>{if(!raf)raf=requestAnimationFrame(update);},{passive:true});
+  // Uma segunda checagem depois da rolagem garante o capítulo certo mesmo se um quadro de animação se perder.
+  addEventListener('scroll',()=>{if(!raf)raf=requestAnimationFrame(update);clearTimeout(scrollSafety);scrollSafety=setTimeout(()=>{if(raf)cancelAnimationFrame(raf);update();},140);},{passive:true});
   addEventListener('resize',()=>{const keep=active;clearTimeout(resizeTimer);resizeTimer=setTimeout(()=>{positions=els.map(e=>e.offsetTop);window.scrollTo({top:positions[keep],behavior:'instant'});update();},150);});
   reducedQuery.addEventListener('change',e=>window.VeredaScene?.setReduced(e.matches));
   const interactionCallbacks={onChange(){},onExpand(){window.VeredaDesktop?.expand();},onPresent(){if(window.VeredaEntry)VeredaEntry.present(()=>go(0));else go(0);},onChapter(i){showDetails(i);}};
   window.VeredaDesktop?.init(interactionCallbacks);
   const hash=decodeURIComponent(location.hash.slice(1));const initial=chapters.findIndex(c=>c.id===hash);positions=els.map(e=>e.offsetTop);if(initial>0)window.scrollTo({top:els[initial].offsetTop,behavior:'instant'});update();let initialMoved=false;addEventListener('wheel',()=>initialMoved=true,{once:true,passive:true});addEventListener('touchmove',()=>initialMoved=true,{once:true,passive:true});document.fonts.ready.then(()=>{if(initial>0&&!initialMoved){positions=els.map(e=>e.offsetTop);window.scrollTo({top:els[initial].offsetTop,behavior:'instant'});}refreshPositions();});
-  window.VeredaStory={go,showDetails,get active(){return active;}};
+  // As posições dos capítulos mudam depois do carregamento (trechos de código, fontes, fim da abertura).
+  // Recalcular sempre que o conteúdo muda de tamanho mantém rolagem e animação sincronizadas.
+  const story=document.querySelector('#story');
+  if(window.ResizeObserver&&story)new ResizeObserver(()=>{positions=els.map(e=>e.offsetTop);if(!raf)raf=requestAnimationFrame(update);}).observe(story);
+  addEventListener('vereda:entry',()=>{positions=els.map(e=>e.offsetTop);if(raf)cancelAnimationFrame(raf);update();});
+  addEventListener('load',refreshPositions);
+  window.VeredaStory={go,showDetails,get active(){return active;},get positions(){return positions.slice();}};
   window.VeredaEntry?.init({onReady(){window.VeredaDesktop?.setVisible(true);window.VeredaDesktop?.openApp('terminal');if(document.body.classList.contains('no-webgl')||document.body.dataset.assets!=='loaded')window.VeredaDesktop?.expand();}});
 })();

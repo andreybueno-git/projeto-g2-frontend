@@ -1,6 +1,6 @@
 # Marco 3 · Cadastro e edição
 
-Apresentação interativa do Marco 3 do projeto G2 de Front-end (equipe Mentalista?). Ela usa o mesmo motor da apresentação da Vereda: personagem com o celular, notebook 3D que você abre e liga, Terminal, apps dentro da tela e uma história em 11 capítulos conduzida pela rolagem. Todo o código do marco está dentro dela, em letra grande.
+Apresentação interativa do Marco 3 do projeto G2 de Front-end (equipe Mentalista?). Ela usa o mesmo motor da apresentação da Vereda: personagem com o celular, notebook 3D que você abre e liga, Terminal, apps dentro da tela e uma história em 12 capítulos conduzida pela rolagem. Todo o código do marco está dentro dela, em letra grande.
 
 Publicada em https://andreybueno-git.github.io/projeto-g2-frontend/marco-3/.
 
@@ -21,7 +21,7 @@ Abra http://127.0.0.1:8843/. Use HTTP, não `file://`, para o modelo 3D carregar
 3. Setas, PageUp/PageDown e Espaço trocam de capítulo. `I` abre o índice e `N` abre os detalhes do capítulo.
 4. Nos capítulos API, Edição, Validação e Testes, role devagar: o cartão vai ao json-server, é editado, é barrado pelo `validarObrigatorios` (título só com espaços; o `required` cuida do vazio) e as 22 marcas acendem.
 5. Em Nova tarefa e Acessibilidade, o notebook mostra o app **Formulário**. Ele usa a mesma validação e acessibilidade do repositório (`validarObrigatorios` e `acessibilidadeFormulario`, portados de TS para JS). Envie vazio, teste o título só com espaços e salve.
-6. O capítulo **Todo o código** lista os 24 arquivos que o marco criou ou alterou, agrupados por issue, com quem fez. O capítulo final traz o roteiro da demonstração no app real (`npm run api` e `npm run dev`).
+6. O capítulo **O que o Svelte fez por nós** mostra seis recursos do Svelte 5 e do SvelteKit usados no marco, cada um com a linha de código de vocês. O capítulo **Todo o código** lista os 24 arquivos que o marco criou ou alterou, agrupados por issue, com quem fez. O capítulo final traz o roteiro da demonstração no app real (`npm run api` e `npm run dev`).
 
 ## Ler o código
 

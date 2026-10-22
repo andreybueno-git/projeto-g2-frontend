@@ -40,6 +40,16 @@ const C = [
   { code: { path: 'tests/api.integration.test.mjs', find: "test('escritas", span: 31 }, snippets: [{ path: 'tests/validarObrigatorios.test.mjs', find: "test('campos", span: 13 }], short: 'Testes', tone: 'light', title: '<span id="test-count">0</span> de 22<br><em>testes passando.</em>',
     body: 'Testes com <code>node --test</code> para a API de escrita, a data local e a validação. O teste de integração grava num json-server de verdade.',
     extra: `<div class="chapter-actions"><button class="primary" data-desktop="testes">Ver os 22 testes ${arrow}</button></div><p class="chapter-note">Resultado da main em 22/10/2026: 22 passaram, 0 falharam.</p>` },
+  { short: 'Svelte 5', tone: 'light', title: 'O que o Svelte<br><em>fez por nós.</em>', wide: true,
+    body: 'O projeto usa SvelteKit 3.0.1 com Svelte 5.57.2. O Svelte é um compilador: transforma cada componente em JavaScript que mexe direto na página, sem DOM virtual. Seis recursos dele fizeram o Marco 3 sair com pouco código. Cada exemplo é uma linha de vocês.',
+    extra: '<div class="svelte-grid">' + [
+      ['As pastas viram rotas', 'A pasta <code>tarefas/[id]/editar</code> vira a URL <code>/tarefas/:id/editar</code>. O <code>[id]</code> chega pronto em <code>page.params.id</code>.', 'src/routes/tarefas/[id]/editar/+page.svelte', 'const id = page.params.id', 1],
+      ['Runas: o estado se atualiza sozinho', '<code>$derived</code> recalcula quando a URL muda. É assim que o projeto chega selecionado em Nova tarefa.', 'src/routes/tarefas/nova/+page.svelte', 'const projetoSugerido', 1],
+      ['$effect refaz o trabalho quando algo muda', 'Se a URL troca sem sair da página, o <code>$effect</code> roda de novo, sem ninguém chamar.', 'src/routes/tarefas/nova/+page.svelte', '// A URL pode mudar', 2],
+      ['use: liga um comportamento ao formulário', 'A validação e a acessibilidade são <em>actions</em>: entram com <code>use:</code> e o Svelte chama o <code>destroy()</code> delas ao sair da tela.', 'src/routes/tarefas/nova/+page.svelte', '<form onsubmit', 1],
+      ['bind:value: campo e estado andam juntos', 'O que a pessoa digita já está em <code>dados.titulo</code>, sem escrever evento de input.', 'src/routes/tarefas/nova/+page.svelte', 'bind:value={dados.titulo}', 1],
+      ['No Svelte 5, evento é só uma função', '<code>createEventDispatcher</code> foi descontinuado: o componente recebe <code>onenviar</code> como prop. E <code>on:submit</code> virou <code>onsubmit</code>.', 'src/lib/componentes/FormularioTarefa.svelte', 'onenviar: (dados', 1]
+    ].map(([t, x, path, find, span]) => `<article><h3>${t}</h3><p>${x}</p>${snippet({ path, find, span })}</article>`).join('') + '</div><p class="chapter-note">Também usamos <code>untrack</code> no <code>FormularioTarefa</code>: os valores iniciais são lidos uma vez e depois o formulário é dono dos dados. E <code>{#each projetos as projeto (projeto.id)}</code> usa o id como chave de cada opção.</p>' },
   { short: 'Todo o código', tone: 'light', title: 'Todo o código<br><em>do Marco 3.</em>', wide: true,
     body: `${CODE.files.length} arquivos, ${CODE.files.reduce((n, f) => n + (f.status === 'novo' ? f.lineCount : f.added.length), 0).toLocaleString('pt-BR')} linhas criadas ou alteradas e ${CODE.commits.length} commits. Clique em qualquer arquivo para ler inteiro, em letra grande; as linhas do Marco 3 ficam marcadas.`,
     extra: '<div class="code-map">' + CODE.groups.map(g => `<section><h3><b>${esc(g.issue)}</b> ${esc(g.title)}</h3><div>${CODE.files.filter(f => f.group === g.id).map(f => `<button type="button" class="code-chip" data-code="${esc(f.path)}" title="${esc(f.path)}"><span>${esc(f.path.split('/').pop())}</span><small>${esc(f.authors.join(', '))} · ${f.status === 'novo' ? f.lineCount + ' linhas' : f.added.length + ' linhas alteradas'}</small></button>`).join('')}</div></section>`).join('') + '</div><div class="chapter-actions"><a class="code-open" href="../" target="_blank" rel="noopener">Guia de estudo do Marco 3 ↗</a><a class="code-open" href="https://github.com/andreybueno-git/projeto-g2-frontend/blob/main/docs/marco-3/apresentacao_marco3.pptx" target="_blank" rel="noopener">Slides da Rayane (.pptx) ↗</a><a class="code-open" href="https://github.com/andreybueno-git/projeto-g2-frontend/pulls?q=is%3Apr+is%3Amerged" target="_blank" rel="noopener">Pull requests ↗</a></div>' },
@@ -51,7 +61,7 @@ const groups = [
   { name: 'Abertura', title: 'O que o Marco 3 entregou', start: 0, end: 2 },
   { name: 'Como funciona', title: 'Gravar, criar e editar', start: 2, end: 6 },
   { name: 'Qualidade', title: 'Validação, acessibilidade e testes', start: 6, end: 9 },
-  { name: 'Fechamento', title: 'Todo o código e demonstração ao vivo', start: 9, end: 11 }
+  { name: 'Fechamento', title: 'Svelte, todo o código e a demonstração', start: 9, end: 12 }
 ];
 function snippet(sn) {
   const f = CODE.files.find(x => x.path === sn.path);
