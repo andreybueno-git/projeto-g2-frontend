@@ -5,6 +5,8 @@
   import { criarTarefa, listarProjetos } from '../../../lib/servicos/api';
   import type { NovaTarefa, Projeto } from '../../../tipos';
 
+  import { acessibilidadeFormulario } from '../../../lib/utils/acessibilidadeFormulario';
+
   let projetos = $state<Projeto[]>([]);
   let carregando = $state(true);
   let erroProjetos = $state<string | null>(null);
@@ -87,7 +89,8 @@
     <p role="status">Tarefa criada com sucesso. <a href="/">Ir para a lista de tarefas</a></p>
   {:else}
     {#if avisoProjeto}<p role="status">{avisoProjeto}</p>{/if}
-    <form onsubmit={salvar} aria-busy={salvando}>
+    <form onsubmit={salvar} aria-busy={salvando} use:acessibilidadeFormulario>
+      <p>Todos os campos são obrigatórios.</p>
       <fieldset disabled={salvando}>
         <legend>Dados da tarefa</legend>
         <label for="projeto">Projeto</label>
@@ -155,7 +158,7 @@
   button { padding: 0.75rem 1rem; font: inherit; font-weight: 600; background: #2563eb; color: #fff; border: 0; border-radius: 0.4rem; cursor: pointer; }
   button:hover { background: #1d4ed8; }
   button:disabled { cursor: wait; opacity: 0.7; }
-  :is(input, select, textarea, button):focus-visible { outline: 3px solid #2563eb; outline-offset: 3px; }
-  .erro { color: #991b1b; }
+  :is(input, select, textarea, button, a):focus-visible { outline: 3px solid #2563eb; outline-offset: 3px; }
+  form :global([data-erro-campo]), .erro { color: #991b1b; font-weight: 600; }
   @media (max-width: 480px) { .colunas { grid-template-columns: 1fr; gap: 0; } fieldset { padding: 1rem; } }
 </style>
