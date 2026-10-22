@@ -4,6 +4,8 @@
   import { listarProjetos } from "../servicos/api";
   import { ROTULOS_STATUS, ROTULOS_PRIORIDADE } from "../utils/rotulos";
 
+  import { acessibilidadeFormulario } from "../utils/acessibilidadeFormulario";
+
   type Props = {
     // Valores de partida: vazio para criar, a tarefa atual para editar.
     // Na criação a partir de um projeto, passe só { projetoId }.
@@ -69,9 +71,10 @@
   }
 </script>
 
-<form onsubmit={aoEnviar}>
+<form onsubmit={aoEnviar} use:acessibilidadeFormulario aria-busy={enviando}>
+  <p>Os campos indicados como obrigatórios precisam ser preenchidos.</p>
   <div class="campo">
-    <label for="tarefa-titulo">Título</label>
+    <label for="tarefa-titulo">Título (obrigatório)</label>
     <input id="tarefa-titulo" type="text" bind:value={dados.titulo} required />
   </div>
 
@@ -81,12 +84,13 @@
   </div>
 
   <div class="campo">
-    <label for="tarefa-projeto">Projeto</label>
+    <label for="tarefa-projeto">Projeto (obrigatório)</label>
     <select
       id="tarefa-projeto"
       bind:value={dados.projetoId}
       required
       disabled={carregandoProjetos}
+      aria-describedby={erroProjetos ? "tarefa-projetos-erro" : undefined}
     >
       {#if carregandoProjetos}
         <option value="">Carregando projetos...</option>
@@ -98,7 +102,7 @@
       {/if}
     </select>
     {#if erroProjetos}
-      <p class="mensagem-erro" role="alert">{erroProjetos}</p>
+      <p id="tarefa-projetos-erro" class="mensagem-erro" role="alert">{erroProjetos}</p>
     {/if}
   </div>
 
@@ -124,7 +128,7 @@
 
   <div class="linha">
     <div class="campo">
-      <label for="tarefa-responsavel">Responsável</label>
+      <label for="tarefa-responsavel">Responsável (obrigatório)</label>
       <input
         id="tarefa-responsavel"
         type="text"
@@ -134,7 +138,7 @@
     </div>
 
     <div class="campo">
-      <label for="tarefa-prazo">Prazo</label>
+      <label for="tarefa-prazo">Prazo (obrigatório)</label>
       <input id="tarefa-prazo" type="date" bind:value={dados.prazo} required />
     </div>
   </div>
@@ -203,9 +207,10 @@
     cursor: not-allowed;
   }
   button:focus-visible {
-    outline: 3px solid #facc15;
+    outline: 3px solid #1f2328;
     outline-offset: 2px;
   }
+  form :global([data-erro-campo]),
   .mensagem-erro {
     margin: 0;
     color: #8b1e27;
