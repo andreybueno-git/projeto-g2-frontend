@@ -1,0 +1,441 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="color-scheme" content="light">
+  <title>Marco 3 | Issues 16, 18 e 20: API, nova tarefa e validação</title>
+  <style>
+    :root { --ink:#192d47; --muted:#52657b; --blue:#205ac0; --line:#dce4ef; --paper:#fff; --wash:#f3f6fb; --soft:#eaf1ff; font-family:system-ui,-apple-system,"Segoe UI",sans-serif; color:var(--ink); background:var(--wash); line-height:1.65; }
+    * { box-sizing:border-box; }
+    body { margin:0; }
+    a { color:var(--blue); text-underline-offset:.2em; }
+    a:hover { text-decoration-thickness:2px; }
+    a:focus-visible, summary:focus-visible { outline:3px solid #d17b00; outline-offset:4px; }
+    .skip { position:absolute; left:1rem; top:-5rem; padding:.7rem; background:white; z-index:10; }
+    .skip:focus { top:1rem; }
+    .cover { background:var(--paper); border-bottom:1px solid var(--line); padding:3rem max(1.25rem,calc((100vw - 1120px)/2)); }
+    .eyebrow { font-size:.8rem; color:var(--blue); font-weight:750; letter-spacing:.12em; text-transform:uppercase; margin:0 0 .75rem; }
+    h1 { max-width:760px; font-size:clamp(2.1rem,5vw,3.8rem); letter-spacing:-.055em; line-height:1.1; margin:0 0 1.2rem; }
+    .intro { max-width:760px; color:var(--muted); font-size:1.1rem; margin:0; }
+    .meta { display:flex; gap:.5rem 1.8rem; flex-wrap:wrap; margin-top:1.6rem; color:var(--muted); font-size:.9rem; }
+    .layout { display:grid; grid-template-columns:220px minmax(0,1fr); gap:3rem; max-width:1160px; padding:2rem 1.25rem 5rem; margin:auto; align-items:start; }
+    nav { position:sticky; top:1.4rem; border-left:2px solid var(--line); padding-left:1rem; font-size:.9rem; }
+    nav p { margin:0 0 .7rem; font-size:.75rem; font-weight:750; letter-spacing:.12em; text-transform:uppercase; color:var(--muted); }
+    nav a { display:block; padding:.3rem 0; text-decoration:none; }
+    main { background:var(--paper); min-width:0; padding:2rem 2.5rem; border:1px solid var(--line); border-radius:8px; }
+    section { padding-bottom:2rem; margin-bottom:2rem; border-bottom:1px solid var(--line); scroll-margin-top:1.5rem; }
+    section:last-child { border:0; margin-bottom:0; padding-bottom:0; }
+    h2 { font-size:1.65rem; letter-spacing:-.035em; line-height:1.2; margin:0 0 1.2rem; }
+    h2 .number { color:#8da2bc; font-size:.9rem; display:block; letter-spacing:.09em; margin-bottom:.4rem; }
+    h3 { font-size:1.1rem; margin:1.6rem 0 .6rem; }
+    p { margin:.8rem 0; }
+    li { margin:.45rem 0; }
+    ul,ol { padding-left:1.4rem; }
+    code { font: .9em ui-monospace,SFMono-Regular,Menlo,Consolas,monospace; overflow-wrap:anywhere; color:#173e7b; background:#eef3fa; padding:.1em .3em; border-radius:3px; }
+    pre { background:#12243d; color:#e8f0ff; padding:1.1rem 1.2rem; border-radius:6px; overflow-x:auto; line-height:1.7; font-size:.85rem; }
+    pre code { color:inherit; padding:0; background:none; overflow-wrap:normal; font-size:inherit; }
+    .note { border-left:3px solid var(--blue); padding:.15rem 1rem; background:var(--soft); margin:1.25rem 0; }
+    .note p { margin:.65rem 0; }
+    .table-wrap { overflow-x:auto; }
+    table { width:100%; border-collapse:collapse; font-size:.92rem; margin:1rem 0; }
+    th,td { padding:.8rem .65rem; text-align:left; vertical-align:top; border-bottom:1px solid var(--line); }
+    th { color:var(--muted); font-size:.8rem; font-weight:750; background:var(--wash); }
+    td:first-child { width:42%; }
+    .flow { margin:1.4rem 0; padding:0; list-style:none; counter-reset:flow; }
+    .flow li { position:relative; padding:.7rem .7rem .7rem 3rem; border-bottom:1px solid var(--line); counter-increment:flow; margin:0; }
+    .flow li::before { content:counter(flow); position:absolute; left:.5rem; top:.8rem; border:1px solid #9fb9df; color:var(--blue); border-radius:50%; width:1.6rem; height:1.6rem; display:grid; place-items:center; font-size:.8rem; font-weight:700; }
+    .label { font-size:.8rem; color:var(--muted); margin-bottom:-.3rem; }
+    details { margin:.9rem 0; border-top:1px solid var(--line); padding:.9rem 0 0; }
+    summary { cursor:pointer; font-weight:650; }
+    details p { color:var(--muted); padding-left:1.3rem; }
+    .checklist { list-style:none; padding:0; }
+    .checklist label { display:flex; align-items:flex-start; gap:.65rem; padding:.5rem 0; }
+    .checklist input { margin-top:.45rem; accent-color:var(--blue); }
+    .small { font-size:.86rem; color:var(--muted); }
+    footer { max-width:1120px; margin:0 auto 2rem; padding:0 1.25rem; color:var(--muted); font-size:.85rem; }
+    @media(max-width:850px) { .layout { grid-template-columns:1fr; gap:1.2rem; } nav { position:static; display:flex; flex-wrap:wrap; gap:.2rem 1rem; border-left:0; padding:0; } nav p { width:100%; } main { padding:1.5rem; } }
+    @media(max-width:480px) { .cover { padding:2rem 1.1rem; } .layout { padding:1.1rem .7rem 3rem; } main { padding:1.2rem; } td,th { padding:.65rem .4rem; } }
+    @media print { :root { background:#fff; } .cover { padding:0 0 1.5rem; } .layout { display:block; padding:1.5rem 0; } nav,.skip,.checklist input { display:none; } main { border:0; padding:0; } section { break-inside:auto; } h2,h3 { break-after:avoid; } pre,table,details { break-inside:avoid; } pre { white-space:pre-wrap; } a { color:inherit; } footer { padding:0; } }
+  </style>
+</head>
+<body>
+  <a class="skip" href="#conteudo">Pular para a explicação</a>
+  <header class="cover">
+    <p class="eyebrow">Projeto G2 · Marco 3 · Issues 16, 18 e 20</p>
+    <h1>Do formulário à API.<br>Entenda cada passo.</h1>
+    <p class="intro">Seu caderno para entender a API de escrita, a tela de nova tarefa e a validação dos campos: onde estão, como usá-las e por que o código funciona assim.</p>
+    <div class="meta"><span>SvelteKit + TypeScript</span><span>API + cadastro + validação</span><span>Leitura guiada para iniciantes</span><a href="issue-18.pdf">Baixar o PDF</a></div>
+  </header>
+  <div class="layout">
+    <nav aria-label="Conteúdo do guia">
+      <p>Neste caderno</p>
+      <a href="#objetivo">01 · O que as issues pedem</a>
+      <a href="#arquivos">02 · Onde está cada parte</a>
+      <a href="#rotas">03 · Rotas e projeto escolhido</a>
+      <a href="#formulario">04 · Entender o formulário</a>
+      <a href="#salvar">05 · O caminho para salvar</a>
+      <a href="#api-escrita">06 · Criar e atualizar pela API</a>
+      <a href="#validacao">07 · Validar antes de enviar</a>
+      <a href="#terminal">08 · Abrir pelo terminal</a>
+      <a href="#conferir">09 · Conferir o comportamento</a>
+      <a href="#perguntas">10 · Explique com suas palavras</a>
+      <a href="#fontes">Documentação oficial</a>
+    </nav>
+    <main id="conteudo">
+      <section id="objetivo">
+        <h2><span class="number">01</span>O que estamos construindo?</h2>
+        <p>A <a href="https://github.com/andreybueno-git/projeto-g2-frontend/issues/16">issue #16</a> amplia o módulo da API: além de ler dados, ele passa a criar e atualizar tarefas e projetos com funções TypeScript. Essas funções podem ser chamadas pelas telas do projeto.</p>
+        <p>A <a href="https://github.com/andreybueno-git/projeto-g2-frontend/issues/18">issue #18</a> pede uma página em <code>/tarefas/nova</code>. Nela, a pessoa preenche os dados, salva a tarefa na API e volta para a lista de tarefas.</p>
+        <p>Também há um atalho: se a pessoa começar dentro de um projeto, esse projeto deve aparecer selecionado no formulário.</p>
+        <p>A <a href="https://github.com/andreybueno-git/projeto-g2-frontend/issues/20">issue #20</a> completa a parte de validação: impedir campos obrigatórios inválidos, manter o erro junto ao campo e bloquear novos envios enquanto o pedido está em andamento.</p>
+        <ol class="flow" aria-label="Caminho de uma nova tarefa">
+          <li>A pessoa abre <strong>Nova tarefa</strong>.</li>
+          <li>A página busca os projetos e mostra o formulário.</li>
+          <li>A pessoa preenche; a validação confere os campos antes do envio.</li>
+          <li>A API grava a tarefa e gera o ID.</li>
+          <li>O site abre a lista de tarefas novamente.</li>
+        </ol>
+        <div class="note"><p><strong>Como as entregas do Andrey se conectam:</strong> a #16 fornece as quatro funções de escrita; a #18 usa <code>criarTarefa</code> no cadastro; a #20 confere os campos e protege o envio. As entregas #16 e #18 já foram integradas pela <a href="https://github.com/andreybueno-git/projeto-g2-frontend/pull/58">PR #58</a>. A nova etapa deste caderno é a validação da #20.</p></div>
+        <h3>O que já chegou pelo trabalho do grupo?</h3>
+        <p>A base atual também inclui o formulário reutilizável (#17), a edição de tarefas (#19), os recursos de acessibilidade (#21) e o cadastro/edição de projetos (#22). São entregas dos colegas já presentes no código. A #20 aproveita essa base, especialmente o auxiliar de acessibilidade que mostra o erro junto do campo.</p>
+        <p>A tela de nova tarefa mantém seu formulário próprio. A edição usa <code>FormularioTarefa</code>; ambos recebem a mesma regra complementar de validação. A organização das páginas de edição e de projetos permanece a do grupo.</p>
+      </section>
+
+      <section id="arquivos">
+        <h2><span class="number">02</span>Onde encontrar o código</h2>
+        <p>No VS Code, pressione <strong>⌘P</strong>, digite um dos caminhos abaixo e pressione Enter. O nome <code>+page.svelte</code> aparece várias vezes porque cada pasta representa uma página diferente.</p>
+        <div class="table-wrap"><table>
+          <thead><tr><th>Arquivo, a partir da raiz do projeto</th><th>Responsabilidade</th></tr></thead>
+          <tbody>
+            <tr><td><code>src/routes/tarefas/nova/+page.svelte</code></td><td>Mostra o cadastro, guarda os valores preenchidos e coordena o envio.</td></tr>
+            <tr><td><code>src/lib/servicos/api.ts</code></td><td>Conversa com a API. Reúne as funções de leitura e as quatro funções de criação e atualização.</td></tr>
+            <tr><td><code>src/tipos.ts</code></td><td>Mantém o contrato de <code>Tarefa</code> e <code>Projeto</code> e define os tipos derivados usados para criar e atualizar.</td></tr>
+            <tr><td><code>src/routes/+page.svelte</code></td><td>É a lista, no endereço <code>/</code>. Tem a entrada para criar uma tarefa.</td></tr>
+            <tr><td><code>src/routes/projetos/[id]/+page.svelte</code></td><td>É o detalhe de um projeto. Seu link leva o ID do projeto até o cadastro.</td></tr>
+            <tr><td><code>src/lib/componentes/FormularioTarefa.svelte</code></td><td>Componente entregue pelo grupo, usado na edição. Recebe a regra de validação e a proteção contra envio repetido.</td></tr>
+            <tr><td><code>src/lib/utils/validarObrigatorios.ts</code></td><td>Regra da #20 para recusar texto obrigatório formado apenas por espaços, sem substituir a validação nativa.</td></tr>
+            <tr><td><code>src/lib/utils/acessibilidadeFormulario.ts</code></td><td>Auxiliar já entregue pelo grupo: mostra mensagens junto do campo e associa os erros por ARIA.</td></tr>
+            <tr><td><code>tests/api.test.mjs</code></td><td>Verifica o comportamento das funções da API, como método, endereço, corpo JSON e tratamento de erros.</td></tr>
+            <tr><td><code>tests/api.integration.test.mjs</code></td><td>Confere a API com operações HTTP e um banco de teste em memória.</td></tr>
+            <tr><td><code>tests/validarObrigatorios.test.mjs</code></td><td>Confere a regra de texto obrigatório, incluindo espaços, tabulações e texto válido.</td></tr>
+            <tr><td><code>tests/api.types.ts</code> e <code>tests/tsconfig.json</code></td><td>Conferem, com TypeScript, os tipos de entrada e retorno da API.</td></tr>
+          </tbody>
+        </table></div>
+        <p>Um arquivo Svelte costuma juntar três partes:</p>
+        <ul>
+          <li><code>&lt;script lang="ts"&gt;</code>: TypeScript, com dados e funções.</li>
+          <li>Marcação HTML/Svelte: os campos, textos e botões que aparecem.</li>
+          <li><code>&lt;style&gt;</code>: CSS, que organiza a aparência da página.</li>
+        </ul>
+        <p class="small">Os exemplos deste guia são recortes para estudar os conceitos; os arquivos do projeto são a referência para o código completo.</p>
+      </section>
+
+      <section id="rotas">
+        <h2><span class="number">03</span>Como o endereço encontra a página?</h2>
+        <pre><code>src/routes/tarefas/nova/+page.svelte
+                    ↓
+               /tarefas/nova
+
+src/routes/tarefas/[id]/+page.svelte
+                    ↓
+           /tarefas/2, /tarefas/abc...</code></pre>
+        <p><code>nova</code> é uma parte fixa do endereço. <code>[id]</code> é uma parte variável. O SvelteKit escolhe a rota fixa antes da variável; por isso, abrir <code>/tarefas/nova</code> deve mostrar o cadastro, sem tentar buscar uma tarefa cujo ID seja “nova”.</p>
+        <h3>E o projeto já selecionado?</h3>
+        <p>O link do projeto leva uma informação extra depois do ponto de interrogação:</p>
+        <pre><code>/tarefas/nova?projetoId=3</code></pre>
+        <p><code>/tarefas/nova</code> escolhe a página. <code>projetoId=3</code> sugere qual projeto selecionar. Isso é um <strong>parâmetro de consulta</strong>, também chamado de <em>query parameter</em>.</p>
+        <pre><code>import { page } from '$app/state';
+
+page.url.searchParams.get('projetoId'); // "3"</code></pre>
+        <p><code>page</code> vem do SvelteKit e informa a URL atual. Ele não é o roteador. Também não confundimos a consulta acima com <code>page.params.id</code>, que lê a parte <code>[id]</code> de uma rota dinâmica.</p>
+        <p>Antes de selecionar, o código confere se esse ID existe nos projetos que vieram da API. Se alguém escrever um ID inválido na URL, o formulário deve orientar a pessoa a escolher um projeto válido.</p>
+        <h3>Por que usar <code>$derived</code> e <code>$effect</code> aqui?</h3>
+        <p>O SvelteKit pode manter a mesma página aberta quando só a consulta muda. Por isso, observar a sugestão da URL permite atualizar o projeto ao ir de <code>?projetoId=1</code> para <code>?projetoId=2</code>. O efeito observa a sugestão e os projetos carregados; ele não deve observar o campo que a pessoa edita, para não desfazer a escolha manual dela.</p>
+      </section>
+
+      <section id="formulario">
+        <h2><span class="number">04</span>Como o formulário guarda o que eu digito?</h2>
+        <p>Os dados enviados são: <code>projetoId</code>, <code>titulo</code>, <code>descricao</code>, <code>status</code>, <code>prioridade</code>, <code>responsavel</code> e <code>prazo</code>. Os nomes precisam respeitar o contrato que a API usa.</p>
+        <h3><code>NovaTarefa</code>: o formato dos dados</h3>
+        <pre><code>export type NovaTarefa = Omit&lt;Tarefa, 'id'&gt;;</code></pre>
+        <p><code>Omit</code> significa “usar os campos de <code>Tarefa</code>, retirando <code>id</code>”. O usuário não inventa o ID. O <code>json-server</code> o gera quando grava a tarefa.</p>
+        <p>O TypeScript ajuda a detectar nomes e tipos errados enquanto programamos. Ele não substitui as verificações do formulário nem a validação de um servidor real.</p>
+        <h3><code>$state</code>: um valor que atualiza a tela</h3>
+        <pre><code>let titulo = $state('');</code></pre>
+        <p>Esse recorte começa com um título vazio. Quando o estado muda, o Svelte atualiza a parte da tela que depende dele. Na página completa, os campos podem estar agrupados em um objeto.</p>
+        <h3><code>bind:value</code>: ligar o campo ao estado</h3>
+        <pre><code>&lt;label for="titulo"&gt;Título&lt;/label&gt;
+&lt;input id="titulo" bind:value={titulo} required /&gt;</code></pre>
+        <p>Ao digitar no campo, <code>titulo</code> recebe o valor. Se o código mudar <code>titulo</code>, o campo também muda. O <code>label</code> dá nome ao campo; o <code>for</code> aponta para seu <code>id</code>. <code>required</code> pede ao navegador que não envie esse campo vazio.</p>
+        <h3><code>onMount</code>: buscar as opções depois de abrir</h3>
+        <p><code>listarProjetos()</code> fornece as opções do seletor. <code>onMount</code> executa a busca quando a página é montada no navegador. Enquanto a resposta não chega, mostramos carregamento; se falhar, mostramos uma mensagem e permitimos tentar de novo.</p>
+        <div class="note"><p><strong>Duas ideias diferentes:</strong> <code>onMount</code> inicia essa busca. O efeito acompanha a sugestão de projeto da URL. Um não substitui automaticamente o outro.</p></div>
+      </section>
+
+      <section id="salvar">
+        <h2><span class="number">05</span>O que acontece ao clicar em Salvar?</h2>
+        <p>Um formulário trata seu envio com uma função. Ela impede o envio tradicional do navegador, prepara os dados e aguarda a API.</p>
+        <div class="table-wrap"><table>
+          <thead><tr><th>Operação</th><th>O que ela faz no projeto</th></tr></thead>
+          <tbody>
+            <tr><td><code>GET /projetos</code></td><td>Lê os projetos para o seletor.</td></tr>
+            <tr><td><code>POST /tarefas</code></td><td>Envia os dados para criar uma tarefa.</td></tr>
+            <tr><td><code>goto('/')</code></td><td>Abre a página da lista depois da confirmação de criação.</td></tr>
+          </tbody>
+        </table></div>
+        <p class="label">Recorte do formato de uma requisição de criação:</p>
+        <pre><code>fetch('http://localhost:3000/tarefas', {
+  method: 'POST',
+  headers: { 'Content-Type': 'application/json' },
+  body: JSON.stringify(dados)
+});</code></pre>
+        <ul>
+          <li><code>method: 'POST'</code> informa que queremos criar um registro.</li>
+          <li><code>Content-Type</code> informa que o corpo usa JSON.</li>
+          <li><code>JSON.stringify(dados)</code> transforma o objeto TypeScript/JavaScript em texto JSON para enviar.</li>
+          <li><code>criarTarefa(dados)</code> reúne essa conversa com a API em uma função que a página chama.</li>
+        </ul>
+        <h3>Por que <code>async</code> e <code>await</code>?</h3>
+        <pre><code>const tarefaCriada = await criarTarefa(dados);
+await goto('/');</code></pre>
+        <p>A API leva algum tempo para responder. <code>await</code> espera o resultado dentro de uma função <code>async</code>. Só depois de criar a tarefa a navegação é iniciada.</p>
+        <p>A lista fica em <code>/</code>, e não em <code>/tarefas</code>. Ao voltar para ela, a busca da lista carrega os registros, incluindo a tarefa nova.</p>
+        <h3>E se der erro?</h3>
+        <p><code>try</code> tenta a operação e <code>catch</code> trata uma falha. Se a gravação falhar, os campos continuam preenchidos para a pessoa tentar novamente. Durante o envio, o botão fica desabilitado para evitar pedidos repetidos.</p>
+        <p>Se a API já confirmou a criação, uma falha ao navegar não deve habilitar uma segunda gravação da mesma tarefa. A página reconhece o sucesso e permite voltar à lista. O <code>onDestroy</code> também marca quando você saiu desta tela, para uma resposta atrasada não forçar a navegação depois disso.</p>
+      </section>
+
+      <section id="api-escrita">
+        <h2><span class="number">06</span>A API agora também escreve</h2>
+        <p>Antes, o módulo da API sabia ler: listar tarefas, buscar uma tarefa e carregar projetos. A #16 acrescenta quatro funções. A página passa os dados para elas; cada função monta a requisição correta e devolve a resposta da API.</p>
+        <div class="table-wrap"><table>
+          <thead><tr><th>Função e retorno</th><th>Pedido enviado</th></tr></thead>
+          <tbody>
+            <tr><td><code>criarTarefa(dados: NovaTarefa): Promise&lt;Tarefa&gt;</code></td><td><code>POST /tarefas</code>. Envia os campos da nova tarefa e recebe a tarefa criada, com ID.</td></tr>
+            <tr><td><code>atualizarTarefa(id: string, dados: AtualizacaoTarefa): Promise&lt;Tarefa&gt;</code></td><td><code>PATCH /tarefas/ID</code>. Envia os campos que devem mudar e recebe a tarefa atualizada.</td></tr>
+            <tr><td><code>criarProjeto(dados: NovoProjeto): Promise&lt;Projeto&gt;</code></td><td><code>POST /projetos</code>. Envia os campos do novo projeto e recebe o projeto criado, com ID.</td></tr>
+            <tr><td><code>atualizarProjeto(id: string, dados: AtualizacaoProjeto): Promise&lt;Projeto&gt;</code></td><td><code>PATCH /projetos/ID</code>. Envia os campos que devem mudar e recebe o projeto atualizado.</td></tr>
+          </tbody>
+        </table></div>
+        <p>Essas assinaturas são um mapa: o que está entre parênteses é a entrada; o que vem depois de <code>:</code> é o tipo do retorno.</p>
+        <h3><code>Omit</code>, <code>Partial</code> e <code>Promise&lt;T&gt;</code></h3>
+        <pre><code>export type NovaTarefa = Omit&lt;Tarefa, 'id'&gt;;
+export type AtualizacaoTarefa = Partial&lt;NovaTarefa&gt;;
+
+export type NovoProjeto = Omit&lt;Projeto, 'id'&gt;;
+export type AtualizacaoProjeto = Partial&lt;NovoProjeto&gt;;</code></pre>
+        <ul>
+          <li><code>Omit</code> retira um campo de um tipo. Na criação, retiramos <code>id</code> porque a API o gera.</li>
+          <li><code>Partial</code> torna os campos opcionais. Podemos atualizar só <code>status</code>, sem repetir o restante da tarefa.</li>
+          <li><code>Promise&lt;Tarefa&gt;</code> representa um resultado futuro. Depois do <code>await</code>, obtemos uma <code>Tarefa</code> se o pedido tiver sucesso. Uma falha precisa ser tratada.</li>
+        </ul>
+        <p>São tipos derivados: os campos e os nomes do contrato original de <code>Tarefa</code> e <code>Projeto</code> continuam os mesmos. A tipagem auxilia o desenvolvimento, mas não valida sozinha os dados recebidos pela rede.</p>
+        <h3>Quando usar GET, POST, PATCH ou PUT?</h3>
+        <div class="table-wrap"><table>
+          <thead><tr><th>Método</th><th>Ideia e uso aqui</th></tr></thead>
+          <tbody>
+            <tr><td><code>GET</code></td><td>Ler. Exemplo: carregar os projetos do seletor.</td></tr>
+            <tr><td><code>POST</code></td><td>Criar. Aqui, enviamos um novo registro à coleção <code>/tarefas</code> ou <code>/projetos</code>.</td></tr>
+            <tr><td><code>PATCH</code></td><td>Alterar parte de um registro existente. No json-server deste projeto, enviamos um objeto JSON com os campos que devem mudar.</td></tr>
+            <tr><td><code>PUT</code></td><td>Substituir a representação completa de um registro. Não é o método escolhido por estas funções, que aceitam atualizações parciais.</td></tr>
+          </tbody>
+        </table></div>
+        <p>O formato aceito por um PATCH depende da API. Aqui usamos o contrato do json-server; isso não significa que todo servidor aceite o mesmo corpo JSON. A distinção entre alteração parcial e substituição é descrita na <a href="https://www.rfc-editor.org/rfc/rfc5789">especificação de PATCH</a>.</p>
+        <h3>Atualizar uma tarefa: ID na URL, mudanças no corpo</h3>
+        <pre><code>const tarefa = await atualizarTarefa('2', {
+  status: 'em-andamento'
+});</code></pre>
+        <p>O <code>'2'</code> identifica qual tarefa queremos alterar. O objeto informa o que deve mudar. O pedido corresponde a <code>PATCH /tarefas/2</code> com o corpo <code>{ "status": "em-andamento" }</code>. Os demais campos são preservados pelo json-server.</p>
+        <p>A função usa <code>encodeURIComponent(id)</code> ao montar o endereço. Assim, caracteres especiais do ID não viram separadores de caminho ou de consulta da URL por acidente. O ID é recebido separadamente e não é um campo de <code>AtualizacaoTarefa</code>.</p>
+        <h3>Criar e depois atualizar um projeto</h3>
+        <pre><code>const projeto = await criarProjeto({
+  nome: 'Estudo de Svelte',
+  descricao: 'Exercícios da equipe',
+  disciplina: 'Desenvolvimento Front-end',
+  criadoEm: '2026-10-21'
+});
+
+const atualizado = await atualizarProjeto(projeto.id, {
+  descricao: 'Exercícios e revisão da equipe'
+});</code></pre>
+        <p>Quem chama <code>criarProjeto</code> fornece <code>criadoEm</code>, junto com os outros campos exigidos. A função de serviço não inventa essa data; a API gera somente o ID. A atualização do exemplo altera apenas a descrição.</p>
+        <h3>Por que existe o auxiliar <code>requisitar</code>?</h3>
+        <p>As funções precisam fazer tarefas em comum: chamar <code>fetch</code>, verificar a resposta e ler o JSON. O auxiliar centraliza esses passos para não repeti-los em cada operação.</p>
+        <pre><code>async function requisitar&lt;T&gt;(
+  caminho: string,
+  opcoes?: RequestInit
+): Promise&lt;T&gt;</code></pre>
+        <p><code>RequestInit</code> é o tipo das opções aceitas pelo <code>fetch</code>, como <code>method</code>, <code>headers</code> e <code>body</code>. O <code>?</code> torna esse argumento opcional. As leituras podem chamar apenas com o caminho; as escritas passam suas opções.</p>
+        <pre><code>return requisitar&lt;Tarefa&gt;(
+  `/tarefas/${encodeURIComponent(id)}`,
+  {
+    method: 'PATCH',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify(dados)
+  }
+);</code></pre>
+        <p>O <code>T</code> indica o tipo de resposta esperado por quem chama. Em <code>requisitar&lt;Tarefa&gt;</code>, esperamos uma tarefa; em <code>requisitar&lt;Projeto&gt;</code>, esperamos um projeto.</p>
+        <h3>Como <code>ErroApi</code> ajuda?</h3>
+        <p>Se a resposta HTTP não indicar sucesso, o auxiliar lança <code>ErroApi</code>, guardando o código em <code>status</code>. Uma tela pode distinguir, por exemplo, um registro não encontrado (<code>404</code>) de outra falha.</p>
+        <pre><code>try {
+  await atualizarTarefa('2', { prioridade: 'alta' });
+} catch (erro) {
+  if (erro instanceof ErroApi &amp;&amp; erro.status === 404) {
+    // Mostrar que a tarefa não foi encontrada.
+  } else {
+    // Mostrar que não foi possível salvar a alteração.
+  }
+}</code></pre>
+        <p>Uma falha de conexão pode ocorrer antes de existir resposta HTTP. Nesse caso, o erro original do <code>fetch</code> também chega ao <code>catch</code>; não presumimos que todo erro seja um <code>ErroApi</code>.</p>
+        <div class="note"><p><strong>Como chegar a esta parte no código:</strong> abra <code>src/lib/servicos/api.ts</code> e procure as quatro funções da tabela. Depois abra <code>src/tipos.ts</code> para ver seus tipos de entrada. Na tela de nova tarefa, procure a chamada de <code>criarTarefa</code>: ela é a ligação entre as issues #18 e #16.</p></div>
+      </section>
+
+      <section id="validacao">
+        <h2><span class="number">07</span>Validar antes de enviar</h2>
+        <p>A #20 trabalha em duas frentes: conferir o que a pessoa preencheu e impedir outro envio enquanto o primeiro está em andamento. Para isso, aproveitamos a validação do navegador e o auxiliar de acessibilidade que já veio do grupo.</p>
+        <h3>Por que <code>required</code> sozinho não cobre tudo?</h3>
+        <pre><code>''      // vazio
+'   '   // tem caracteres, mas só espaços
+'Svelte' // tem texto</code></pre>
+        <p>Em um campo de texto, <code>required</code> bloqueia o valor vazio. Um texto formado apenas por espaços pode passar por essa regra. A função <code>textoObrigatorioValido</code> acrescenta a conferência que faltava:</p>
+        <pre><code>export function textoObrigatorioValido(valor: string): boolean {
+  return valor.trim().length &gt; 0;
+}</code></pre>
+        <p><code>trim()</code> obtém o texto sem espaços em branco nas pontas. Se nada sobrar, o resultado tem tamanho zero e a função retorna <code>false</code>. Ela usa esse resultado para conferir o preenchimento; não modifica por conta própria o texto digitado.</p>
+        <h3>Como essa regra chega ao formulário?</h3>
+        <p><code>validarObrigatorios</code> é uma <em>action</em> do Svelte: uma função ligada a um elemento por <code>use:</code>. Ela recebe o formulário quando ele é montado no navegador e acompanha os campos de texto.</p>
+        <pre><code>&lt;form
+  onsubmit={aoEnviar}
+  use:validarObrigatorios
+  use:acessibilidadeFormulario
+&gt;
+  ...
+&lt;/form&gt;</code></pre>
+        <p>A nova action examina somente <code>input type="text"</code> e <code>textarea</code> com <code>required</code>. O seletor de projeto e o prazo continuam com suas regras nativas. A descrição é obrigatória no cadastro de nova tarefa; no formulário de edição, continua opcional conforme a entrega do colega.</p>
+        <h3><code>setCustomValidity</code>: adicionar uma regra ao navegador</h3>
+        <pre><code>campo.setCustomValidity(
+  'Preencha este campo com texto, sem usar somente espaços.'
+);
+
+// Depois que essa regra for atendida:
+campo.setCustomValidity('');</code></pre>
+        <p>Uma mensagem não vazia marca um erro personalizado. Passar <code>''</code> limpa esse erro, permitindo ao navegador avaliar as outras regras. Não significa declarar que qualquer valor é válido.</p>
+        <p>O código deixa o valor realmente vazio para <code>required</code> tratar. A regra personalizada cuida do valor que contém caracteres, mas fica vazio depois de <code>trim()</code>. O formulário mantém a <a href="https://html.spec.whatwg.org/multipage/form-control-infrastructure.html#the-constraint-validation-api">validação nativa do HTML</a>, sem <code>novalidate</code>.</p>
+        <h3>Por que o erro aparece perto do campo?</h3>
+        <p>O auxiliar existente <code>acessibilidadeFormulario</code> escuta o evento <code>invalid</code>. Quando um campo é inválido, ele acrescenta uma mensagem de texto ao lado desse campo, marca <code>aria-invalid</code> e usa <code>aria-describedby</code> para relacionar campo e mensagem.</p>
+        <p>Assim, o erro continua disponível mesmo depois que o balão do navegador fecha. Quando o valor é corrigido e fica válido, o auxiliar remove sua mensagem e as marcações de erro. O navegador continua responsável por indicar o primeiro campo inválido durante a tentativa de envio.</p>
+        <h3>Captura antes da propagação: por que a ordem importa?</h3>
+        <pre><code>formulario.addEventListener('input', aoAlterar, true);
+formulario.addEventListener('change', aoAlterar, true);</code></pre>
+        <p>O <code>true</code> pede para tratar esses eventos na fase de <strong>captura</strong>. Primeiro a nova regra atualiza a validade; depois, na fase de propagação, o auxiliar de acessibilidade lê o resultado. Isso evita que uma mensagem antiga permaneça depois de corrigir o texto.</p>
+        <p>O evento <code>invalid</code> não se propaga da mesma forma que <code>input</code>. O auxiliar de acessibilidade já o escuta em captura para atender aos campos do formulário. A #20 complementa essa estrutura existente.</p>
+        <h3>Botão desabilitado e guarda no código</h3>
+        <p><code>disabled</code> comunica que o botão está indisponível e bloqueia seu uso normal. A função de envio também verifica o estado antes de chamar o código que grava a tarefa:</p>
+        <pre><code>if (enviando || carregandoProjetos || erroProjetos) return;
+if (!(evento.currentTarget as HTMLFormElement).reportValidity()) return;</code></pre>
+        <p>O primeiro <code>if</code> impede executar o envio enquanto ele já está acontecendo ou sem ter os projetos disponíveis. O segundo pede a conferência nativa com <code>reportValidity()</code>; se houver campo inválido, a função encerra ali.</p>
+        <p>Durante a gravação, o botão mostra <strong>Salvando...</strong> e permanece desabilitado. A guarda no código dá proteção adicional contra chamadas repetidas; o cadastro também mantém seu controle de tarefa já criada para não repetir um POST depois do sucesso.</p>
+        <h3>Erro de preenchimento e falha da API são diferentes</h3>
+        <div class="table-wrap"><table>
+          <thead><tr><th>Situação</th><th>Como tratamos</th></tr></thead>
+          <tbody>
+            <tr><td>Título vazio ou só com espaços</td><td>Impedir o envio e mostrar a mensagem junto do campo. A pessoa corrige o conteúdo.</td></tr>
+            <tr><td>Os projetos ainda estão carregando ou falharam</td><td>Não enviar com as opções indisponíveis. Mostrar a situação de carregamento ou erro.</td></tr>
+            <tr><td>A API falha ao salvar dados válidos</td><td>Manter os dados e mostrar a falha de gravação. Depois que o envio termina, permitir uma nova tentativa.</td></tr>
+          </tbody>
+        </table></div>
+        <p>A mensagem de uma tentativa anterior de salvar não é, por si só, motivo para bloquear a próxima. Por isso, a guarda do componente verifica <code>erroProjetos</code>, mas não bloqueia o envio apenas porque a prop <code>erro</code> ainda contém a falha anterior da API.</p>
+        <div class="note"><p><strong>Como chegar a esta parte:</strong> abra <code>src/lib/utils/validarObrigatorios.ts</code> para ler a regra. Depois procure <code>use:validarObrigatorios</code> na página de nova tarefa e em <code>FormularioTarefa.svelte</code>. Compare com <code>use:acessibilidadeFormulario</code> para separar quem confere o valor de quem apresenta o erro.</p></div>
+      </section>
+
+      <section id="terminal">
+        <h2><span class="number">08</span>Como abrir pelo terminal</h2>
+        <p>Esta entrega usa uma cópia de trabalho separada. A raiz dessa cópia é:</p>
+        <pre><code>/Users/andreybuenoisoton/Documents/Codex/2026-10-14/create-a-new-site-with-sites-4/outputs/marco3-issue18</code></pre>
+        <p>Abra essa pasta no VS Code. No terminal integrado, use <code>pwd</code> para confirmar onde você está. Todos os comandos abaixo partem da raiz do projeto, onde está <code>package.json</code>.</p>
+        <h3>1. Instalar as dependências, quando necessário</h3>
+        <pre><code>npm ci</code></pre>
+        <p>Instala as versões registradas no <code>package-lock.json</code>. É necessário em uma cópia recém-baixada ou quando as dependências precisam ser reinstaladas. O projeto pede Node.js 24 ou superior; <code>node --version</code> mostra sua versão.</p>
+        <h3>2. Abrir a API em uma aba do terminal</h3>
+        <pre><code>npm run api</code></pre>
+        <p>Inicia o <code>json-server</code> usando o <code>db.json</code> dessa pasta. O endereço esperado pela aplicação é <code>http://localhost:3000</code>. Esse terminal continua ocupado atendendo à API.</p>
+        <h3>3. Abrir o site em outra aba do terminal</h3>
+        <pre><code>npm run dev</code></pre>
+        <p>Inicia o servidor de desenvolvimento. Abra o endereço <strong>Local</strong> que ele imprimir, normalmente <code>http://localhost:5173</code>, e acrescente <code>/tarefas/nova</code>.</p>
+        <div class="note"><p><strong>Não copie o prompt.</strong> Um trecho como <code>andrey@Mac projeto-g2-frontend %</code> apenas mostra o usuário e a pasta atual. Você digita somente o comando depois do <code>%</code>.</p><p>Com um servidor rodando, aquela aba não está pronta para comandos Git. Abra outra aba. Para encerrar um servidor que você iniciou, use <strong>Ctrl+C</strong> na aba dele.</p></div>
+        <p>O site e a API são dois programas. A porta <strong>5173</strong> mostra a interface; a porta <strong>3000</strong> responde com os dados. Abrir a API diretamente no navegador pode mostrar JSON, o que é esperado.</p>
+        <h3>Conferir os tipos e preparar a aplicação</h3>
+        <pre><code>npm run check
+npm run build</code></pre>
+        <p>O primeiro procura problemas de tipos e de Svelte. O segundo gera a versão de produção. Eles ajudam a conferir o código, mas não substituem experimentar o formulário no navegador.</p>
+        <h3>Executar os testes e conferir os contratos</h3>
+        <pre><code>node --test tests/*.test.mjs
+npx tsc -p tests/tsconfig.json</code></pre>
+        <p>Execute na raiz do projeto. O primeiro comando usa o executor de testes do Node em todos os arquivos <code>.test.mjs</code> da pasta: inclui a API, os auxiliares do grupo e a nova regra de texto obrigatório. Os testes de integração da API usam um json-server com banco em memória, sem tocar no <code>db.json</code> da equipe.</p>
+        <p>O segundo comando executa o TypeScript para conferir entradas e retornos: verifica também que ID e campos inválidos sejam recusados pelos tipos. Leia os resultados impressos no terminal. A regra de texto e o comportamento visual dos erros também devem ser conferidos no navegador.</p>
+      </section>
+
+      <section id="conferir">
+        <h2><span class="number">09</span>O que você deve experimentar</h2>
+        <p>Use esta lista como roteiro de estudo. As caixas são suas marcações locais e não representam um relatório automático de testes.</p>
+        <ul class="checklist">
+          <li><label><input type="checkbox"><span>Abrir <code>/tarefas/nova</code> e identificar a tela de cadastro.</span></label></li>
+          <li><label><input type="checkbox"><span>Abrir um projeto e usar seu link de nova tarefa. Conferir qual opção já vem selecionada.</span></label></li>
+          <li><label><input type="checkbox"><span>Trocar o projeto manualmente e perceber que sua escolha é mantida.</span></label></li>
+          <li><label><input type="checkbox"><span>Preencher todos os campos e salvar uma tarefa de teste. Conferir se ela aparece na lista.</span></label></li>
+          <li><label><input type="checkbox"><span>Observar o botão durante o envio e explicar por que ele fica desabilitado.</span></label></li>
+          <li><label><input type="checkbox"><span>Abrir um detalhe como <code>/tarefas/2</code> e perceber que continua sendo outra página.</span></label></li>
+          <li><label><input type="checkbox"><span>Tentar salvar um título só com espaços. Conferir a mensagem junto ao título e o bloqueio do envio.</span></label></li>
+          <li><label><input type="checkbox"><span>Corrigir o título e observar a mensagem de erro desaparecer quando o campo fica válido.</span></label></li>
+          <li><label><input type="checkbox"><span>Conferir que descrição vazia é recusada no cadastro, enquanto continua opcional na edição.</span></label></li>
+          <li><label><input type="checkbox"><span>Depois de uma falha de gravação, tentar novamente e conferir que a mensagem anterior não bloqueia a nova tentativa.</span></label></li>
+        </ul>
+        <h3>Verificação final da #20</h3><p>Passaram 22 testes automatizados, a verificação dos tipos TypeScript, a checagem do Svelte sem erros nem avisos e a compilação. No navegador, conferimos campos vazios, texto só com espaços, erro junto ao campo, foco no primeiro inválido e limpeza da mensagem ao corrigir. Também conferimos cadastro e edição com resposta lenta, botão bloqueado, tentativa após erro da API e clique duplo com apenas um envio válido. A descrição opcional da edição foi preservada. Nenhum pedido foi enviado nas tentativas inválidas, e o banco original permaneceu intacto.</p><h3>Verificações anteriores da tela e da API</h3><p>Na verificação inicial da #18, o Svelte encontrou zero erros e avisos e a compilação passou. No navegador, conferimos cadastro, projeto pré-selecionado, troca manual, campos obrigatórios, clique duplo e recuperação após falha de conexão, usando uma cópia do banco.</p><p>Na entrega da #16, passaram 18 testes automatizados, a verificação dos contratos TypeScript, a checagem do Svelte sem erros nem avisos e a compilação. Foram conferidos POST e PATCH, ID no caminho, JSON no corpo, preservação de campos, erros HTTP e leituras existentes. Os testes de integração usaram banco em memória e encerraram seu próprio servidor. Nenhuma tela foi modificada nesta etapa da #16.</p><p class="small">Criar ou atualizar registros grava dados na API em uso. Para estudar sem alterar os dados da equipe, faça os testes em uma cópia do banco.</p>
+      </section>
+
+      <section id="perguntas">
+        <h2><span class="number">10</span>Agora explique com suas palavras</h2>
+        <p>Tente responder antes de abrir a resposta. Se travar, volte ao trecho do guia e procure a ligação entre a URL, o campo e a API.</p>
+        <details><summary>1. Por que /tarefas/nova não abre o detalhe de uma tarefa chamada “nova”?</summary><p>Porque existe uma rota fixa em <code>tarefas/nova/+page.svelte</code>. O SvelteKit dá prioridade à rota fixa sobre <code>tarefas/[id]/+page.svelte</code>.</p></details>
+        <details><summary>2. De onde vem o projeto que aparece selecionado?</summary><p>Do parâmetro <code>projetoId</code> na consulta da URL, enviado pelo link da página do projeto. O código lê essa sugestão e confere se ela corresponde a um projeto existente nas opções da API.</p></details>
+        <details><summary>3. Qual é a diferença entre GET e POST nesta tela?</summary><p><code>GET</code> lê os projetos. <code>POST</code> envia os dados para criar a tarefa. A requisição de criação leva um corpo JSON.</p></details>
+        <details><summary>4. Por que não enviamos um id junto com os campos?</summary><p>O ID é gerado pela API. O tipo <code>NovaTarefa</code> usa os campos de <code>Tarefa</code> sem <code>id</code>, deixando isso claro enquanto programamos.</p></details>
+        <details><summary>5. O que aconteceria se voltássemos para a lista antes de esperar a API?</summary><p>A pessoa poderia ver a lista antes da gravação terminar ou sair do formulário sem perceber uma falha. A ordem correta é confirmar a criação e depois navegar.</p></details>
+        <details><summary>6. O que bind:value faz quando você digita um título?</summary><p>Atualiza o estado ligado ao campo. A ligação também funciona no outro sentido: quando o código altera esse estado, o valor mostrado no campo acompanha a mudança.</p></details>
+        <details><summary>7. Para mudar só a prioridade, uso criarTarefa ou atualizarTarefa?</summary><p>Uso <code>atualizarTarefa</code>, passando o ID do registro e um objeto como <code>{ prioridade: 'alta' }</code>. O pedido usa PATCH. <code>criarTarefa</code> usa POST para acrescentar uma nova tarefa.</p></details>
+        <details><summary>8. Qual é a diferença entre Omit e Partial nesses tipos?</summary><p><code>Omit&lt;Tarefa, 'id'&gt;</code> retira o ID do tipo de criação. <code>Partial&lt;NovaTarefa&gt;</code> torna opcionais os campos da atualização, permitindo enviar apenas aqueles que devem mudar.</p></details>
+        <details><summary>9. No cadastro de um projeto, quem fornece criadoEm?</summary><p>O código que chama <code>criarProjeto</code> fornece esse campo no objeto <code>NovoProjeto</code>. A função envia os dados recebidos; a API gera o ID, sem inventar a data de criação.</p></details>
+        <details><summary>10. Onde vão o ID e os novos valores em uma atualização?</summary><p>O ID identifica o registro na URL, como <code>/tarefas/2</code>. Os valores que devem mudar vão no corpo JSON do PATCH. A função codifica o ID com <code>encodeURIComponent</code> ao montar o endereço.</p></details>
+        <details><summary>11. Promise&lt;Projeto&gt; quer dizer que já tenho um projeto pronto?</summary><p>Não. É um resultado que pode chegar depois. Ao usar <code>await</code>, esperamos a operação; se ela tiver sucesso, recebemos o projeto. Se falhar, tratamos o erro no <code>catch</code>.</p></details>
+        <details><summary>12. Por que todas as funções usam requisitar?</summary><p>Porque a chamada de rede, a leitura do JSON e a checagem de sucesso são passos comuns. O auxiliar recebe o caminho e opções <code>RequestInit</code>, evitando repetir esses passos em cada função.</p></details>
+        <details><summary>13. Por que um título só com espaços precisa de outra regra além de required?</summary><p>Porque ele contém caracteres, embora não tenha texto útil. A nova regra confere se ainda sobra algum conteúdo depois de <code>trim()</code>. Se não sobrar, marca um erro personalizado.</p></details>
+        <details><summary>14. O que significa chamar setCustomValidity com uma string vazia?</summary><p>Significa limpar o erro personalizado dessa regra. As outras verificações nativas, como <code>required</code>, continuam valendo. Isso permite que um campo corrigido volte a ser considerado válido.</p></details>
+        <details><summary>15. Quem mostra o erro junto do campo?</summary><p>O auxiliar <code>acessibilidadeFormulario</code>, já entregue pelo grupo. Ele usa o evento <code>invalid</code>, insere a mensagem em texto e relaciona a mensagem ao campo com atributos ARIA. A nova action fornece a regra adicional de validade para texto só com espaços.</p></details>
+        <details><summary>16. Por que a nova regra escuta input e change em captura?</summary><p>Para atualizar a validade antes que o auxiliar de acessibilidade, na fase de propagação desses eventos, leia o resultado. Assim, corrigir o texto também atualiza a mensagem na ordem certa.</p></details>
+        <details><summary>17. Se o botão já está disabled, para que verificar enviando dentro da função?</summary><p>O botão desabilitado bloqueia sua interação normal e comunica o estado. A função também verifica se há envio em andamento para evitar executar novamente o código de gravação. São duas proteções trabalhando juntas.</p></details>
+        <details><summary>18. Uma mensagem de falha da API deve impedir a próxima tentativa de salvar?</summary><p>Não. Depois que a tentativa termina, a pessoa precisa poder tentar outra vez. O código bloqueia durante o envio e quando os projetos estão indisponíveis; ele não usa a mensagem de uma falha anterior de gravação como trava permanente.</p></details>
+      </section>
+
+      <section id="fontes">
+        <h2>Para consultar quando precisar</h2>
+        <ul>
+          <li><a href="https://svelte.dev/docs/kit/routing">SvelteKit: páginas e rotas</a></li>
+          <li><a href="https://svelte.dev/docs/kit/advanced-routing#Sorting">SvelteKit: prioridade entre rotas</a></li>
+          <li><a href="https://svelte.dev/docs/kit/$app-state#page">SvelteKit: informações da página atual</a></li>
+          <li><a href="https://svelte.dev/docs/kit/$app-navigation#goto">SvelteKit: navegar com goto</a></li>
+          <li><a href="https://svelte.dev/docs/kit/state-management#Component-and-page-state-is-preserved">SvelteKit: preservação da página ao navegar</a></li>
+          <li><a href="https://svelte.dev/docs/svelte/$state">Svelte: estado com $state</a></li>
+          <li><a href="https://svelte.dev/docs/svelte/bind">Svelte: ligação com bind</a></li>
+          <li><a href="https://svelte.dev/docs/svelte/use">Svelte: actions ligadas a elementos com use:</a></li>
+          <li><a href="https://html.spec.whatwg.org/multipage/form-control-infrastructure.html#the-constraint-validation-api">HTML: validação nativa e setCustomValidity</a></li>
+          <li><a href="https://www.typescriptlang.org/docs/handbook/utility-types.html#partialtype">TypeScript: Partial</a></li>
+          <li><a href="https://www.typescriptlang.org/docs/handbook/utility-types.html#omittype-keys">TypeScript: Omit</a></li>
+          <li><a href="https://www.rfc-editor.org/rfc/rfc5789">HTTP: especificação do método PATCH</a></li>
+        </ul>
+      </section>
+    </main>
+  </div>
+  <footer>Caderno do Marco 3, issues #16, #18 e #20. Leia o código junto com este guia e use as perguntas para conferir o seu entendimento.</footer>
+</body>
+</html>
