@@ -1,0 +1,145 @@
+/* Apps do Marco 3 dentro do notebook (superfície fixa de 960×600). */
+#notebook-ui .vd-wallpaper>img{filter:none;opacity:.9;width:120px;height:120px;top:150px}
+#notebook-ui .vd-eyebrow{color:#1d4ed8}
+#notebook-ui .m3-fine{font-size:12px;line-height:1.4;color:#64748b;margin:0}
+#notebook-ui .m3-empty{color:#64748b;font-style:italic}
+#notebook-ui .m3-wide{grid-column:1/-1}
+
+/* Quadro */
+#notebook-ui .m3-board{display:grid;grid-template-columns:1.25fr 1fr;height:100%}
+#notebook-ui .m3-col{padding:16px 18px;overflow:auto;min-width:0}
+#notebook-ui .m3-col+.m3-col{border-left:1px solid var(--vd-line);background:#f8fafc}
+#notebook-ui .m3-col h3{font-size:16px;margin:0 0 10px;display:flex;justify-content:space-between}
+#notebook-ui .m3-col h3 span{font-size:13px;background:#dbeafe;color:#1d4ed8;border-radius:20px;padding:2px 9px}
+#notebook-ui .m3-col ol{list-style:none;margin:0;padding:0;display:grid;gap:6px}
+#notebook-ui .m3-col>ol{grid-template-columns:1fr 1fr}
+#notebook-ui .m3-issue{width:100%;text-align:left;display:grid;gap:2px;padding:8px 10px;border:1px solid #cbd5e1;border-left:4px solid #2563eb;border-radius:7px;background:#fff;font-size:13px;line-height:1.25;color:#0f172a}
+#notebook-ui .m3-issue:hover{border-color:#2563eb}
+#notebook-ui .m3-issue b{color:#1d4ed8;font-size:12px}
+#notebook-ui .m3-issue small{color:#64748b;font-size:11px}
+#notebook-ui .m3-next ol{grid-template-columns:1fr;margin-bottom:10px}
+#notebook-ui .m3-next li{font-size:13px;padding:7px 10px;border:1px dashed #cbd5e1;border-radius:7px;color:#334155}
+#notebook-ui .m3-next li b{color:#64748b;margin-right:4px}
+
+/* Formulário */
+#notebook-ui .m3-form-app{display:grid;grid-template-columns:1fr 255px;height:100%}
+#notebook-ui .m3-form-wrap{padding:12px 18px;overflow:auto;min-width:0}
+#notebook-ui .m3-form-head h3{font-size:22px;margin:2px 0 2px}
+#notebook-ui .m3-form{display:grid;grid-template-columns:1fr 1fr;gap:7px 14px;margin-top:8px}
+#notebook-ui .m3-field{display:flex;flex-direction:column;gap:3px;min-width:0}
+#notebook-ui .m3-field label{font-size:13px;font-weight:650;color:#1e293b}
+#notebook-ui .m3-field input,#notebook-ui .m3-field select,#notebook-ui .m3-field textarea{width:100%;font:inherit;font-size:14px;padding:5px 8px;border:1px solid #8c959f;border-radius:6px;background:#fff;color:#1f2328;resize:none}
+#notebook-ui .m3-field input:focus-visible,#notebook-ui .m3-field select:focus-visible,#notebook-ui .m3-field textarea:focus-visible{outline:3px solid #2563eb;outline-offset:1px}
+#notebook-ui .m3-field [aria-invalid=true]{border-color:#b91c1c;border-width:2px}
+#notebook-ui .m3-form [data-erro-campo]{margin:0;font-size:12px;color:#8b1e27;font-weight:650;line-height:1.25}
+#notebook-ui .m3-field:has(#m3-descricao){grid-column:1/-1}
+#notebook-ui .m3-field:has(#m3-projeto),#notebook-ui .m3-field:has(#m3-titulo){grid-column:auto}
+#notebook-ui .m3-actions{display:flex;gap:16px;align-items:center;flex-wrap:wrap;margin-top:2px}
+#notebook-ui .m3-actions .vd-button{min-height:38px;font-size:15px;padding:8px 18px}
+#notebook-ui .m3-actions .vd-link{font-size:14px}
+#notebook-ui .m3-reader{border-left:1px solid var(--vd-line);background:#0f172a;color:#e2e8f0;padding:14px 14px 12px;display:flex;flex-direction:column;gap:8px;min-width:0}
+#notebook-ui .m3-reader .vd-eyebrow{color:#93c5fd}
+#notebook-ui .m3-reader ol{list-style:none;margin:0;padding:0;display:grid;gap:7px;flex:1;overflow:auto;align-content:start}
+#notebook-ui .m3-reader li{font-size:13px;line-height:1.35;padding:7px 9px;border-radius:6px;background:#1e293b;color:#cbd5e1}
+#notebook-ui .m3-reader li.is-new{background:#1d4ed8;color:#fff}
+#notebook-ui .m3-reader li.m3-empty{background:none;padding:0;color:#94a3b8}
+#notebook-ui .m3-reader .m3-fine{color:#94a3b8}
+
+/* API */
+#notebook-ui .m3-api{display:grid;grid-template-columns:1fr 1.15fr;gap:0;height:100%;grid-template-rows:1fr auto}
+#notebook-ui .m3-api>section{padding:14px 16px;overflow:auto;min-width:0}
+#notebook-ui .m3-api>section+section{border-left:1px solid var(--vd-line)}
+#notebook-ui .m3-api>.m3-fine{padding:8px 16px;border-top:1px solid var(--vd-line)}
+#notebook-ui .m3-log{list-style:none;margin:8px 0 0;padding:0;display:grid;gap:6px}
+#notebook-ui .m3-log li{display:flex;gap:10px;align-items:center;font-size:14px}
+#notebook-ui .m3-log b{font-size:12px;border-radius:5px;padding:3px 7px;min-width:54px;text-align:center}
+#notebook-ui .m3-post{background:#dbeafe;color:#1d4ed8}
+#notebook-ui .m3-patch{background:#ffedd5;color:#9a3412}
+#notebook-ui .m3-log code{flex:1;font-size:13px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+#notebook-ui .m3-log span{font-weight:700;color:#334155}
+#notebook-ui .m3-db{margin:8px 0 0;font-size:11.5px;line-height:1.45;background:#0f172a;color:#e2e8f0;border-radius:8px;padding:10px 12px;white-space:pre-wrap;word-break:break-all;max-height:300px;overflow:auto}
+
+/* Testes */
+#notebook-ui .m3-tests{display:flex;flex-direction:column;height:100%;padding:12px 16px;gap:8px}
+#notebook-ui .m3-tests-head{display:flex;justify-content:space-between;align-items:end;gap:12px}
+#notebook-ui .m3-tests-head h3{font-size:22px;margin:0}
+#notebook-ui .m3-tests-head .vd-button{min-height:38px;font-size:14px}
+#notebook-ui .m3-tests-list{list-style:none;margin:0;padding:0;display:grid;grid-template-columns:1fr 1fr;gap:3px 14px;overflow:auto;flex:1;align-content:start}
+#notebook-ui .m3-tests-list li{display:grid;grid-template-columns:16px 1fr;gap:0 7px;font-size:11.5px;line-height:1.25;color:#94a3b8;padding:2px 0}
+#notebook-ui .m3-tests-list li small{grid-column:2;font-size:10px;color:#94a3b8}
+#notebook-ui .m3-tests-list li i{width:14px;height:14px;border-radius:4px;border:1.5px solid #cbd5e1;margin-top:1px}
+#notebook-ui .m3-tests-list li.is-pass{color:#0f172a}
+#notebook-ui .m3-tests-list li.is-pass i{background:#2563eb;border-color:#2563eb;position:relative}
+#notebook-ui .m3-tests-list li.is-pass i:after{content:'';position:absolute;left:3.5px;top:1px;width:4px;height:7px;border:solid #fff;border-width:0 2px 2px 0;transform:rotate(45deg)}
+
+/* Saídas da cena nos capítulos */
+.http-log{display:flex;align-items:center;gap:12px;margin-top:26px;font-family:ui-monospace,SFMono-Regular,Menlo,monospace;font-size:13px;color:#0f172a;background:#fffffff2;border:1px solid var(--border);border-left:4px solid var(--accent);border-radius:6px;padding:12px 14px;max-width:46ch}
+.http-log span{font-family:Manrope,sans-serif;font-size:10px;letter-spacing:.08em;text-transform:uppercase;color:#475569;white-space:nowrap}
+.http-log output{overflow-wrap:anywhere}
+.code-peek{margin:22px 0 0;font-family:ui-monospace,SFMono-Regular,Menlo,monospace;font-size:12.5px;line-height:1.55;background:#0f172a;color:#e2e8f0;border-radius:8px;padding:14px 16px;max-width:52ch;overflow:auto;white-space:pre}
+.code-peek b{color:#93c5fd;font-weight:500}.code-peek i{color:#fdba74;font-style:normal}.code-peek s{color:#94a3b8;text-decoration:none}
+.owner{display:inline-flex;align-items:center;gap:8px;font-size:12px;color:var(--muted);margin:-14px 0 22px}
+.owner b{color:var(--ink);font-weight:600}
+.demo-steps{list-style:none;margin:24px 0 0;padding:0;display:grid;gap:8px;max-width:46ch}
+.demo-steps li{display:grid;grid-template-columns:52px 1fr;gap:10px;font-size:14px;line-height:1.45;color:var(--muted)}
+.demo-steps li b{color:var(--accent);font-variant-numeric:tabular-nums;font-weight:600}
+.demo-steps li strong{color:var(--ink);font-weight:600}
+.dialog-content pre{background:#0f172a;color:#e2e8f0;border-radius:8px;padding:14px 16px;overflow:auto;font-size:13px;line-height:1.55}
+.dialog-content code{font-family:ui-monospace,SFMono-Regular,Menlo,monospace;font-size:.92em}
+.dialog-content pre code{font-size:13px}
+.dialog-content .note{border-left:3px solid #ea580c;padding-left:12px;color:#7c2d12}
+@media(max-width:760px){.http-log{font-size:12px}.code-peek{font-size:11.5px;max-width:100%}}
+
+/* Cabeçalho com a marca da equipe e capítulos dirigidos pela rolagem */
+.brand.brand-text{display:flex;align-items:center;gap:10px;width:auto;height:auto;text-decoration:none;font-weight:700;font-size:17px;letter-spacing:-.01em;color:var(--ink)}
+.brand.brand-text img,body[data-tone] .brand.brand-text img{width:30px;height:30px;filter:none!important}
+#api,#edicao,#validacao,#testes{min-height:165svh}
+.chapter h1 code,.chapter h2 code,.story-body code{font-family:ui-monospace,SFMono-Regular,Menlo,monospace;font-size:.86em;background:#2563eb10;border:1px solid #2563eb24;border-radius:4px;padding:1px 4px}
+body[data-tone='rust'] .story-body code,body[data-tone='dark'] .story-body code,body[data-tone='night'] .story-body code{background:#ffffff14;border-color:#ffffff30}
+#test-count{font-variant-numeric:tabular-nums;color:var(--accent)}
+@media(max-width:760px){#api,#edicao,#validacao,#testes{min-height:150svh}}
+/* Formulário compacto: cabe na janela de 440px mesmo com as mensagens de erro */
+#notebook-ui .m3-form-wrap{padding:8px 16px}
+#notebook-ui .m3-form-head h3{font-size:18px;margin:0}
+#notebook-ui .m3-form-head .m3-fine{font-size:11px}
+#notebook-ui .m3-form{gap:3px 12px;margin-top:4px}
+#notebook-ui .m3-field{gap:1px}
+#notebook-ui .m3-field label{font-size:12px}
+#notebook-ui .m3-field input,#notebook-ui .m3-field select,#notebook-ui .m3-field textarea{font-size:13px;padding:3px 7px;min-height:28px}
+#notebook-ui .m3-field textarea{height:30px}
+#notebook-ui .m3-form [data-erro-campo]{font-size:11px}
+#notebook-ui .m3-actions .vd-button{min-height:32px;padding:5px 16px;font-size:14px}
+#notebook-ui .m3-reader li{font-size:12px;padding:5px 8px}
+
+/* Legibilidade para projetor: nada importante abaixo de 13px */
+.code-peek{font-size:clamp(15px,1.15vw,18px);line-height:1.6;max-width:60ch}
+.http-log{font-size:clamp(14px,1.05vw,16px)}
+.http-log span{font-size:11px}
+.proof-tags span{font-size:13px!important;padding:8px 11px}
+.chapter-label{font-size:13px!important}
+.owner{font-size:14px;margin:-12px 0 22px}
+.chapter-note{font-size:13px!important;line-height:1.5}
+.details-trigger{font-size:13px!important}
+.code-open{font-size:14px}
+.code-open code{font-size:13px}
+.terminal-cue{font-size:13px!important;max-width:36ch!important}
+.dialog-content p,.dialog-content li{font-size:16.5px!important;line-height:1.6}
+.dialog-content pre,.dialog-content pre code{font-size:15.5px!important;line-height:1.6}
+.dialog-content table{font-size:14.5px!important}
+.dialog-content .open-files{display:flex;flex-wrap:wrap;gap:4px 0}
+.demo-steps li{font-size:15px}
+.stage-caption{font-size:13px}.stage-caption strong{font-size:14px}
+
+/* Capítulo "Todo o código": painel largo e mapa de arquivos */
+.chapter-wide .chapter-copy{width:min(66%,980px)!important;background:var(--surface);border:1px solid var(--border);border-radius:14px;padding:30px 32px;box-shadow:0 24px 60px #0f172a14}
+.chapter-wide h2{font-size:clamp(36px,4.2vw,64px)!important}
+.code-map{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:16px 22px;margin-top:24px}
+.code-map h3{margin:0 0 8px;font-size:14px;font-weight:600;color:var(--muted)}
+.code-map h3 b{color:var(--accent)}
+.code-map section>div{display:grid;gap:6px}
+.code-chip{display:grid;text-align:left;gap:2px;border:1px solid var(--border);border-left:4px solid var(--accent);border-radius:6px;background:#ffffffb3;padding:8px 11px;cursor:pointer;color:var(--ink)}
+.code-chip:hover{border-color:var(--accent);background:#fff}
+.code-chip span{font:600 15px ui-monospace,SFMono-Regular,Menlo,monospace;overflow-wrap:anywhere}
+.code-chip small{font-size:12.5px;color:var(--muted)}
+#codigo{min-height:auto;padding-top:140px;padding-bottom:160px}
+@media(max-width:760px){.chapter-wide .chapter-copy{width:100%!important;padding:20px}.code-map{grid-template-columns:1fr}#codigo{padding-top:64svh}}
