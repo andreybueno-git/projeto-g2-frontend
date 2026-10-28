@@ -1,13 +1,49 @@
 
 <script lang="ts">
-  import type { Tarefa } from "../../tipos";
+  import { tick } from "svelte";
+  import type { Tarefa, Status } from "../../tipos";
+  import { atualizarTarefa } from "../servicos/api";
   import {
     ROTULOS_STATUS,
     ROTULOS_PRIORIDADE,
     formatarPrazo
   } from "../utils/rotulos";
 
-  let { tarefa }: { tarefa: Tarefa } = $props();
+  let { tarefa, onstatusalterado }: {
+    tarefa: Tarefa;
+    onstatusalterado?: (tarefa: Tarefa) => void;
+  } = $props();
+  let salvando = $state(false);
+  let erroStatus = $state("");
+  let avisoStatus = $state("");
+
+  async function mudarStatus(evento: Event) {
+    const seletor = evento.currentTarget as HTMLSelectElement;
+    const status = seletor.value as Status;
+    if (salvando || status === tarefa.status) return;
+    salvando = true;
+    erroStatus = "";
+    avisoStatus = "";
+    try {
+      const atualizada = await atualizarTarefa(tarefa.id, { status });
+      // A tarefa vem do $state da tela. Atualiza o mesmo objeto para que
+      // filtros e colunas sejam recalculados após a confirmação da API.
+      Object.assign(tarefa, atualizada);
+      avisoStatus = "Status salvo.";
+      onstatusalterado?.(atualizada);
+      await tick();
+      // O quadro recria o cartão na coluna de destino. Conserva o foco;
+      // se o filtro ocultar a tarefa, retorna à busca.
+      const destino = document.getElementById(`status-tarefa-${tarefa.id}`)
+        ?? document.getElementById("busca");
+      destino?.focus();
+    } catch {
+      seletor.value = tarefa.status;
+      erroStatus = "Não foi possível salvar o status. Tente novamente.";
+    } finally {
+      salvando = false;
+    }
+  }
 
   // Identifica o status pelo rótulo definido no projeto
   const classeStatus = (status: Tarefa["status"]) => {
@@ -29,7 +65,7 @@
 </script>
 
 <article class="cartao">
-  <h3>{tarefa.titulo}</h3>
+  <h3><a href={`/tarefas/${encodeURIComponent(tarefa.id)}`}>{tarefa.titulo}</a></h3>
 
   <div class="selos">
     <!-- Status da tarefa -->
@@ -54,9 +90,29 @@
       <dd>{formatarPrazo(tarefa.prazo)}</dd>
     </div>
   </dl>
+  <div class="campo-status">
+    <label for={`status-tarefa-${tarefa.id}`}>Mudar status<span class="sr-only"> de {tarefa.titulo}</span></label>
+    <select id={`status-tarefa-${tarefa.id}`} value={tarefa.status} onchange={mudarStatus} disabled={salvando} aria-busy={salvando}>
+      {#each Object.entries(ROTULOS_STATUS) as [valor, rotulo] (valor)}
+        <option value={valor}>{rotulo}</option>
+      {/each}
+    </select>
+    <span role="status">{salvando ? "Salvando..." : avisoStatus}</span>
+    {#if erroStatus}<p class="erro-status" role="alert">{erroStatus}</p>{/if}
+  </div>
 </article>
 
 <style>
+  h3 a { color: inherit; text-underline-offset: 3px; }
+  .campo-status { display: grid; gap: .4rem; margin-top: 1rem; }
+  .campo-status label { font-size: .85rem; font-weight: 600; }
+  select { width: 100%; min-height: 44px; padding: .5rem; font: inherit; background: #fff; color: #1f2328; border: 1px solid #64748b; border-radius: 6px; }
+  select:focus-visible { outline: 3px solid #0969da; outline-offset: 3px; }
+  select:disabled { cursor: wait; }
+  .campo-status span[role="status"] { font-size: .8rem; }
+  .erro-status { color: #9f1239; margin: 0; font-size: .85rem; }
+  .sr-only { position: absolute; width: 1px; height: 1px; padding: 0; margin: -1px; overflow: hidden; clip-path: inset(50%); white-space: nowrap; }
+
   /* Estrutura principal */
   .cartao {
     height: 100%;

@@ -24,9 +24,11 @@
       carregando = false;
     }
   });
+  let avisoStatus = $state("");
 </script>
 
 <main>
+  <p role="status">{avisoStatus}</p>
   <h1>Tarefas</h1>
 
   <p><a href="/tarefas/nova">Nova tarefa</a></p>
@@ -46,9 +48,7 @@
       <ul class="lista">
         {#each visiveis as tarefa (tarefa.id)}
           <li>
-            <a class="link-cartao" href="/tarefas/{tarefa.id}">
-              <CartaoTarefa {tarefa} />
-            </a>
+            <CartaoTarefa {tarefa} onstatusalterado={(atualizada) => { avisoStatus = `${atualizada.titulo}: status atualizado.`; }} />
           </li>
         {/each}
       </ul>
@@ -69,24 +69,5 @@
     display: grid;
     grid-template-columns: repeat(auto-fill, minmax(min(18rem, 100%), 1fr));
     gap: 1rem;
-  }
-  /* O cartão inteiro é o link para o detalhe da tarefa. */
-  .link-cartao {
-    display: block;
-    height: 100%;
-    border-radius: 10px;
-    color: inherit;
-    text-decoration: none;
-  }
-  .link-cartao :global(.cartao) {
-    transition: border-color 0.15s, box-shadow 0.15s;
-  }
-  .link-cartao:hover :global(.cartao) {
-    border-color: #8c959f;
-    box-shadow: 0 4px 12px rgba(31, 35, 40, 0.12);
-  }
-  .link-cartao:focus-visible {
-    outline: 3px solid #0969da;
-    outline-offset: 2px;
   }
 </style>

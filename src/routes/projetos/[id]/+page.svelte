@@ -38,9 +38,11 @@
       ativo = false;
     };
   });
+  let avisoStatus = $state("");
 </script>
 
 <main>
+  <p role="status">{avisoStatus}</p>
   <a class="voltar" href="/projetos">← Voltar para os projetos</a>
 
   {#if carregando}
@@ -78,9 +80,7 @@
         <ul class="lista">
           {#each projeto.tarefas as tarefa (tarefa.id)}
             <li>
-              <a class="link-cartao" href="/tarefas/{tarefa.id}">
-                <CartaoTarefa {tarefa} />
-              </a>
+              <CartaoTarefa {tarefa} onstatusalterado={(atualizada) => { avisoStatus = `${atualizada.titulo}: status atualizado.`; }} />
             </li>
           {/each}
         </ul>
@@ -125,11 +125,5 @@
     display: grid;
     grid-template-columns: repeat(auto-fill, minmax(min(18rem, 100%), 1fr));
     gap: 1rem;
-  }
-  .link-cartao {
-    display: block;
-    height: 100%;
-    color: inherit;
-    text-decoration: none;
   }
 </style>

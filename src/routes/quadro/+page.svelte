@@ -33,6 +33,7 @@
     }
   }
 
+  let avisoStatus = $state("");
 </script>
 
 <svelte:head>
@@ -40,6 +41,7 @@
 </svelte:head>
 
 <main>
+  <p role="status">{avisoStatus}</p>
   <h1>Quadro de tarefas</h1>
   <p class="introducao">As tarefas estão organizadas por status.</p>
   <p><a href="/">Voltar para a lista de tarefas</a></p>
@@ -65,9 +67,7 @@
             <ul>
               {#each coluna.tarefas as tarefa (tarefa.id)}
                 <li>
-                  <a class="link-cartao" href={`/tarefas/${encodeURIComponent(tarefa.id)}`}>
-                    <CartaoTarefa {tarefa} />
-                  </a>
+                  <CartaoTarefa {tarefa} onstatusalterado={(atualizada) => { avisoStatus = `${atualizada.titulo}: status atualizado.`; }} />
                 </li>
               {/each}
             </ul>
@@ -154,23 +154,6 @@
 
   li {
     min-width: 0;
-  }
-
-  .link-cartao {
-    display: block;
-    color: inherit;
-    text-decoration: none;
-    border-radius: 10px;
-  }
-
-  .link-cartao:hover :global(.cartao) {
-    border-color: #8c959f;
-    box-shadow: 0 4px 12px rgba(31, 35, 40, 0.12);
-  }
-
-  .link-cartao:focus-visible {
-    outline: 3px solid #0969da;
-    outline-offset: 3px;
   }
 
   .vazia {
