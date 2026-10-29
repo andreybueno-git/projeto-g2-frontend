@@ -1,7 +1,7 @@
 import type { FiltroPrioridade, FiltroStatus } from "../utils/filtrarTarefas";
 
-// Único lugar onde ficam a busca e os filtros das tarefas. A lista (e, depois,
-// o quadro) leem daqui, então as duas visões mostram sempre as mesmas tarefas.
+// Único lugar onde ficam a busca e os filtros das tarefas. A lista e o quadro
+// leem daqui, então as duas visões mostram sempre as mesmas tarefas.
 // O valor continua ao navegar entre páginas e volta ao padrão ao recarregar.
 class FiltrosTarefas {
   busca = $state("");

@@ -22,10 +22,11 @@
 </nav>
 
 <style>
-  .visoes { display: inline-flex; margin: 0.5rem 0; border: 1px solid #64748b; border-radius: 0.4rem; overflow: hidden; }
-  a { padding: 0.6rem 1.1rem; color: #1e293b; background: #fff; font-weight: 600; text-decoration: none; }
-  a + a { border-left: 1px solid #64748b; }
-  a:hover:not(.ativo) { background: #f1f5f9; }
-  a.ativo { background: #1e293b; color: #fff; }
-  a:focus-visible { outline: 3px solid #2563eb; outline-offset: -3px; }
+.visoes { display: inline-flex; margin: .5rem 0 1.1rem; padding: 4px; border: 1px solid var(--linha); background: #e4e4de; }
+  a { display: inline-flex; align-items: center; gap: .55rem; min-height: 40px; padding: .45rem 1rem; color: var(--secundario); font-size: .85rem; font-weight: 650; text-decoration: none; transition: background .15s ease, color .15s ease; }
+  a::before { content: ''; width: 12px; height: 12px; background: repeating-linear-gradient(0deg, currentColor 0 2px, transparent 2px 5px); }
+  a + a::before { background: repeating-linear-gradient(90deg, currentColor 0 3px, transparent 3px 5px); }
+  a:hover:not(.ativo) { background: var(--superficie); color: var(--tinta); }
+  a.ativo { background: var(--tinta); color: var(--superficie); }
+  a:focus-visible { outline: 3px solid var(--azul-escuro); outline-offset: 2px; z-index: 1; }
 </style>

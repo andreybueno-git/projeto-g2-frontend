@@ -90,40 +90,18 @@
 </main>
 
 <style>
-  main {
-    max-width: 72rem;
-    margin: 0 auto;
-    padding: 1.5rem 1rem;
-  }
-  .voltar {
-    display: inline-block;
-    margin-bottom: 1rem;
-  }
-  h1 {
-    margin: 0 0 0.25rem;
-  }
-  .descricao {
-    margin: 0 0 1rem;
-  }
-  dl {
-    margin: 0 0 2rem;
-    display: flex;
-    flex-wrap: wrap;
-    gap: 1.5rem;
-  }
-  dt {
-    font-size: 0.75rem;
-    opacity: 0.7;
-  }
-  dd {
-    margin: 0;
-  }
-  .lista {
-    list-style: none;
-    margin: 0;
-    padding: 0;
-    display: grid;
-    grid-template-columns: repeat(auto-fill, minmax(min(18rem, 100%), 1fr));
-    gap: 1rem;
-  }
+main { max-width: 88rem; margin: 0 auto; padding: 2.75rem 2rem 4rem; }
+  .voltar { display: inline-flex; margin-bottom: 1.5rem; font-size: .85rem; }
+  header { margin-bottom: 2.5rem; padding-bottom: 1.75rem; border-bottom: 2px solid var(--tinta); }
+  h1 { margin: .5rem 0 1rem; }
+  .descricao { max-width: 44rem; margin: 0 0 1rem; color: var(--secundario); overflow-wrap: anywhere; }
+  dl { margin: 1.75rem 0 0; display: flex; flex-wrap: wrap; gap: 1.25rem 3rem; }
+  dl > div { min-width: 0; max-width: 100%; border-left: 3px solid var(--azul); padding-left: 1rem; overflow-wrap: anywhere; }
+  dt { margin-bottom: .4rem; font-size: .7rem; color: var(--secundario); font-weight: 650; text-transform: uppercase; letter-spacing: .06em; }
+  dd { margin: 0; font-size: .92rem; font-weight: 600; }
+  h2 { font-size: 1.5rem; margin: 0 0 1rem; }
+  section > p { margin-bottom: 1.5rem; }
+  .lista { list-style: none; margin: 0; padding: 0; display: grid; grid-template-columns: repeat(auto-fill, minmax(min(20rem, 100%), 1fr)); gap: 1.25rem; }
+  .lista li { min-width: 0; }
+  @media (max-width: 640px) { main { padding: 1.5rem 1rem 3rem; } }
 </style>

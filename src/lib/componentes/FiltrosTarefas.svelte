@@ -56,15 +56,16 @@
 </p>
 
 <style>
-  .filtros { display: flex; flex-wrap: wrap; align-items: end; gap: 1rem; margin: 1rem 0 0.5rem; }
-  .campo { display: flex; flex-direction: column; gap: 0.35rem; min-width: 10rem; }
-  .campo.busca { flex: 1 1 16rem; }
-  label { font-weight: 600; }
-  input, select { min-height: 2.75rem; padding: 0.5rem 0.65rem; font: inherit; color: #0f172a; background: #fff; border: 1px solid #64748b; border-radius: 0.35rem; }
-  button { min-height: 2.75rem; padding: 0.5rem 1rem; font: inherit; font-weight: 600; color: #1e293b; background: #fff; border: 1px solid #64748b; border-radius: 0.4rem; cursor: pointer; }
-  button:hover:not(:disabled) { background: #f1f5f9; }
-  button:disabled { cursor: not-allowed; opacity: 0.6; }
-  :is(input, select, button):focus-visible { outline: 3px solid #2563eb; outline-offset: 3px; }
-  .resumo { margin: 0.5rem 0 1rem; }
-  @media (max-width: 480px) { .campo { flex: 1 1 100%; } }
+.filtros { clear: both; display: flex; flex-wrap: wrap; align-items: end; gap: 1rem; margin: 1rem 0 0; padding: 1.25rem; border: 1px solid var(--linha); border-top: 2px solid var(--tinta); background: #e8e8e2; }
+  .campo { display: flex; flex-direction: column; gap: .5rem; min-width: 10rem; flex: 0 1 12rem; }
+  .campo.busca { flex: 1 1 20rem; }
+  label { font-size: .72rem; font-weight: 750; letter-spacing: .08em; text-transform: uppercase; }
+  input, select { width: 100%; min-height: 46px; padding: .65rem .8rem; font: inherit; font-size: .9rem; color: var(--tinta); background: var(--superficie); border: 1px solid #888c96; border-radius: 2px; }
+  input[type='search'] { border-left: 3px solid var(--azul); }
+  button { min-height: 46px; padding: .6rem 1rem; font: inherit; font-size: .85rem; font-weight: 650; color: var(--tinta); background: transparent; border: 1px solid #737987; border-radius: 2px; cursor: pointer; }
+  button:hover:not(:disabled) { background: var(--superficie); border-color: var(--tinta); }
+  button:disabled { cursor: not-allowed; color: #6b6e76; border-color: #b6b8bc; }
+  .resumo { margin: 0 0 1.5rem; padding: .7rem 0; border-bottom: 1px solid var(--linha); color: var(--secundario); font-size: .8rem; font-weight: 600; }
+  @media (max-width: 640px) { .filtros { gap: .85rem; padding: 1rem; } .campo { flex: 1 1 calc(50% - .5rem); min-width: 0; } .campo.busca { flex-basis: 100%; } button { width: 100%; } }
+  @media (max-width: 360px) { .campo { flex-basis: 100%; } }
 </style>
