@@ -14,7 +14,7 @@
     const caminho = page.url.pathname;
 
     if (href === '/') {
-      return caminho === '/' || caminho.startsWith('/tarefas');
+      return caminho === '/' || caminho === '/quadro' || caminho.startsWith('/tarefas');
     }
 
     return caminho === href || caminho.startsWith(`${href}/`);

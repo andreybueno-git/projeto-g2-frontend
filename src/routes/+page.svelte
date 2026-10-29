@@ -6,6 +6,7 @@
   import { filtrarTarefas } from "../lib/utils/filtrarTarefas";
   import CartaoTarefa from "../lib/componentes/CartaoTarefa.svelte";
   import FiltrosTarefas from "../lib/componentes/FiltrosTarefas.svelte";
+  import AlternarVisao from "../lib/componentes/AlternarVisao.svelte";
 
   let tarefas = $state<Tarefa[]>([]);
   let carregando = $state(true);
@@ -28,6 +29,8 @@
 
 <main>
   <h1>Tarefas</h1>
+
+  <AlternarVisao />
 
   <p><a href="/tarefas/nova">Nova tarefa</a></p>
 
