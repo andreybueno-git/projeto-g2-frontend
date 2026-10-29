@@ -2,7 +2,11 @@
   import { onDestroy, onMount } from "svelte";
   import type { Status, Tarefa } from "../../tipos";
   import CartaoTarefa from "../../lib/componentes/CartaoTarefa.svelte";
+  import FiltrosTarefas from "../../lib/componentes/FiltrosTarefas.svelte";
+  import AlternarVisao from "../../lib/componentes/AlternarVisao.svelte";
+  import { filtros } from "../../lib/estado/filtros.svelte";
   import { listarTarefas } from "../../lib/servicos/api";
+  import { filtrarTarefas } from "../../lib/utils/filtrarTarefas";
   import { ROTULOS_STATUS } from "../../lib/utils/rotulos";
 
   const statusDisponiveis = Object.keys(ROTULOS_STATUS) as Status[];
@@ -11,10 +15,13 @@
   let erro = $state<string | null>(null);
   let ativo = true;
 
+  // A lista e o quadro aplicam os mesmos critérios antes de exibir as tarefas.
+  const visiveis = $derived(filtrarTarefas(tarefas, filtros));
+
   // Cada status mantém sua coluna, inclusive quando não há tarefas nela.
   let colunas = $derived(statusDisponiveis.map((status) => ({
     status,
-    tarefas: tarefas.filter((tarefa) => tarefa.status === status),
+    tarefas: visiveis.filter((tarefa) => tarefa.status === status),
   })));
 
   onMount(carregarTarefas);
@@ -44,7 +51,7 @@
   <p role="status">{avisoStatus}</p>
   <h1>Quadro de tarefas</h1>
   <p class="introducao">As tarefas estão organizadas por status.</p>
-  <p><a href="/">Voltar para a lista de tarefas</a></p>
+  <AlternarVisao />
 
   {#if carregando}
     <p role="status">Carregando tarefas...</p>
@@ -52,6 +59,14 @@
     <p role="alert">{erro}</p>
     <button type="button" onclick={carregarTarefas}>Tentar novamente</button>
   {:else}
+    <FiltrosTarefas total={tarefas.length} exibidas={visiveis.length} />
+
+    {#if tarefas.length === 0}
+      <p>Nenhuma tarefa cadastrada.</p>
+    {:else if visiveis.length === 0}
+      <p>Nenhuma tarefa encontrada com esses filtros.</p>
+    {/if}
+
     <div class="quadro">
       {#each colunas as coluna (coluna.status)}
         <section class="coluna {coluna.status}" aria-labelledby={`titulo-${coluna.status}`}>
@@ -79,114 +94,21 @@
 </main>
 
 <style>
-  main {
-    max-width: 88rem;
-    margin: 0 auto;
-    padding: 1.5rem 1rem;
-  }
-
-  h1 {
-    margin: 0 0 0.5rem;
-  }
-
-  .introducao {
-    margin: 0;
-    color: #59636e;
-  }
-
-  .quadro {
-    display: grid;
-    grid-template-columns: repeat(4, minmax(0, 1fr));
-    gap: 1rem;
-    align-items: start;
-  }
-
-  .coluna {
-    min-width: 0;
-    padding: 0.75rem;
-    border: 1px solid #c9ced6;
-    border-top: 4px solid #64748b;
-    border-radius: 10px;
-    background: #f8fafc;
-  }
-
-  .coluna.em-andamento {
-    border-top-color: #2563eb;
-  }
-
-  .coluna.em-revisao {
-    border-top-color: #d97706;
-  }
-
-  .coluna.concluida {
-    border-top-color: #16a34a;
-  }
-
-  header {
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    gap: 0.5rem;
-    margin-bottom: 0.75rem;
-  }
-
-  h2 {
-    margin: 0;
-    font-size: 1.1rem;
-  }
-
-  .contagem {
-    min-width: 1.75rem;
-    padding: 0.1rem 0.4rem;
-    border-radius: 999px;
-    background: #e2e8f0;
-    text-align: center;
-    font-size: 0.85rem;
-  }
-
-  ul {
-    display: grid;
-    gap: 0.75rem;
-    list-style: none;
-    margin: 0;
-    padding: 0;
-  }
-
-  li {
-    min-width: 0;
-  }
-
-  .vazia {
-    margin: 0;
-    padding: 1rem 0;
-    color: #59636e;
-    font-size: 0.9rem;
-  }
-
-  button {
-    padding: 0.6rem 1rem;
-    border: 1px solid #8c959f;
-    border-radius: 6px;
-    background: #ffffff;
-    color: #1f2328;
-    font: inherit;
-    cursor: pointer;
-  }
-
-  button:focus-visible {
-    outline: 3px solid #0969da;
-    outline-offset: 3px;
-  }
-
-  @media (max-width: 1100px) {
-    .quadro {
-      grid-template-columns: repeat(2, minmax(0, 1fr));
-    }
-  }
-
-  @media (max-width: 640px) {
-    .quadro {
-      grid-template-columns: minmax(0, 1fr);
-    }
-  }
+main { max-width: 88rem; margin: 0 auto; padding: 2.75rem 2rem 4rem; }
+  h1 { margin-bottom: .7rem; }
+  .introducao { margin: 0 0 1.1rem; color: var(--secundario); font-size: .92rem; }
+  .quadro { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 1rem; align-items: start; }
+  .coluna { min-width: 0; padding: .75rem; border: 1px solid var(--linha); border-top: 4px solid #666b77; border-radius: 2px; background: #e5e5de; }
+  .coluna.em-andamento { border-top-color: var(--azul); background: #e2e6f1; }
+  .coluna.em-revisao { border-top-color: #c49b45; background: #eeeadf; }
+  .coluna.concluida { border-top-color: #698775; background: #e3e9e2; }
+  header { display: flex; align-items: center; justify-content: space-between; gap: .5rem; margin-bottom: 1rem; padding: .25rem .15rem .65rem; border-bottom: 1px solid #c4c7c6; }
+  h2 { margin: 0; font-size: .76rem; font-weight: 750; letter-spacing: .045em; text-transform: uppercase; }
+  .contagem { display: inline-flex; align-items: center; justify-content: center; min-width: 26px; min-height: 26px; padding: .1rem .4rem; background: var(--superficie); border: 1px solid var(--linha); text-align: center; font-size: .75rem; font-weight: 650; }
+  ul { display: grid; gap: 1rem; list-style: none; margin: 0; padding: 0; }
+  li { min-width: 0; }
+  .vazia { margin: 0; padding: 1.5rem .4rem; color: var(--secundario); font-size: .82rem; line-height: 1.6; }
+  button { min-height: 44px; padding: .6rem 1rem; border: 1px solid var(--tinta); border-radius: 2px; background: var(--tinta); color: var(--superficie); font: inherit; cursor: pointer; }
+  @media (max-width: 1150px) { .quadro { grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 1.25rem; } }
+  @media (max-width: 640px) { main { padding: 1.5rem 1rem 3rem; } .quadro { grid-template-columns: minmax(0, 1fr); } }
 </style>

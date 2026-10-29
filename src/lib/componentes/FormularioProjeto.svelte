@@ -116,18 +116,18 @@
 {/if}
 
 <style>
-  form { margin-top: 1.5rem; }
-  fieldset { min-width: 0; border: 1px solid #cbd5e1; border-radius: 0.5rem; padding: 1.25rem; }
-  legend { padding: 0 0.4rem; font-weight: 700; }
-  label { display: block; margin: 1rem 0 0.35rem; font-weight: 600; }
-  input, textarea { display: block; width: 100%; min-height: 2.75rem; padding: 0.65rem; font: inherit; color: #0f172a; background: #fff; border: 1px solid #64748b; border-radius: 0.35rem; }
-  input[aria-invalid='true'], textarea[aria-invalid='true'] { border-color: #991b1b; border-width: 2px; }
-  textarea { resize: vertical; }
-  .acoes { display: flex; align-items: center; flex-wrap: wrap; gap: 1.25rem; margin-top: 1.5rem; }
-  button { padding: 0.75rem 1rem; font: inherit; font-weight: 600; background: #2563eb; color: #fff; border: 0; border-radius: 0.4rem; cursor: pointer; }
-  button:hover { background: #1d4ed8; }
-  button:disabled { cursor: wait; opacity: 0.7; }
-  :is(input, textarea, button):focus-visible { outline: 3px solid #2563eb; outline-offset: 3px; }
-  .erro { margin: 0.35rem 0 0; color: #991b1b; }
-  @media (max-width: 480px) { fieldset { padding: 1rem; } }
+form { margin-top: 1.75rem; }
+  fieldset { min-width: 0; border: 1px solid var(--linha); border-top: 3px solid var(--azul); border-radius: 2px; padding: 1.25rem 1.75rem 1.75rem; background: var(--superficie); box-shadow: 4px 4px 0 #dedfd7; }
+  legend { padding: 0 .6rem; color: var(--azul-escuro); font-size: .73rem; font-weight: 750; text-transform: uppercase; letter-spacing: .075em; }
+  label { display: block; margin: 1.2rem 0 .5rem; color: var(--tinta); font-size: .82rem; font-weight: 650; }
+  input, textarea { display: block; width: 100%; min-height: 46px; padding: .7rem .8rem; font: inherit; font-size: .92rem; color: var(--tinta); background: #fcfcf8; border: 1px solid #8c919a; border-radius: 2px; }
+  textarea { resize: vertical; min-height: 7rem; }
+  input[aria-invalid='true'], textarea[aria-invalid='true'] { border-color: var(--erro); border-width: 2px; }
+  .acoes { display: flex; align-items: center; flex-wrap: wrap; gap: 1.5rem; margin-top: 1.75rem; padding-top: 1.25rem; border-top: 1px solid var(--linha); }
+  .acoes a { font-size: .88rem; }
+  button { min-height: 46px; padding: .7rem 1.25rem; font: inherit; font-size: .88rem; font-weight: 650; background: var(--tinta); color: var(--superficie); border: 1px solid var(--tinta); border-radius: 2px; box-shadow: 3px 3px 0 var(--ocre); cursor: pointer; }
+  button:hover:not(:disabled) { background: var(--azul-escuro); }
+  button:disabled { cursor: wait; opacity: .65; }
+  .erro { margin: .5rem 0 0; color: var(--erro); font-size: .85rem; font-weight: 600; }
+  @media (max-width: 640px) { fieldset { padding: 1rem; } }
 </style>

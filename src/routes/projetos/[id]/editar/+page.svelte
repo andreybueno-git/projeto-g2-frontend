@@ -83,6 +83,8 @@
 </main>
 
 <style>
-  main { max-width: 48rem; margin: 0 auto; padding: 1.5rem 1rem; }
-  h1 { margin-bottom: 0.5rem; }
+main { max-width: 54rem; margin: 0 auto; padding: 2.75rem 2rem 4rem; }
+  h1 { margin-bottom: 1rem; }
+  main > p { max-width: 40rem; color: var(--secundario); }
+  @media (max-width: 640px) { main { padding: 1.5rem 1rem 3rem; } }
 </style>

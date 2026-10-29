@@ -60,17 +60,11 @@
 </main>
 
 <style>
-  main {
-    max-width: 72rem;
-    margin: 0 auto;
-    padding: 1.5rem 1rem;
-  }
-  .lista {
-    list-style: none;
-    margin: 0;
-    padding: 0;
-    display: grid;
-    grid-template-columns: repeat(auto-fill, minmax(min(18rem, 100%), 1fr));
-    gap: 1rem;
-  }
+main { max-width: 88rem; margin: 0 auto; padding: 2.75rem 2rem 4rem; }
+  main > p:has(a[href='/tarefas/nova']) { float: right; margin: .5rem 3px 1.1rem 1rem; }
+  .lista { list-style: none; margin: 0; padding: 0; display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 1.25rem; }
+  .lista li { min-width: 0; }
+  @media (max-width: 1024px) { .lista { grid-template-columns: repeat(2, minmax(0, 1fr)); } }
+  @media (max-width: 640px) { main { padding: 1.5rem 1rem 3rem; } .lista { grid-template-columns: minmax(0, 1fr); } }
+  @media (max-width: 360px) { main > p:has(a[href='/tarefas/nova']) { float: none; margin: .4rem 0 1rem; } }
 </style>

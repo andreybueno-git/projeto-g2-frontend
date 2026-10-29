@@ -103,162 +103,33 @@
 </article>
 
 <style>
-  h3 a { color: inherit; text-underline-offset: 3px; }
-  .campo-status { display: grid; gap: .4rem; margin-top: 1rem; }
-  .campo-status label { font-size: .85rem; font-weight: 600; }
-  select { width: 100%; min-height: 44px; padding: .5rem; font: inherit; background: #fff; color: #1f2328; border: 1px solid #64748b; border-radius: 6px; }
-  select:focus-visible { outline: 3px solid #0969da; outline-offset: 3px; }
-  select:disabled { cursor: wait; }
-  .campo-status span[role="status"] { font-size: .8rem; }
-  .erro-status { color: #9f1239; margin: 0; font-size: .85rem; }
+.cartao { position: relative; display: flex; flex-direction: column; height: 100%; min-width: 0; border: 1px solid var(--linha); border-radius: 2px; padding: 1.25rem; background: var(--superficie); color: var(--tinta); box-shadow: 3px 3px 0 #dedfd7; overflow-wrap: anywhere; transition: border-color .15s ease, box-shadow .15s ease; }
+  .cartao:hover { border-color: #858b9b; box-shadow: 3px 3px 0 #cbd2e5; }
+  .cartao::before { content: ''; position: absolute; top: -1px; left: -1px; width: 38px; height: 3px; background: var(--azul); }
+  h3 { margin: 0 0 1rem; font-size: 1.02rem; font-weight: 700; line-height: 1.45; letter-spacing: -.015em; }
+  h3 a { color: inherit; text-decoration: none; }
+  h3 a:hover { color: var(--azul-escuro); text-decoration: underline; }
+  .selos { display: flex; flex-wrap: wrap; align-items: center; gap: .4rem; margin-bottom: 1.25rem; }
+  .selo { display: inline-flex; align-items: center; gap: .35rem; max-width: 100%; padding: .2rem .5rem; border: 1px solid var(--linha); border-radius: 2px; font-size: .69rem; font-weight: 650; line-height: 1.5; overflow-wrap: anywhere; }
+  .status::before { content: ''; flex-shrink: 0; width: 5px; height: 5px; background: currentColor; border-radius: 50%; }
+  .status.afazer, .status.padrao { background: #edede8; border-color: #bcbeb8; color: #50535b; }
+  .status.andamento { background: var(--azul-claro); border-color: #a9b6db; color: #354b89; }
+  .status.revisao { background: #f7edcf; border-color: #d7bd79; color: #725517; }
+  .status.concluida { background: #e8eeea; border-color: #a4bbad; color: #345b45; }
+  .prioridade { background: transparent; }
+  .prioridade.alta { border-color: #d7b0ac; color: #8a3834; }
+  .prioridade.media { border-color: #d2bd86; color: #70571e; }
+  .prioridade.baixa { border-color: #b7c6bc; color: #45634f; }
+  dl { display: grid; grid-template-columns: minmax(0, 1.4fr) minmax(0, 1fr); gap: .8rem; margin: 0 0 1.1rem; }
+  .informacao { min-width: 0; }
+  dt { margin-bottom: .35rem; font-size: .65rem; color: var(--secundario); letter-spacing: .06em; text-transform: uppercase; font-weight: 650; }
+  dd { margin: 0; font-size: .82rem; line-height: 1.5; }
+  .campo-status { display: grid; gap: .45rem; margin-top: auto; padding-top: .9rem; border-top: 1px solid #e1e2dc; }
+  .campo-status label { font-size: .72rem; color: var(--secundario); font-weight: 600; }
+  select { width: 100%; min-height: 44px; padding: .55rem .65rem; font: inherit; font-size: .82rem; background: #f8f8f3; color: var(--tinta); border: 1px solid #8c919a; border-radius: 2px; }
+  select:disabled { cursor: wait; opacity: .65; }
+  .campo-status span[role='status'] { font-size: .75rem; color: #345b45; }
+  .erro-status { color: var(--erro); margin: 0; font-size: .8rem; }
   .sr-only { position: absolute; width: 1px; height: 1px; padding: 0; margin: -1px; overflow: hidden; clip-path: inset(50%); white-space: nowrap; }
-
-  /* Estrutura principal */
-  .cartao {
-    height: 100%;
-    min-width: 0;
-    box-sizing: border-box;
-    border: 1px solid #c9ced6;
-    border-radius: 10px;
-    padding: 1.25rem;
-    background-color: #ffffff;
-    color: #1f2328;
-    overflow-wrap: anywhere;
-  }
-
-  /* Título */
-  h3 {
-    margin: 0 0 0.75rem;
-    font-size: 1.05rem;
-    font-weight: 600;
-    line-height: 1.5;
-  }
-
-  /* Indicadores */
-  .selos {
-    display: flex;
-    flex-wrap: wrap;
-    align-items: center;
-    gap: 0.5rem;
-    margin-bottom: 1rem;
-  }
-
-  .selo {
-    display: inline-flex;
-    align-items: center;
-    max-width: 100%;
-    box-sizing: border-box;
-    padding: 0.25rem 0.65rem;
-    border: 1px solid #c9ced6;
-    border-radius: 999px;
-    font-size: 0.8rem;
-    line-height: 1.4;
-    overflow-wrap: anywhere;
-  }
-
-  /* Cores dos status */
-  .status.afazer {
-    background-color: #f1f5f9;
-    border-color: #cbd5e1;
-    color: #475569;
-  }
-
-  .status.andamento {
-    background-color: #dbeafe;
-    border-color: #60a5fa;
-    color: #1d4ed8;
-  }
-
-  .status.revisao {
-    background-color: #fef3c7;
-    border-color: #f59e0b;
-    color: #92400e;
-  }
-
-  .status.concluida {
-    background-color: #dcfce7;
-    border-color: #4ade80;
-    color: #166534;
-  }
-
-  .status.padrao {
-    background-color: #f8fafc;
-    border-color: #cbd5e1;
-    color: #334155;
-  }
-
-  /* Cores das prioridades */
-  .prioridade.alta {
-    background-color: #ffe3e3;
-    border-color: #d1242f;
-    color: #8b1e27;
-  }
-
-  .prioridade.media {
-    background-color: #fff4d6;
-    border-color: #bf8700;
-    color: #805900;
-  }
-
-  .prioridade.baixa {
-    background-color: #e6f4ea;
-    border-color: #1a7f37;
-    color: #17652e;
-  }
-
-  /* Informações */
-  dl {
-    display: grid;
-    grid-template-columns: repeat(2, minmax(0, 1fr));
-    gap: 1rem;
-    margin: 0;
-  }
-
-  .informacao {
-    min-width: 0;
-  }
-
-  dt {
-    margin-bottom: 0.25rem;
-    font-size: 0.75rem;
-    color: #59636e;
-  }
-
-  dd {
-    margin: 0;
-    font-size: 0.95rem;
-    line-height: 1.5;
-    overflow-wrap: anywhere;
-  }
-
-  /* Responsividade */
-  @media (max-width: 480px) {
-    .cartao {
-      padding: 1rem;
-      border-radius: 8px;
-    }
-
-    h3 {
-      font-size: 1rem;
-    }
-
-    .selos {
-      gap: 0.4rem;
-      margin-bottom: 0.85rem;
-    }
-
-    .selo {
-      font-size: 0.75rem;
-      padding: 0.25rem 0.5rem;
-    }
-
-    dl {
-      grid-template-columns: 1fr;
-      gap: 0.75rem;
-    }
-
-    dd {
-      font-size: 0.9rem;
-    }
-  }
+  @media (max-width: 640px) { .cartao { padding: 1.1rem; } }
 </style>

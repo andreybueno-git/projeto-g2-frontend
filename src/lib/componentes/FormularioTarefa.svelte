@@ -156,67 +156,16 @@
 </form>
 
 <style>
-  form {
-    display: flex;
-    flex-direction: column;
-    gap: 1rem;
-    max-width: 40rem;
-  }
-  .linha {
-    display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(min(14rem, 100%), 1fr));
-    gap: 1rem;
-  }
-  .campo {
-    display: flex;
-    flex-direction: column;
-    gap: 0.25rem;
-    min-width: 0;
-  }
-  label {
-    font-size: 0.9rem;
-    font-weight: 600;
-  }
-  input,
-  select,
-  textarea {
-    width: 100%;
-    padding: 0.55rem 0.7rem;
-    border: 1px solid #8c959f;
-    border-radius: 6px;
-    background: #ffffff;
-    color: #1f2328;
-    font: inherit;
-  }
-  input:focus-visible,
-  select:focus-visible,
-  textarea:focus-visible {
-    outline: 3px solid #2563eb;
-    outline-offset: 1px;
-  }
-  button {
-    align-self: flex-start;
-    padding: 0.65rem 1.4rem;
-    border: none;
-    border-radius: 8px;
-    background: #2563eb;
-    color: #ffffff;
-    font: inherit;
-    font-weight: 600;
-    cursor: pointer;
-  }
-  button:disabled {
-    background: #8c959f;
-    cursor: not-allowed;
-  }
-  button:focus-visible {
-    outline: 3px solid #1f2328;
-    outline-offset: 2px;
-  }
-  form :global([data-erro-campo]),
-  .mensagem-erro {
-    margin: 0;
-    color: #8b1e27;
-    font-weight: 600;
-  }
+form { display: flex; flex-direction: column; gap: 1.25rem; max-width: 48rem; padding: 1.75rem; background: var(--superficie); border: 1px solid var(--linha); border-top: 3px solid var(--azul); box-shadow: 4px 4px 0 #dedfd7; }
+  form > p { margin: 0; color: var(--secundario); font-size: .8rem; }
+  .linha { display: grid; grid-template-columns: repeat(auto-fit, minmax(min(14rem, 100%), 1fr)); gap: 1.25rem; }
+  .campo { display: flex; flex-direction: column; gap: .5rem; min-width: 0; }
+  label { font-size: .82rem; font-weight: 650; }
+  input, select, textarea { width: 100%; min-height: 46px; padding: .7rem .8rem; border: 1px solid #8c919a; border-radius: 2px; background: #fcfcf8; color: var(--tinta); font: inherit; font-size: .92rem; }
+  textarea { resize: vertical; min-height: 7rem; }
+  button { align-self: flex-start; min-height: 46px; margin-top: .5rem; padding: .7rem 1.25rem; border: 1px solid var(--tinta); border-radius: 2px; background: var(--tinta); color: var(--superficie); box-shadow: 3px 3px 0 var(--ocre); font: inherit; font-size: .88rem; font-weight: 650; cursor: pointer; }
+  button:hover:not(:disabled) { background: var(--azul-escuro); }
+  button:disabled { opacity: .65; cursor: not-allowed; }
+  form :global([data-erro-campo]), .mensagem-erro { margin: 0; color: var(--erro); font-size: .85rem; font-weight: 600; }
+  @media (max-width: 640px) { form { padding: 1rem; } }
 </style>
