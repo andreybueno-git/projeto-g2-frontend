@@ -1,5 +1,5 @@
 import {
-  criarTarefa, atualizarTarefa, criarProjeto, atualizarProjeto,
+  criarTarefa, atualizarTarefa, excluirTarefa, criarProjeto, atualizarProjeto,
 } from '../src/lib/servicos/api';
 import type {
   NovaTarefa, NovoProjeto, Tarefa, Projeto,
@@ -17,6 +17,7 @@ function verificarContratos() {
   };
   const novaTarefa: Promise<Tarefa> = criarTarefa(tarefa);
   const tarefaAtualizada: Promise<Tarefa> = atualizarTarefa('1', { status: 'concluida' });
+  const exclusao: Promise<void> = excluirTarefa('1');
   const novoProjeto: Promise<Projeto> = criarProjeto(projeto);
   const projetoAtualizado: Promise<Projeto> = atualizarProjeto('1', { nome: 'Outro nome' });
 
@@ -35,6 +36,6 @@ function verificarContratos() {
   // @ts-expect-error criadoEm continua obrigatório na criação de projeto.
   criarProjeto({ nome: 'Projeto', descricao: 'Descrição', disciplina: 'Frontend' });
 
-  return { novaTarefa, tarefaAtualizada, novoProjeto, projetoAtualizado };
+  return { novaTarefa, tarefaAtualizada, exclusao, novoProjeto, projetoAtualizado };
 }
 void verificarContratos;

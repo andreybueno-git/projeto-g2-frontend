@@ -41,6 +41,10 @@
   }
 
   let avisoStatus = $state("");
+  function removerTarefa(excluida: Tarefa) {
+    tarefas = tarefas.filter((tarefa) => tarefa.id !== excluida.id);
+    avisoStatus = `${excluida.titulo}: tarefa excluída.`;
+  }
 </script>
 
 <svelte:head>
@@ -82,7 +86,7 @@
             <ul>
               {#each coluna.tarefas as tarefa (tarefa.id)}
                 <li>
-                  <CartaoTarefa {tarefa} onstatusalterado={(atualizada) => { avisoStatus = `${atualizada.titulo}: status atualizado.`; }} />
+                  <CartaoTarefa {tarefa} onstatusalterado={(atualizada) => { avisoStatus = `${atualizada.titulo}: status atualizado.`; }} onexcluida={removerTarefa} />
                 </li>
               {/each}
             </ul>

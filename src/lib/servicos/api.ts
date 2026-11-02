@@ -13,11 +13,16 @@ export class ErroApi extends Error {
   }
 }
 
-async function requisitar<T>(caminho: string, opcoes?: RequestInit): Promise<T> {
+async function requisitarResposta(caminho: string, opcoes?: RequestInit): Promise<Response> {
   const resposta = await fetch(`${API_URL}${caminho}`, opcoes);
   if (!resposta.ok) {
     throw new ErroApi(resposta.status, `Erro ${resposta.status} em ${caminho}`);
   }
+  return resposta;
+}
+
+async function requisitar<T>(caminho: string, opcoes?: RequestInit): Promise<T> {
+  const resposta = await requisitarResposta(caminho, opcoes);
   return (await resposta.json()) as T;
 }
 
@@ -45,6 +50,12 @@ export function atualizarTarefa(id: string, dados: AtualizacaoTarefa): Promise<T
 
 export function buscarTarefa(id: string): Promise<Tarefa> {
   return requisitar<Tarefa>(`/tarefas/${encodeURIComponent(id)}`);
+}
+
+export async function excluirTarefa(id: string): Promise<void> {
+  // DELETE pode responder com o registro (200) ou sem conteúdo (204).
+  // O sucesso depende do status HTTP, sem tentar ler um JSON vazio.
+  await requisitarResposta(`/tarefas/${encodeURIComponent(id)}`, { method: "DELETE" });
 }
 
 export function listarProjetos(): Promise<Projeto[]> {

@@ -1,26 +1,85 @@
 
 <script lang="ts">
-  import { tick } from "svelte";
+  import { onDestroy, tick } from "svelte";
   import type { Tarefa, Status } from "../../tipos";
-  import { atualizarTarefa } from "../servicos/api";
+  import { atualizarTarefa, excluirTarefa } from "../servicos/api";
   import {
     ROTULOS_STATUS,
     ROTULOS_PRIORIDADE,
     formatarPrazo
   } from "../utils/rotulos";
 
-  let { tarefa, onstatusalterado }: {
+  let { tarefa, onstatusalterado, onexcluida }: {
     tarefa: Tarefa;
     onstatusalterado?: (tarefa: Tarefa) => void;
+    onexcluida?: (tarefa: Tarefa) => void;
   } = $props();
   let salvando = $state(false);
   let erroStatus = $state("");
   let avisoStatus = $state("");
+  let dialogo = $state<HTMLDialogElement>();
+  let botaoExcluir = $state<HTMLButtonElement>();
+  let botaoCancelar = $state<HTMLButtonElement>();
+  let confirmando = $state(false);
+  let excluindo = $state(false);
+  let erroExclusao = $state("");
+  let ativo = true;
+  onDestroy(() => { ativo = false; });
+
+  function pedirExclusao() {
+    if (salvando || confirmando || excluindo || !dialogo) return;
+    erroExclusao = "";
+    confirmando = true;
+    dialogo.showModal();
+    botaoCancelar?.focus();
+  }
+
+  function cancelarExclusao() {
+    if (!excluindo) dialogo?.close();
+  }
+
+  async function aoFecharConfirmacao() {
+    confirmando = false;
+    if (!excluindo) {
+      await tick();
+      botaoExcluir?.focus();
+    }
+  }
+
+  async function confirmarExclusao() {
+    if (excluindo || salvando || !confirmando) return;
+    excluindo = true;
+    erroExclusao = "";
+    const excluida = tarefa;
+    try {
+      await excluirTarefa(excluida.id);
+    } catch {
+      if (!ativo) return;
+      erroExclusao = "Não foi possível excluir a tarefa. Tente novamente.";
+      excluindo = false;
+      return;
+    }
+
+    // O histórico do navegador pode desmontar o cartão durante o DELETE.
+    if (!ativo) return;
+    const main = dialogo?.closest("main");
+    dialogo?.close();
+    // Só remove da tela depois que a API confirma a exclusão.
+    onexcluida?.(excluida);
+    await tick();
+    // O botão que abriu a confirmação deixou de existir; mantém o foco
+    // na busca ou no link para cadastrar outra tarefa quando a lista esvazia.
+    if (main?.isConnected) {
+      const destino = main.querySelector<HTMLElement>("#busca")
+        ?? main.querySelector<HTMLElement>("a[href^='/tarefas/nova']");
+      destino?.focus();
+    }
+  }
 
   async function mudarStatus(evento: Event) {
     const seletor = evento.currentTarget as HTMLSelectElement;
     const status = seletor.value as Status;
-    if (salvando || status === tarefa.status) return;
+    if (salvando || confirmando || excluindo || status === tarefa.status) return;
     salvando = true;
     erroStatus = "";
     avisoStatus = "";
@@ -92,7 +151,7 @@
   </dl>
   <div class="campo-status">
     <label for={`status-tarefa-${tarefa.id}`}>Mudar status<span class="sr-only"> de {tarefa.titulo}</span></label>
-    <select id={`status-tarefa-${tarefa.id}`} value={tarefa.status} onchange={mudarStatus} disabled={salvando} aria-busy={salvando}>
+    <select id={`status-tarefa-${tarefa.id}`} value={tarefa.status} onchange={mudarStatus} disabled={salvando || confirmando || excluindo} aria-busy={salvando}>
       {#each Object.entries(ROTULOS_STATUS) as [valor, rotulo] (valor)}
         <option value={valor}>{rotulo}</option>
       {/each}
@@ -100,6 +159,29 @@
     <span role="status">{salvando ? "Salvando..." : avisoStatus}</span>
     {#if erroStatus}<p class="erro-status" role="alert">{erroStatus}</p>{/if}
   </div>
+  {#if onexcluida}
+    <button bind:this={botaoExcluir} class="excluir" type="button" onclick={pedirExclusao} disabled={salvando || confirmando || excluindo}>
+      Excluir tarefa<span class="sr-only"> {tarefa.titulo}</span>
+    </button>
+    <dialog
+      bind:this={dialogo}
+      aria-labelledby={`excluir-titulo-${tarefa.id}`}
+      aria-describedby={`excluir-descricao-${tarefa.id}`}
+      oncancel={(evento) => { if (excluindo) evento.preventDefault(); }}
+      onclose={aoFecharConfirmacao}
+    >
+      <h2 id={`excluir-titulo-${tarefa.id}`}>Excluir tarefa?</h2>
+      <p id={`excluir-descricao-${tarefa.id}`}>A tarefa <strong>{tarefa.titulo}</strong> será excluída. Esta ação não pode ser desfeita.</p>
+      {#if erroExclusao}<p class="erro-status" role="alert">{erroExclusao}</p>{/if}
+      <p class="andamento-exclusao" role="status">{excluindo ? "Excluindo tarefa..." : ""}</p>
+      <div class="acoes-exclusao">
+        <button bind:this={botaoCancelar} type="button" onclick={cancelarExclusao} disabled={excluindo}>Cancelar</button>
+        <button class="confirmar-exclusao" type="button" onclick={confirmarExclusao} disabled={excluindo}>
+          {excluindo ? "Excluindo..." : "Excluir tarefa"}
+        </button>
+      </div>
+    </dialog>
+  {/if}
 </article>
 
 <style>
@@ -130,6 +212,18 @@
   select:disabled { cursor: wait; opacity: .65; }
   .campo-status span[role='status'] { font-size: .75rem; color: #345b45; }
   .erro-status { color: var(--erro); margin: 0; font-size: .8rem; }
+  button { min-height: 44px; padding: .55rem .8rem; border: 1px solid var(--linha); border-radius: 2px; background: var(--superficie); color: var(--tinta); font: inherit; font-size: .82rem; cursor: pointer; }
+  button:disabled { cursor: wait; opacity: .65; }
+  button:not(:disabled):hover { background: var(--papel); }
+  .excluir { margin-top: .75rem; color: var(--erro); border-color: #d7b0ac; }
+  dialog { width: min(28rem, calc(100% - 2rem)); max-height: calc(100% - 2rem); padding: 1.5rem; border: 1px solid var(--tinta); border-top: 4px solid var(--erro); border-radius: 2px; background: var(--superficie); color: var(--tinta); box-shadow: 6px 6px 0 #1a1c2133; overflow-wrap: anywhere; }
+  dialog::backdrop { background: #1a1c2199; }
+  dialog h2 { margin: 0 0 1rem; font-size: 1.4rem; }
+  dialog p { font-size: .92rem; }
+  .andamento-exclusao:empty { margin: 0; }
+  .acoes-exclusao { display: flex; flex-wrap: wrap; justify-content: flex-end; gap: .75rem; margin-top: 1.5rem; }
+  .confirmar-exclusao { background: var(--erro); color: var(--superficie); border-color: var(--erro); }
+  .confirmar-exclusao:not(:disabled):hover { background: #6f242b; }
   .sr-only { position: absolute; width: 1px; height: 1px; padding: 0; margin: -1px; overflow: hidden; clip-path: inset(50%); white-space: nowrap; }
   @media (max-width: 640px) { .cartao { padding: 1.1rem; } }
 </style>
