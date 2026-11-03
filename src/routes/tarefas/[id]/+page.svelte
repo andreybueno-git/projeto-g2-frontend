@@ -43,7 +43,7 @@
 
     <p><a href="/tarefas/{tarefa.id}/editar">Editar tarefa</a></p>
   {:else}
-    <p>Carregando tarefa...</p>
+    <p role="status">Carregando tarefa...</p>
   {/if}
   
   <a href="/">Voltar para as tarefas</a>

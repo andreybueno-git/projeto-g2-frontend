@@ -37,7 +37,7 @@
   <p><a href="/tarefas/nova">Nova tarefa</a></p>
 
   {#if carregando}
-    <p>Carregando tarefas...</p>
+    <p role="status">Carregando tarefas...</p>
   {:else if erro}
     <p role="alert">Não foi possível carregar as tarefas: {erro}</p>
   {:else if tarefas.length === 0}

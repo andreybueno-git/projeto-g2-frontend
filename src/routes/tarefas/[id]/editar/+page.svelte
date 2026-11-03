@@ -65,7 +65,7 @@
   <h1>Editar tarefa</h1>
 
   {#if carregando}
-    <p>Carregando tarefa...</p>
+    <p role="status">Carregando tarefa...</p>
   {:else if erro}
     <p role="alert">{erro}</p>
     <a href="/">Voltar para as tarefas</a>

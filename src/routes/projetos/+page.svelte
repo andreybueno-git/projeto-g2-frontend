@@ -23,7 +23,7 @@
     <p><a href="/projetos/novo">Novo projeto</a></p>
   
     {#if carregando}
-      <p>Carregando projetos...</p>
+      <p role="status">Carregando projetos...</p>
     {:else if erro}
       <p role="alert">{erro}</p>
     {:else if projetos.length === 0}
