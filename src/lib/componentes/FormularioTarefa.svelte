@@ -88,6 +88,7 @@
 
   <div class="campo">
     <label for="tarefa-projeto">Projeto (obrigatório)</label>
+    {#if carregandoProjetos}<p role="status">Carregando projetos...</p>{/if}
     <select
       id="tarefa-projeto"
       bind:value={dados.projetoId}
