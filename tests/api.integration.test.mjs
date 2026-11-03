@@ -5,7 +5,7 @@ import { createServer } from 'node:http';
 import { Low, Memory } from 'lowdb';
 import { createApp } from 'json-server/lib/app.js';
 import {
-  criarTarefa, atualizarTarefa, buscarTarefa,
+  criarTarefa, atualizarTarefa, buscarTarefa, excluirTarefa, listarTarefas,
   criarProjeto, atualizarProjeto, buscarProjeto, ErroApi,
 } from '../src/lib/servicos/api.ts';
 
@@ -81,5 +81,17 @@ test('escritas da API funcionam por HTTP com o json-server instalado', { timeout
     await assert.rejects(atualizarTarefa('tarefa-inexistente', { titulo: 'Não criar' }), eh404);
     await assert.rejects(atualizarProjeto('projeto-inexistente', { nome: 'Não criar' }), eh404);
     assert.deepEqual(banco.data, antes);
+  });
+
+  await t.test('excluir tarefa remove apenas o registro escolhido e a próxima leitura retorna 404', async () => {
+    const antes = await listarTarefas();
+    assert.equal(antes.length, 1);
+    const projetosAntes = structuredClone(banco.data.projetos);
+    await excluirTarefa(antes[0].id);
+    assert.deepEqual(await listarTarefas(), []);
+    const eh404 = (erro) => erro instanceof ErroApi && erro.status === 404;
+    await assert.rejects(buscarTarefa(antes[0].id), eh404);
+    await assert.rejects(excluirTarefa(antes[0].id), eh404);
+    assert.deepEqual(banco.data.projetos, projetosAntes);
   });
 });

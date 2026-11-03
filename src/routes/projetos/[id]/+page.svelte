@@ -2,12 +2,14 @@
   import { page } from "$app/state";
   import { buscarProjetoComTarefas, ErroApi } from "../../../lib/servicos/api";
   import type { ProjetoComTarefas } from "../../../lib/servicos/api";
+  import type { Tarefa } from "../../../tipos";
   import { formatarPrazo } from "../../../lib/utils/rotulos";
   import CartaoTarefa from "../../../lib/componentes/CartaoTarefa.svelte";
 
   let projeto = $state<ProjetoComTarefas | null>(null);
   let carregando = $state(true);
   let erro = $state<string | null>(null);
+  let avisoStatus = $state("");
 
   // Busca de novo sempre que o id da URL muda (ex.: /projetos/1 -> /projetos/2).
   $effect(() => {
@@ -17,6 +19,7 @@
     let ativo = true;
     projeto = null;
     erro = null;
+    avisoStatus = "";
     carregando = true;
 
     buscarProjetoComTarefas(id)
@@ -38,7 +41,12 @@
       ativo = false;
     };
   });
-  let avisoStatus = $state("");
+
+  function removerTarefa(excluida: Tarefa) {
+    if (!projeto || projeto.id !== excluida.projetoId) return;
+    projeto.tarefas = projeto.tarefas.filter((tarefa) => tarefa.id !== excluida.id);
+    avisoStatus = `${excluida.titulo}: tarefa excluída.`;
+  }
 </script>
 
 <main>
@@ -80,7 +88,7 @@
         <ul class="lista">
           {#each projeto.tarefas as tarefa (tarefa.id)}
             <li>
-              <CartaoTarefa {tarefa} onstatusalterado={(atualizada) => { avisoStatus = `${atualizada.titulo}: status atualizado.`; }} />
+              <CartaoTarefa {tarefa} onstatusalterado={(atualizada) => { avisoStatus = `${atualizada.titulo}: status atualizado.`; }} onexcluida={removerTarefa} />
             </li>
           {/each}
         </ul>

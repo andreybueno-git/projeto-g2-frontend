@@ -1,7 +1,7 @@
 import { test } from 'node:test';
 import assert from 'node:assert/strict';
 import {
-  criarTarefa, atualizarTarefa, criarProjeto, atualizarProjeto,
+  criarTarefa, atualizarTarefa, excluirTarefa, criarProjeto, atualizarProjeto,
   listarTarefas, buscarTarefa, listarProjetos, buscarProjeto,
   buscarProjetoComTarefas, ErroApi,
 } from '../src/lib/servicos/api.ts';
@@ -64,4 +64,28 @@ test('falha de conexão continua sendo rejeitada para a tela tratar', async (t) 
   const erro = new TypeError('Failed to fetch');
   t.mock.method(globalThis, 'fetch', async () => { throw erro; });
   await assert.rejects(criarProjeto(projeto), (recebido) => recebido === erro);
+});
+
+for (const status of [200, 204]) {
+  test(`excluirTarefa: DELETE com id codificado aceita ${status} sem exigir JSON`, async (t) => {
+    t.mock.method(globalThis, 'fetch', async (url, opcoes) => {
+      assert.equal(url, `http://localhost:3000/tarefas/${idCodificado}`);
+      assert.deepEqual(opcoes, { method: 'DELETE' });
+      return new Response(null, { status });
+    });
+    assert.equal(await excluirTarefa(id), undefined);
+  });
+}
+
+for (const status of [404, 500]) {
+  test(`excluirTarefa: falha HTTP ${status} continua sendo erro`, async (t) => {
+    t.mock.method(globalThis, 'fetch', async () => new Response('Erro', { status }));
+    await assert.rejects(excluirTarefa(id), (erro) => erro instanceof ErroApi && erro.status === status);
+  });
+}
+
+test('excluirTarefa: falha de rede é propagada sem confirmar exclusão', async (t) => {
+  const erro = new TypeError('Failed to fetch');
+  t.mock.method(globalThis, 'fetch', async () => { throw erro; });
+  await assert.rejects(excluirTarefa(id), (recebido) => recebido === erro);
 });
