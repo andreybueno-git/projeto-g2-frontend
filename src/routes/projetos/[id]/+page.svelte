@@ -46,7 +46,7 @@
   <a class="voltar" href="/projetos">← Voltar para os projetos</a>
 
   {#if carregando}
-    <p>Carregando projeto...</p>
+    <p role="status">Carregando projeto...</p>
   {:else if erro}
     <p role="alert">{erro}</p>
   {:else if projeto}
