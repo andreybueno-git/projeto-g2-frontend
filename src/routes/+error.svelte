@@ -1,7 +1,10 @@
 <script lang="ts">
     import { page } from '$app/state';
   </script>
+
+<svelte:head><title>Erro de navegação | Mentalista</title></svelte:head>
   
+<main>
   {#if page.status === 404}
     <h1>Página não encontrada</h1>
     <p>O endereço acessado não existe.</p>
@@ -11,4 +14,4 @@
   {/if}
   
   <a href="/">Voltar para o início</a>
-  
+</main>

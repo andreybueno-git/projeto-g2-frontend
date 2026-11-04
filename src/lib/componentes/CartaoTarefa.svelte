@@ -9,8 +9,9 @@
     formatarPrazo
   } from "../utils/rotulos";
 
-  let { tarefa, onstatusalterado, onexcluida }: {
+  let { tarefa, nivelTitulo = "h3", onstatusalterado, onexcluida }: {
     tarefa: Tarefa;
+    nivelTitulo?: "h2" | "h3";
     onstatusalterado?: (tarefa: Tarefa) => void;
     onexcluida?: (tarefa: Tarefa) => void;
   } = $props();
@@ -124,7 +125,7 @@
 </script>
 
 <article class="cartao">
-  <h3><a href={`/tarefas/${encodeURIComponent(tarefa.id)}`}>{tarefa.titulo}</a></h3>
+  <svelte:element this={nivelTitulo} class="titulo-cartao"><a href={`/tarefas/${encodeURIComponent(tarefa.id)}`}>{tarefa.titulo}</a></svelte:element>
 
   <div class="selos">
     <!-- Status da tarefa -->
@@ -188,9 +189,9 @@
 .cartao { position: relative; display: flex; flex-direction: column; height: 100%; min-width: 0; border: 1px solid var(--linha); border-radius: 2px; padding: 1.25rem; background: var(--superficie); color: var(--tinta); box-shadow: 3px 3px 0 #dedfd7; overflow-wrap: anywhere; transition: border-color .15s ease, box-shadow .15s ease; }
   .cartao:hover { border-color: #858b9b; box-shadow: 3px 3px 0 #cbd2e5; }
   .cartao::before { content: ''; position: absolute; top: -1px; left: -1px; width: 38px; height: 3px; background: var(--azul); }
-  h3 { margin: 0 0 1rem; font-size: 1.02rem; font-weight: 700; line-height: 1.45; letter-spacing: -.015em; }
-  h3 a { color: inherit; text-decoration: none; }
-  h3 a:hover { color: var(--azul-escuro); text-decoration: underline; }
+  .titulo-cartao { margin: 0 0 1rem; font-size: 1.02rem; font-weight: 700; line-height: 1.45; letter-spacing: -.015em; }
+  .titulo-cartao a { color: inherit; text-decoration: none; }
+  .titulo-cartao a:hover { color: var(--azul-escuro); text-decoration: underline; }
   .selos { display: flex; flex-wrap: wrap; align-items: center; gap: .4rem; margin-bottom: 1.25rem; }
   .selo { display: inline-flex; align-items: center; gap: .35rem; max-width: 100%; padding: .2rem .5rem; border: 1px solid var(--linha); border-radius: 2px; font-size: .69rem; font-weight: 650; line-height: 1.5; overflow-wrap: anywhere; }
   .status::before { content: ''; flex-shrink: 0; width: 5px; height: 5px; background: currentColor; border-radius: 50%; }

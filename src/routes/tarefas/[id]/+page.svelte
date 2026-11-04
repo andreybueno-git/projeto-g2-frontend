@@ -7,12 +7,17 @@
     let carregando = $state(true);
     let erro = $state<string | null>(null);
   
-    $effect(() => {
+    let tentativa = $state(0);
+  let podeTentar = $state(false);
+
+  $effect(() => {
+    void tentativa;
       const id = page.params.id;
   
       let ativo = true;
       tarefa = null;
       erro = null;
+    podeTentar = false;
       carregando = true;
 
       if (!id) {
@@ -27,6 +32,7 @@
         })
         .catch((e) => {
           if (!ativo) return;
+        podeTentar = !(e instanceof ErroApi && e.status === 404);
           erro = e instanceof ErroApi && e.status === 404
             ? 'Tarefa não encontrada.'
             : 'Não foi possível carregar a tarefa.';
@@ -40,12 +46,17 @@
       };
     });
   </script>
+
+<svelte:head><title>Detalhes da tarefa | Mentalista</title></svelte:head>
   
 <main>
   {#if carregando}
     <p role="status">Carregando tarefa...</p>
   {:else if erro}
     <p role="alert">{erro}</p>
+    {#if podeTentar}
+      <button type="button" onclick={() => tentativa++}>Tentar novamente</button>
+    {/if}
   {:else if tarefa}
     <h1>{tarefa.titulo}</h1>
   

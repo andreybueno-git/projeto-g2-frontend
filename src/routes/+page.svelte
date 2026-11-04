@@ -16,21 +16,27 @@
   const visiveis = $derived(filtrarTarefas(tarefas, filtros));
 
   // onMount roda só no navegador, então a busca não é repetida no servidor.
-  onMount(async () => {
+  onMount(carregarTarefas);
+
+  async function carregarTarefas() {
+    carregando = true;
+    erro = null;
     try {
       tarefas = await listarTarefas();
-    } catch (e) {
-      erro = e instanceof Error ? e.message : "Erro desconhecido";
+    } catch {
+      erro = "Não foi possível carregar as tarefas. Confira a conexão e tente novamente.";
     } finally {
       carregando = false;
     }
-  });
+  }
   let avisoStatus = $state("");
   function removerTarefa(excluida: Tarefa) {
     tarefas = tarefas.filter((tarefa) => tarefa.id !== excluida.id);
     avisoStatus = `${excluida.titulo}: tarefa excluída.`;
   }
 </script>
+
+<svelte:head><title>Tarefas | Mentalista</title></svelte:head>
 
 <main>
   <p role="status">{avisoStatus}</p>
@@ -43,7 +49,8 @@
   {#if carregando}
     <p role="status">Carregando tarefas...</p>
   {:else if erro}
-    <p role="alert">Não foi possível carregar as tarefas: {erro}</p>
+    <p role="alert">{erro}</p>
+    <button type="button" onclick={carregarTarefas}>Tentar novamente</button>
   {:else if tarefas.length === 0}
     <p>Nenhuma tarefa cadastrada.</p>
   {:else}
@@ -55,7 +62,7 @@
       <ul class="lista">
         {#each visiveis as tarefa (tarefa.id)}
           <li>
-            <CartaoTarefa {tarefa} onstatusalterado={(atualizada) => { avisoStatus = `${atualizada.titulo}: status atualizado.`; }} onexcluida={removerTarefa} />
+            <CartaoTarefa {tarefa} nivelTitulo="h2" onstatusalterado={(atualizada) => { avisoStatus = `${atualizada.titulo}: status atualizado.`; }} onexcluida={removerTarefa} />
           </li>
         {/each}
       </ul>

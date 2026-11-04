@@ -10,13 +10,18 @@
   let erro = $state<string | null>(null);
 
   // Busca de novo sempre que o id da URL muda.
+  let tentativa = $state(0);
+  let podeTentar = $state(false);
+
   $effect(() => {
+    void tentativa;
     const id = page.params.id;
     if (!id) return;
 
     let ativo = true;
     projeto = null;
     erro = null;
+    podeTentar = false;
     carregando = true;
 
     buscarProjeto(id)
@@ -25,6 +30,7 @@
       })
       .catch((e) => {
         if (!ativo) return;
+        podeTentar = !(e instanceof ErroApi && e.status === 404);
         erro =
           e instanceof ErroApi && e.status === 404
             ? 'Projeto não encontrado.'
@@ -66,6 +72,9 @@
     <p role="status">Carregando projeto...</p>
   {:else if erro}
     <p role="alert">{erro}</p>
+    {#if podeTentar}
+      <button type="button" onclick={() => tentativa++}>Tentar novamente</button>
+    {/if}
   {:else if projeto}
     {#key projeto.id}
       <FormularioProjeto
