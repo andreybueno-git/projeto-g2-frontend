@@ -7,16 +7,22 @@
     let carregando = $state(true);
     let erro = $state<string | null>(null);
   
-    onMount(async () => {
+    onMount(carregarProjetos);
+
+    async function carregarProjetos() {
+      carregando = true;
+      erro = null;
       try {
         projetos = await listarProjetos();
       } catch {
-        erro = 'Não foi possível carregar os projetos.';
+        erro = "Não foi possível carregar os projetos. Confira a conexão e tente novamente.";
       } finally {
         carregando = false;
       }
-    });
+    }
   </script>
+
+<svelte:head><title>Projetos | Mentalista</title></svelte:head>
   
   <main>
     <h1>Projetos</h1>
@@ -26,6 +32,7 @@
       <p role="status">Carregando projetos...</p>
     {:else if erro}
       <p role="alert">{erro}</p>
+      <button type="button" onclick={carregarProjetos}>Tentar novamente</button>
     {:else if projetos.length === 0}
       <p>Nenhum projeto cadastrado.</p>
     {:else}
