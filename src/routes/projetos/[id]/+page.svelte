@@ -94,7 +94,7 @@
       <p><a href={`/tarefas/nova?projetoId=${encodeURIComponent(projeto.id)}`}>Nova tarefa neste projeto</a></p>
 
       {#if projeto.tarefas.length === 0}
-        <p>Este projeto ainda não tem tarefas.</p>
+        <p>Este projeto ainda não tem tarefas. Use “Nova tarefa neste projeto” para começar.</p>
       {:else}
         <ul class="lista">
           {#each projeto.tarefas as tarefa (tarefa.id)}

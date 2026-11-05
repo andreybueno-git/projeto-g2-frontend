@@ -51,13 +51,13 @@
   {:else if erro}
     <p role="alert">{erro}</p>
     <button type="button" onclick={carregarTarefas}>Tentar novamente</button>
-  {:else if tarefas.length === 0}
-    <p>Nenhuma tarefa cadastrada.</p>
   {:else}
     <FiltrosTarefas total={tarefas.length} exibidas={visiveis.length} />
 
-    {#if visiveis.length === 0}
-      <p>Nenhuma tarefa encontrada com esses filtros.</p>
+    {#if tarefas.length === 0}
+      <p>Nenhuma tarefa cadastrada. Use “Nova tarefa” para começar.</p>
+    {:else if visiveis.length === 0}
+      <p>Nenhuma tarefa encontrada com esses filtros. Altere a busca ou limpe os filtros para ver outras tarefas.</p>
     {:else}
       <ul class="lista">
         {#each visiveis as tarefa (tarefa.id)}

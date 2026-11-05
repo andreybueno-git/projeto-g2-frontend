@@ -66,9 +66,9 @@
     <FiltrosTarefas total={tarefas.length} exibidas={visiveis.length} />
 
     {#if tarefas.length === 0}
-      <p>Nenhuma tarefa cadastrada.</p>
+      <p>Nenhuma tarefa cadastrada. Cadastre uma tarefa para começar.</p>
     {:else if visiveis.length === 0}
-      <p>Nenhuma tarefa encontrada com esses filtros.</p>
+      <p>Nenhuma tarefa encontrada com esses filtros. Altere a busca ou limpe os filtros para ver outras tarefas.</p>
     {/if}
 
     <div class="quadro">
