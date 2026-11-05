@@ -42,9 +42,10 @@
   --g:calc(var(--u) * 64);
   --t-min:calc(var(--u) * 28);
   --t-sobre:calc(var(--u) * 28);
-  --t-titulo:calc(var(--u) * 76);
-  --t-rotulo:calc(var(--u) * 30);
-  --t-desc:calc(var(--u) * 32);
+  --t-titulo:calc(var(--u) * 72);
+  --t-rotulo:calc(var(--u) * 37.5);
+  --t-desc:calc(var(--u) * 37.5);
+  --t-sim:calc(var(--u) * 32);
   --t-capa:calc(var(--u) * 216);
   --t-capa-sub:calc(var(--u) * 46);
   --t-capa-sobre:calc(var(--u) * 30);
@@ -67,11 +68,11 @@ ol,ul{padding:0;list-style:none}
 /* ============ Palco ============ */
 .palco{position:relative;width:calc(1920 * var(--u));margin:0 auto}
 .no-js .palco{padding:12px 0}
-.js .palco{position:fixed;left:calc(50vw - 960 * var(--u));top:calc(50vh - 540 * var(--u));height:calc(1080 * var(--u));overflow:hidden;contain:layout paint;touch-action:pan-y}
+.js .palco{position:fixed;left:calc(50vw - 960 * var(--u));top:calc(50vh - 540 * var(--u));height:calc(1080 * var(--u));overflow:hidden;contain:layout paint;touch-action:pan-y pinch-zoom}
 @supports (height:100dvh){ .js .palco{top:calc(50dvh - 540 * var(--u))} }
 
 .slide{position:relative;width:calc(1920 * var(--u));height:calc(1080 * var(--u));overflow:hidden;background:var(--papel);
-  padding:calc(var(--u) * 92) var(--m) calc(var(--u) * 116);display:grid;grid-template-columns:calc(var(--u) * 740) minmax(0,1fr);
+  padding:calc(var(--u) * 80) var(--m) calc(var(--u) * 106);display:grid;grid-template-columns:calc(var(--u) * 740) minmax(0,1fr);
   grid-template-rows:auto minmax(0,1fr);column-gap:var(--g)}
 .slide[hidden]{display:none}
 .no-js .slide{margin:0 auto 12px}
@@ -80,24 +81,25 @@ ol,ul{padding:0;list-style:none}
 .slide--codigo{grid-template-columns:calc(var(--u) * 600) minmax(0,1fr)}
 
 /* cabeçalho: sobretítulo + título */
-.cab{grid-column:1 / -1;margin-bottom:calc(var(--u) * 40)}
+.cab{grid-column:1 / -1;margin-bottom:calc(var(--u) * 20)}
 .sobre{font-size:var(--t-sobre);font-weight:700;letter-spacing:.16em;line-height:1.2;color:var(--azul-claro)}
 .titulo{margin-top:calc(var(--u) * 8);font-size:var(--t-titulo);font-weight:800;letter-spacing:-.035em;line-height:1.12;color:var(--tinta);overflow:clip;padding-block:.04em .1em}
 .titulo-in{display:block}
 
 /* coluna da esquerda: as três linhas do PPTX */
 .coluna{grid-column:1;grid-row:2;display:flex;flex-direction:column;min-height:0}
-.linhas{display:flex;flex-direction:column;gap:calc(var(--u) * 24)}
-.linha{position:relative;padding:calc(var(--u) * 20) calc(var(--u) * 14) calc(var(--u) * 16) calc(var(--u) * 30);border-top:calc(var(--u) * 2) solid #dad7cb;
-  transition:background-color var(--dur-medio) var(--ease-entra)}
-.linha::before{content:"";position:absolute;left:0;top:calc(var(--u) * 24);width:calc(var(--u) * 6);height:calc(var(--u) * 30);background:var(--azul);
+.linhas{display:flex;flex-direction:column;gap:calc(var(--u) * 14)}
+.linha{position:relative;padding:calc(var(--u) * 10) calc(var(--u) * 14) calc(var(--u) * 8) calc(var(--u) * 30);border-top:calc(var(--u) * 2) solid #dad7cb;
+  transition:background-color var(--dur-medio) var(--ease-entra),box-shadow var(--dur-medio) var(--ease-entra)}
+.linha::before{content:"";position:absolute;left:0;top:calc(var(--u) * 14);width:calc(var(--u) * 6);height:calc(var(--u) * 36);background:var(--azul);
   transform-origin:top;transition:height var(--dur-medio) var(--ease-entra)}
-.linha.ativa{background:rgba(232,230,221,.95)}
-.linha.ativa::before{height:calc(100% - var(--u) * 40)}
+/* linha que acompanha a interação: fundo mais escuro e moldura azul (>= 3:1 contra o papel), visível do fundo da sala */
+.linha.ativa{background:var(--papel-2);box-shadow:0 0 0 calc(var(--u) * 4) var(--azul)}
+.linha.ativa::before{height:calc(100% - var(--u) * 22)}
 .linha dt{font-size:var(--t-rotulo);font-weight:800;line-height:1.2;letter-spacing:-.01em;color:var(--azul)}
-.linha dd{margin-top:calc(var(--u) * 8);font-size:var(--t-desc);line-height:1.32;color:var(--texto)}
+.linha dd{margin-top:calc(var(--u) * 6);font-size:var(--t-desc);line-height:1.26;color:var(--texto)}
 .mono{font-family:var(--mono);font-weight:700;letter-spacing:-.02em}
-.nota{margin-top:auto;padding-top:calc(var(--u) * 20);font-size:var(--t-min);line-height:1.3;color:var(--mudo)}
+.nota{margin-top:auto;padding-top:calc(var(--u) * 12);font-size:var(--t-min);line-height:1.3;color:var(--mudo)}
 .nota code{font-size:.95em;color:var(--texto)}
 
 /* ============ Capa ============ */
@@ -117,7 +119,7 @@ ol,ul{padding:0;list-style:none}
 .progresso{position:absolute;left:var(--m);right:var(--m);top:calc(var(--u) * 18);display:flex;gap:calc(var(--u) * 10)}
 .progresso li{flex:1}
 .seg{display:block;width:100%;height:calc(var(--u) * 40);padding:0;border:0;background:none;cursor:pointer;position:relative}
-.seg::before{content:"";position:absolute;left:0;right:0;top:calc(var(--u) * 16);height:calc(var(--u) * 6);border-radius:calc(var(--u) * 3);background:#d3d0c4;transition:background-color var(--dur-medio) var(--ease-entra)}
+.seg::before{content:"";position:absolute;left:0;right:0;top:calc(var(--u) * 16);height:calc(var(--u) * 6);border-radius:calc(var(--u) * 3);background:#8a877d;transition:background-color var(--dur-medio) var(--ease-entra)}
 .seg.feito::before{background:var(--azul-claro)}
 .seg[aria-current="step"]::before{background:var(--azul);height:calc(var(--u) * 8);top:calc(var(--u) * 15)}
 .seg:hover::before{background:var(--azul)}
@@ -128,11 +130,11 @@ ol,ul{padding:0;list-style:none}
 .btn:hover{border-color:var(--azul);color:var(--azul)}
 .btn:active{transform:scale(.96)}
 .btn svg{width:calc(var(--u) * 28);height:calc(var(--u) * 28)}
-.btn[disabled]{opacity:.45;cursor:default}
+.btn[aria-disabled="true"]{opacity:.45;cursor:default}
 .contador{font-size:var(--t-min);font-weight:800;letter-spacing:.04em;font-variant-numeric:tabular-nums;min-width:calc(var(--u) * 118);text-align:center;pointer-events:none}
 .contador .de{color:var(--mudo);font-weight:600}
 .palco[data-tom="escuro"] .controle{color:var(--papel-2)}
-.palco[data-tom="escuro"] .seg::before{background:#3a3e48}
+.palco[data-tom="escuro"] .seg::before{background:#636874}
 .palco[data-tom="escuro"] .seg.feito::before{background:var(--azul-claro)}
 .palco[data-tom="escuro"] .seg[aria-current="step"]::before{background:var(--lavanda)}
 .palco[data-tom="escuro"] .btn{background:rgba(23,25,30,.9);border-color:#4a4e59;color:var(--papel-2)}
@@ -170,24 +172,24 @@ ol,ul{padding:0;list-style:none}
 .toast.on{opacity:1}
 
 /* índice (tecla I): fora do palco, na camada de cima */
-.indice{width:min(760px,calc(100vw - 32px));max-height:calc(100vh - 48px);padding:clamp(18px,2.4vw,34px);border:0;border-top:6px solid var(--azul);border-radius:4px;
+.indice{width:min(760px,calc(100vw - 32px));max-height:calc(100vh - 24px);padding:clamp(14px,1.8vw,26px) clamp(16px,2.2vw,30px);border:0;border-top:6px solid var(--azul);border-radius:4px;
   background:var(--papel);color:var(--texto);font-family:var(--fonte);box-shadow:10px 10px 0 rgba(23,25,30,.35)}
 .indice::backdrop{background:rgba(23,25,30,.72)}
 .indice h2{font-size:clamp(20px,2vw,30px);font-weight:800;letter-spacing:-.02em;color:var(--tinta)}
-.indice ol{margin-top:14px;display:grid;gap:4px}
-.indice-item{display:flex;gap:16px;align-items:baseline;width:100%;padding:9px 12px;border:0;border-radius:4px;background:none;text-align:left;cursor:pointer;font-size:clamp(17px,1.6vw,24px);font-weight:600;color:var(--texto)}
+.indice ol{margin-top:10px;display:grid;gap:2px}
+.indice-item{display:flex;gap:16px;align-items:baseline;width:100%;padding:5px 12px;border:0;border-radius:4px;background:none;text-align:left;cursor:pointer;font-size:clamp(17px,1.6vw,24px);font-weight:600;line-height:1.25;color:var(--texto)}
 .indice-item .num{font-weight:800;color:var(--azul-claro);font-variant-numeric:tabular-nums;min-width:2.2ch}
 .indice-item:hover{background:var(--papel-2)}
 .indice-item[aria-current="true"]{background:var(--azul);color:var(--branco)}
 .indice-item[aria-current="true"] .num{color:var(--lavanda)}
-.indice-atalhos{margin-top:16px;font-size:clamp(14px,1.2vw,18px);line-height:1.5;color:var(--mudo)}
+.indice-atalhos{margin-top:12px;font-size:clamp(14px,1.2vw,18px);line-height:1.5;color:var(--mudo)}
 .indice-atalhos kbd{display:inline-block;padding:0 6px;border:1px solid #c9c6ba;border-bottom-width:2px;border-radius:4px;background:var(--branco);font-size:.9em;color:var(--texto)}
-.indice-fechar{margin-top:14px;padding:8px 18px;border:2px solid var(--tinta);border-radius:24px;background:var(--tinta);color:var(--papel);font-size:clamp(15px,1.3vw,20px);font-weight:700;cursor:pointer}
+.indice-fechar{margin-top:12px;padding:7px 18px;border:2px solid var(--tinta);border-radius:24px;background:var(--tinta);color:var(--papel);font-size:clamp(15px,1.3vw,20px);font-weight:700;cursor:pointer}
 
 /* ============ Simulações ============ */
-.sim{grid-column:2;grid-row:2;min-height:0;min-width:0;display:flex;flex-direction:column;gap:.45em;font-size:var(--t-min);line-height:1.3;position:relative}
-.slide--capa .sim{grid-row:1;height:calc(var(--u) * 640)}
-.credito{flex:none;font-family:var(--fonte);font-weight:600;color:var(--mudo);line-height:1.3}
+.sim{grid-column:2;grid-row:2;min-height:0;min-width:0;display:flex;flex-direction:column;gap:.4em;font-size:var(--t-sim);line-height:1.3;position:relative}
+.slide--capa .sim{grid-row:1;height:calc(var(--u) * 720)}
+.credito{flex:none;font-family:var(--fonte);font-size:.875em;font-weight:600;color:var(--mudo);line-height:1.3}
 .credito b{color:var(--azul);font-weight:800}
 
 .app{flex:1;min-height:0;display:flex;flex-direction:column;position:relative;overflow:hidden;background:var(--a-papel);border:1px solid #b9bab2;
@@ -196,8 +198,8 @@ ol,ul{padding:0;list-style:none}
 .app-top::after{content:"";position:absolute;left:0;right:0;top:100%;height:.17em;background:linear-gradient(90deg,var(--a-azul) 0 72%,var(--a-sup) 72% 83%,var(--a-ocre) 83% 92%,var(--a-azul) 92%)}
 .app-marca{flex:none;display:grid;place-items:center;width:1.1em;height:1.25em;background:var(--a-azul);border-right:.13em solid var(--a-ocre);transform:skew(-4deg)}
 .app-marca svg{width:.72em;height:.72em}
-.sim-tag{margin-left:auto;font-family:var(--fonte);font-weight:600;color:#a8acb7;letter-spacing:.02em;white-space:nowrap}
-.app-corpo{flex:1;min-height:0;position:relative;overflow:hidden;padding:1em .95em .8em;margin-top:.17em}
+.sim-tag{margin-left:auto;font-family:var(--fonte);font-size:.875em;font-weight:600;color:#a8acb7;letter-spacing:.02em;white-space:nowrap}
+.app-corpo{flex:1;min-height:0;position:relative;overflow:hidden;padding:.8em .85em .7em;margin-top:.17em}
 .app-top .a-btn{margin-left:auto;background:transparent;color:var(--a-sup);border-color:#6a6e79;box-shadow:none}
 
 .cena{animation:cena-entra var(--dur-medio) var(--ease-entra) both}
@@ -223,6 +225,7 @@ ol,ul{padding:0;list-style:none}
 .a-primario{background:var(--a-tinta);color:var(--a-sup)}
 .a-btn.desab{background:#e4e4de;border-color:#a9aaa4;color:#5f6269;box-shadow:none;cursor:default}
 .app .foco,.app :focus-visible{outline:.11em solid var(--a-azul-esc);outline-offset:.14em}
+.app-top .a-btn.foco,.app-top .a-btn:focus-visible{outline-color:var(--lavanda)}
 .cartao{position:relative;padding:.6em .75em .7em;border:1px solid var(--a-linha);border-radius:2px;background:var(--a-sup);box-shadow:.1em .1em 0 #dedfd7}
 .cartao::before{content:"";position:absolute;left:-1px;top:-1px;width:1.36em;height:.11em;background:var(--a-azul)}
 .cartao-titulo{font-size:1.06em;font-weight:700;line-height:1.25;color:var(--a-azul-esc)}
@@ -308,12 +311,12 @@ ol,ul{padding:0;list-style:none}
 /* simulação 6: estados e código */
 .diag{flex:none;position:relative;height:5.2em}
 .diag svg{position:absolute;inset:0;width:100%;height:100%;overflow:visible}
-.diag .arco{fill:none;stroke:#b9b6aa;stroke-width:3;transition:stroke var(--dur-curto)}
+.diag .arco{fill:none;stroke:#8a877d;stroke-width:3;transition:stroke var(--dur-curto)}
 .diag .arco.on{stroke:var(--azul)}
 .diag-rot{position:absolute;left:24%;top:0;width:28%;text-align:center;font-weight:700;color:var(--mudo);transition:color var(--dur-curto)}
 .diag-rot.on{color:var(--azul)}
 .nos{position:absolute;left:0;right:0;bottom:0;display:grid;grid-template-columns:1fr 1fr 1fr;gap:2.4em}
-.no{padding:.32em .5em;border:.08em solid #b9b6aa;border-radius:2px;background:var(--papel);text-align:center;font-weight:800;color:var(--mudo);
+.no{padding:.32em .5em;border:.08em solid #8a877d;border-radius:2px;background:var(--papel);text-align:center;font-weight:800;color:var(--mudo);
   transition:background-color var(--dur-medio) var(--ease-entra),color var(--dur-medio),border-color var(--dur-medio)}
 .no.on{background:var(--azul);border-color:var(--azul);color:var(--branco)}
 .no[data-no="erro"].on{background:var(--erro);border-color:var(--erro)}
@@ -327,10 +330,11 @@ ol,ul{padding:0;list-style:none}
 .codigo-arq{flex:none;padding:.25em .7em;background:#24272e;color:#c9ccd4;font-family:var(--mono);font-weight:600}
 .codigo-janela{flex:1;min-height:0;overflow:hidden;position:relative}
 .codigo-rolo{padding:.35em 0 1em;transition:transform var(--dur-medio) var(--ease-entra)}
-.ln{display:grid;grid-template-columns:2.7em minmax(0,1fr);font-family:var(--mono);line-height:1.38;color:#E8E6DD;transition:background-color var(--dur-curto)}
+.ln{display:grid;grid-template-columns:2.7em minmax(0,1fr);font-family:var(--mono);line-height:1.38;color:#E8E6DD;transition:background-color var(--dur-curto),opacity var(--dur-medio)}
+.codigo-rolo .ln:not(.on),.codigo-rolo .ln-sep{opacity:.5}
 .ln .n{color:#8d919b;text-align:right;padding-right:.65em;user-select:none}
 .ln .c{white-space:pre-wrap;overflow-wrap:anywhere;padding-left:4ch;text-indent:-4ch;padding-right:.5em}
-.ln.on{background:rgba(174,189,232,.2);box-shadow:inset .14em 0 0 var(--lavanda)}
+.ln.on{background:rgba(174,189,232,.3);box-shadow:inset .18em 0 0 var(--lavanda)}
 .ln-sep{font-family:var(--mono);color:#8d919b;padding-left:2.1em;line-height:1.38}
 .tk-kw{color:#AEBDE8}
 .tk-run{color:#ffffff;font-weight:700}
@@ -364,14 +368,14 @@ ol,ul{padding:0;list-style:none}
 .vant{flex:1;display:flex;flex-direction:column;gap:.5em;min-height:0}
 .vant-i{flex:1;display:grid;grid-template-columns:3.4em minmax(0,1fr);gap:.8em;align-items:center;padding:.55em .8em;border:1px solid #d3d0c4;border-left:.2em solid var(--azul);background:var(--branco);
   transition:background-color var(--dur-medio) var(--ease-entra),border-color var(--dur-medio)}
-.vant-i.on{background:#f8f7f2;border-color:var(--azul)}
+.vant-i.on{background:#eef1fa;border-color:var(--azul);box-shadow:0 0 0 .1em var(--azul)}
 .ico{width:3.4em;height:3.4em;color:var(--azul)}
 .ico .tr{fill:none;stroke:currentColor;stroke-width:3.2;stroke-linecap:round;stroke-linejoin:round}
 .ico .ch{fill:var(--lavanda)}
 .vant-forte{font-size:1.4em;font-weight:800;line-height:1.12;letter-spacing:-.02em;color:var(--tinta)}
 .vant-prova{margin-top:.25em;color:var(--mudo);font-weight:600;line-height:1.3}
 .vant-prova code{color:var(--azul);font-weight:700;overflow-wrap:anywhere}
-.etiqueta-solta{flex:none;align-self:flex-end;font-weight:600;color:var(--mudo)}
+.etiqueta-solta{flex:none;align-self:flex-end;font-size:.875em;font-weight:600;color:var(--mudo)}
 
 /* simulação 9: roteiro da demonstração */
 .demo{display:flex;flex-direction:column;gap:.45em}
@@ -444,6 +448,7 @@ ol,ul{padding:0;list-style:none}
   .sim--codigo .codigo-janela{height:11em;flex:none}
   .sim--codigo .codigo{flex:none}
   .vant-i{flex:none}
+  .tl-pr{font-size:.74em}
   .progresso{position:fixed;left:12px;right:12px;top:0;padding-top:4px;background:linear-gradient(var(--papel) 70%,rgba(242,240,232,0))}
   .palco[data-tom="escuro"] .progresso{background:linear-gradient(var(--tinta) 70%,rgba(23,25,30,0))}
   .seg{height:26px}.seg::before{top:10px;height:5px}.seg[aria-current="step"]::before{top:9px;height:7px}
@@ -503,9 +508,9 @@ ol,ul{padding:0;list-style:none}
 .diag .arco{stroke-linejoin:round;stroke-linecap:round;vector-effect:non-scaling-stroke}
 
 /* simulação 7 e 10: destaque do bloco em foco */
-.metricas.on .met{box-shadow:0 0 0 .09em var(--azul)}
+.metricas.on .met{box-shadow:0 0 0 .12em var(--azul)}
 .git,.prox,.tempo{transition:background-color var(--dur-medio) var(--ease-entra),box-shadow var(--dur-medio) var(--ease-entra)}
-.git.on,.prox.on,.tempo.on{background:var(--a-azul-claro);box-shadow:0 0 0 .3em var(--a-azul-claro)}
+.git.on,.prox.on,.tempo.on{background:var(--a-azul-claro);box-shadow:0 0 0 .12em var(--a-azul-esc),0 0 0 .3em var(--a-azul-claro)}
 
 /* ============ Acréscimos da segunda passada ============ */
 .diag{height:6em}
@@ -534,6 +539,62 @@ ol,ul{padding:0;list-style:none}
 .antes{margin-top:.5em;padding:.4em .7em .45em}
 .diag-rot{left:3%;width:60%;white-space:nowrap}
 @media (max-width:760px){ .diag{height:6.6em} }
+
+/* ============ Acréscimos das correções (revisão) ============ */
+/* créditos dentro da linha das abas ou da rede, para sobrar altura para a simulação */
+.abas .credito,.rede-linha .credito{margin-left:auto;margin-right:0}
+/* simulação 5: formulário mais baixo (campos empilhados, como no app) */
+.a-form{gap:.2em;padding:.4em .6em .45em}
+.a-form .a-input{margin-bottom:.1em;min-height:1.5em}
+.a-form .a-alerta{margin:.1em 0 .15em}
+.a-form .explica{margin-top:.15em}
+[data-sim="falhas"] .app-corpo{padding:.6em .75em .55em}
+[data-sim="falhas"] .a-h1{margin-bottom:.25em}
+/* simulação 6: nome do arquivo na linha dos valores; janela de código mais alta */
+.vars{flex:none;display:flex;align-items:baseline;justify-content:space-between;gap:.6em;font-family:var(--mono)}
+.vars-lista{display:flex;flex-wrap:wrap;gap:.3em .9em}
+.vars .codigo-arq{flex:none;padding:0;background:none;color:var(--mudo);font-weight:700}
+.diag{height:5em}
+.codigo-rolo{padding:.25em 0 .8em}
+/* simulação 3: diálogo focável durante o DELETE, sem anel */
+.a-dialogo:focus{outline:none}
+/* slide 5: o endereço e o estado da API ficam na barra escura do app (uma barra só) */
+.app-top .a-url-cam{flex:1;min-width:0;padding:.04em .45em;background:var(--a-sup);border:1px solid #b9bab2;font-family:var(--mono);font-weight:600;color:var(--a-tinta);white-space:nowrap;overflow:hidden}
+.app-top .pilula{flex:none}
+/* slide 2: marco e datas na mesma linha; detalhe sem altura mínima */
+.tl-g{flex-direction:row;align-items:baseline;gap:.4em;flex-wrap:wrap}
+.tl-detalhe{min-height:0}
+/* slide 9 e 10: um pouco mais compactos */
+.demo{gap:.35em}
+.demo-passo{padding:.35em .6em .4em}
+.demo-aviso{margin-top:.45em}
+.prox{margin-top:.35em;padding:.4em .55em}
+.prox pre{padding:.3em .45em}
+.tempo{margin-top:.4em}
+/* slide 7: cartões de métricas um pouco mais baixos */
+.met{padding:.4em .55em .45em}
+.met-num{font-size:1.7em}
+/* slides 7 e 9: painéis um pouco mais compactos para caber a 1280x720 */
+[data-sim="a11y"] .app-corpo,[data-sim="demo"] .app-corpo{padding:.6em .75em .55em}
+.metricas{gap:.4em}
+.met{padding:.35em .5em .4em}
+.met-num{font-size:1.6em}
+.papel{margin-bottom:.5em}
+.demo{gap:.3em}
+.demo-passo{padding:.3em .6em .35em}
+.demo-acoes{margin-top:.2em}
+.demo-aviso{margin-top:.4em;padding:.35em .6em;line-height:1.25}
+.met-num small{font-size:.63em}
+/* celular: rótulos dos PRs menores, com espaço entre si (regra no fim para vencer a regra geral do .tl-pr) */
+@media (max-width:760px){
+  .tl-pr{font-size:.93em;letter-spacing:-.04em}
+  .credito,.sim-tag,.etiqueta-solta{font-size:1em}
+  /* celular: o crédito ocupa a linha inteira e quebra, em vez de passar da borda (N1) */
+  .abas .credito,.rede-linha .credito{flex:1 1 100%;min-width:0;margin-left:0;margin-right:0}
+  /* celular: a descrição do passo fica em cima, com os dois botões embaixo (N2) */
+  .passos{flex-wrap:wrap;justify-content:space-between}
+  .passo-txt{flex:1 1 100%;order:-1}
+}
 
 </style>
 </head>
@@ -590,26 +651,26 @@ ol,ul{padding:0;list-style:none}
         <div class="tl">
           <div class="tl-grupos"><p class="tl-g"><b>Marco 4</b> <span>27/10 a 29/10</span></p><p class="tl-g"><b>Marco 5</b> <span>03/11 a 05/11</span></p></div>
           <div class="tl-eixo">
-            <span class="tl-trilho" aria-hidden="true"></span><span class="tl-cheio" aria-hidden="true"></span>
+            <span class="tl-trilho" aria-hidden="true"></span><span class="tl-cheio" aria-hidden="true" style="transform:scaleX(.468)"></span>
             <ol class="tl-prs" aria-label="Pull requests em ordem de junção">
-              <li><button type="button" class="tl-pr m4" data-i="0">#64</button></li>
-              <li><button type="button" class="tl-pr m4" data-i="1">#65</button></li>
-              <li><button type="button" class="tl-pr m4" data-i="2">#66</button></li>
-              <li><button type="button" class="tl-pr m4" data-i="3">#67</button></li>
-              <li><button type="button" class="tl-pr m4" data-i="4">#68</button></li>
+              <li><button type="button" class="tl-pr m4 feito" data-i="0" aria-pressed="false">#64</button></li>
+              <li><button type="button" class="tl-pr m4 feito" data-i="1" aria-pressed="false">#65</button></li>
+              <li><button type="button" class="tl-pr m4 feito" data-i="2" aria-pressed="false">#66</button></li>
+              <li><button type="button" class="tl-pr m4 feito" data-i="3" aria-pressed="false">#67</button></li>
+              <li><button type="button" class="tl-pr m4 feito on" data-i="4" aria-pressed="true">#68</button></li>
               <li class="tl-vao" aria-hidden="true"></li>
-              <li><button type="button" class="tl-pr m5" data-i="5">#70</button></li>
-              <li><button type="button" class="tl-pr m5" data-i="6">#69</button></li>
-              <li><button type="button" class="tl-pr m5" data-i="7">#71</button></li>
-              <li><button type="button" class="tl-pr m5 on" data-i="8" aria-pressed="true">#72</button></li>
+              <li><button type="button" class="tl-pr m5" data-i="5" aria-pressed="false">#70</button></li>
+              <li><button type="button" class="tl-pr m5" data-i="6" aria-pressed="false">#69</button></li>
+              <li><button type="button" class="tl-pr m5" data-i="7" aria-pressed="false">#71</button></li>
+              <li><button type="button" class="tl-pr m5" data-i="8" aria-pressed="false">#72</button></li>
             </ol>
           </div>
         </div>
-        <div class="tl-detalhe" data-detalhe>
-          <p class="tl-d-cab"><b data-d="pr">PR #72</b> <span data-d="data">05/11</span> <span class="tl-d-marco" data-d="marco">Marco 5</span></p>
-          <p class="tl-d-titulo" data-d="titulo">Aprimora mensagens de estados vazios</p>
+        <div class="tl-detalhe" data-detalhe data-marco="4">
+          <p class="tl-d-cab"><b data-d="pr">PR #68</b> <span data-d="data">29/10</span> <span class="tl-d-marco" data-d="marco">Marco 4</span></p>
+          <p class="tl-d-titulo" data-d="titulo">Integra filtros entre lista e quadro e aplica visual Mentalista</p>
         </div>
-        <div class="antes" data-antes>
+        <div class="antes on" data-antes>
           <p class="antes-tit">Lista no fim do Marco 4 <span class="hash">47849b8</span></p>
           <ul class="antes-lista">
             <li data-antes-i="0"><code data-src="47849b8:src/routes/+page.svelte:40">&lt;p&gt;Carregando tarefas...&lt;/p&gt;</code></li>
@@ -632,7 +693,7 @@ ol,ul{padding:0;list-style:none}
       <div class="linha"><dt>Depois da resposta</dt><dd>A tarefa sai da tela somente após a API confirmar. Se falhar, aparece um aviso.</dd></div>
     </dl>
   </div>
-  <figure class="sim" data-sim="exclusao" aria-label="Simulação: excluir uma tarefa com confirmação. Clique em Excluir tarefa, Cancelar ou confirme.">
+  <figure class="sim" data-sim="exclusao" data-foco-real aria-label="Simulação: excluir uma tarefa com confirmação. Clique em Excluir tarefa, Cancelar ou confirme.">
     <div class="app">
       <div class="app-top"><span class="app-marca" aria-hidden="true"><svg viewBox="0 0 16 16"><path d="M3 8.6 L6.4 12 L13 4.6" fill="none" stroke="#fffef9" stroke-width="2.6" stroke-linecap="square"/></svg></span><span>Gerenciador de Tarefas</span><span class="sim-tag">simulação</span></div>
       <div class="app-corpo" data-palco-sim>
@@ -642,10 +703,9 @@ ol,ul{padding:0;list-style:none}
           <div class="selos"><span class="selo s-afazer">A fazer</span><span class="selo p-alta">Prioridade alta</span></div>
           <button type="button" class="a-btn" data-abrir>Excluir tarefa</button>
         </article>
-        <p class="a-p" data-vazio hidden>Nenhuma tarefa cadastrada. Use “Nova tarefa” para começar.</p>
         <button type="button" class="btn-sim" data-recomecar hidden>Recomeçar a simulação</button>
         <div class="a-camada" data-camada>
-          <div class="a-dialogo" role="dialog" aria-labelledby="s3-dt" aria-describedby="s3-dd">
+          <div class="a-dialogo" role="dialog" aria-labelledby="s3-dt" aria-describedby="s3-dd" tabindex="-1">
             <p class="a-dialogo-titulo" id="s3-dt">Excluir tarefa?</p>
             <p id="s3-dd">A tarefa <strong>Implementar layout responsivo com Flexbox e Grid</strong> será excluída. Esta ação não pode ser desfeita.</p>
             <p class="a-alerta" data-erro hidden>Não foi possível excluir a tarefa. Tente novamente.</p>
@@ -657,12 +717,12 @@ ol,ul{padding:0;list-style:none}
       </div>
     </div>
     <div class="rede-linha">
-      <span class="rot">Rede</span><code class="rede-req">DELETE /tarefas/1</code><svg class="rede-seta" viewBox="0 0 24 24" aria-hidden="true"><path d="M4 12 H18 M13 6 L19 12 L13 18" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"/></svg><span class="pilula" data-res data-tipo="ok">204</span>
+      <span class="rot">Rede</span><code class="rede-req">DELETE /tarefas/1</code><svg class="rede-seta" viewBox="0 0 24 24" aria-hidden="true"><path d="M4 12 H18 M13 6 L19 12 L13 18" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"/></svg><span class="pilula" data-res data-tipo="vazio">—</span>
+      <p class="credito"><b>Issue #31</b> · PR #69 · Andrey Bueno</p>
     </div>
     <div class="rede-linha">
-      <span class="escolha-rot" id="s3-escolha">Resposta nesta simulação:</span><span class="escolha" role="group" aria-labelledby="s3-escolha"><button type="button" aria-pressed="true" data-modo="ok">204</button><button type="button" aria-pressed="false" data-modo="falha">API parada</button></span>
+      <span class="escolha-rot" id="s3-escolha">Resposta nesta simulação:</span><span class="escolha" role="group" aria-labelledby="s3-escolha"><button type="button" aria-pressed="true" data-modo="200">200</button><button type="button" aria-pressed="false" data-modo="204">204</button><button type="button" aria-pressed="false" data-modo="falha">API parada</button></span>
     </div>
-    <p class="credito"><b>Issue #31</b> · PR #69 · Andrey Bueno</p>
   </figure>
 </section>
 
@@ -680,6 +740,7 @@ ol,ul{padding:0;list-style:none}
   <figure class="sim" data-sim="vazios" aria-label="Simulação: carregando, lista vazia, projeto sem tarefas e busca sem resultados">
     <div class="abas" role="group" aria-label="Escolher o estado mostrado">
       <button type="button" aria-pressed="false" data-ir="carregando">Carregando</button><button type="button" aria-pressed="false" data-ir="lista">Lista vazia</button><button type="button" aria-pressed="false" data-ir="projeto">Projeto sem tarefas</button><button type="button" aria-pressed="true" data-ir="busca">Busca sem resultados</button>
+      <p class="credito"><b>Issues #32 e #34</b> · PR #70 e PR #72 · Pedro Henrique</p>
     </div>
     <div class="app">
       <div class="app-top"><span class="app-marca" aria-hidden="true"><svg viewBox="0 0 16 16"><path d="M3 8.6 L6.4 12 L13 4.6" fill="none" stroke="#fffef9" stroke-width="2.6" stroke-linecap="square"/></svg></span><span>Gerenciador de Tarefas</span><span class="sim-tag">simulação</span></div>
@@ -710,7 +771,6 @@ ol,ul{padding:0;list-style:none}
         </div>
       </div>
     </div>
-    <p class="credito"><b>Issues #32 e #34</b> · PR #70 e PR #72 · Pedro Henrique</p>
   </figure>
 </section>
 
@@ -727,10 +787,10 @@ ol,ul{padding:0;list-style:none}
   <figure class="sim" data-sim="falhas" aria-label="Simulação: falha de consulta com Tentar novamente, item inexistente e falha ao salvar">
     <div class="abas" role="group" aria-label="Escolher o caso mostrado">
       <button type="button" aria-pressed="false" data-ir="consulta">Falha de consulta</button><button type="button" aria-pressed="false" data-ir="inexistente">Item inexistente</button><button type="button" aria-pressed="true" data-ir="salvar">Falha ao salvar</button>
+      <p class="credito"><b>#33</b> Rayane Araujo Teles (PR #71) · <b>#35</b> Andrey Bueno (PR #69)</p>
     </div>
     <div class="app">
-      <div class="app-top"><span class="app-marca" aria-hidden="true"><svg viewBox="0 0 16 16"><path d="M3 8.6 L6.4 12 L13 4.6" fill="none" stroke="#fffef9" stroke-width="2.6" stroke-linecap="square"/></svg></span><span>Gerenciador de Tarefas</span><span class="sim-tag">simulação</span></div>
-      <div class="a-url"><span class="a-url-cam" data-url>/tarefas/1/editar</span><span class="pilula" data-api data-tipo="ok">API ligada</span></div>
+      <div class="app-top"><span class="app-marca" aria-hidden="true"><svg viewBox="0 0 16 16"><path d="M3 8.6 L6.4 12 L13 4.6" fill="none" stroke="#fffef9" stroke-width="2.6" stroke-linecap="square"/></svg></span><span class="a-url-cam" data-url>/tarefas/1/editar</span><span class="pilula" data-api data-tipo="ok">API ligada</span><span class="sim-tag">simulação</span></div>
       <div class="app-corpo" data-palco-sim>
         <div class="cena" data-cena="consulta" hidden>
           <div class="sub" data-sub="carregando" hidden><p class="a-status"><span class="a-barra" aria-hidden="true"></span>Carregando tarefas...</p></div>
@@ -743,9 +803,9 @@ ol,ul{padding:0;list-style:none}
         </div>
         <div class="cena" data-cena="inexistente" hidden>
           <div class="sub" data-sub="carregando-t" hidden><p class="a-status"><span class="a-barra" aria-hidden="true"></span>Carregando tarefa...</p></div>
-          <div class="sub" data-sub="tarefa" hidden><p class="a-alerta">Tarefa não encontrada.</p><p class="explica">Resposta 404: sem “Tentar novamente”.</p></div>
+          <div class="sub" data-sub="tarefa"><p class="a-alerta">Tarefa não encontrada.</p><p class="explica">Resposta 404: sem “Tentar novamente”.</p></div>
           <div class="sub" data-sub="carregando-p" hidden><p class="a-status"><span class="a-barra" aria-hidden="true"></span>Carregando projeto...</p></div>
-          <div class="sub" data-sub="projeto"><p class="a-alerta">Projeto não encontrado.</p><p class="explica">Resposta 404: sem “Tentar novamente”.</p></div>
+          <div class="sub" data-sub="projeto" hidden><p class="a-alerta">Projeto não encontrado.</p><p class="explica">Resposta 404: sem “Tentar novamente”.</p></div>
         </div>
         <div class="cena" data-cena="salvar">
           <p class="a-h1">Editar tarefa</p>
@@ -760,7 +820,6 @@ ol,ul{padding:0;list-style:none}
         <span class="ponteiro" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="M4 2.5 V19.7 L8.6 15.4 L11.7 22.3 L14.7 20.9 L11.6 14.1 L17.9 13.7 Z" fill="#fffef9" stroke="#1a1c21" stroke-width="1.6" stroke-linejoin="round"/></svg></span>
       </div>
     </div>
-    <p class="credito"><b>#33</b> Rayane Araujo Teles (PR #71) · <b>#35</b> Andrey Bueno (PR #69)</p>
   </figure>
 </section>
 
@@ -784,12 +843,11 @@ ol,ul{padding:0;list-style:none}
       <p class="diag-rot" data-arco-rot>Tentar novamente</p>
       <div class="nos"><p class="no" data-no="erro">Erro</p><p class="no" data-no="carregando">Carregando</p><p class="no on" data-no="lista">Lista</p></div>
     </div>
-    <p class="vars" aria-label="Valores guardados com $state"><span class="var"><code>carregando</code><b data-v="carregando">false</b></span><span class="var"><code>erro</code><b data-v="erro">null</b></span><span class="var"><code>tarefas</code><b data-v="tarefas">9 itens</b></span></p>
+    <div class="vars"><p class="vars-lista" aria-label="Valores guardados com $state"><span class="var"><code>carregando</code><b data-v="carregando">false</b></span><span class="var"><code>erro</code><b data-v="erro">null</b></span><span class="var"><code>tarefas</code><b data-v="tarefas">9 itens</b></span></p><p class="codigo-arq">src/routes/+page.svelte</p></div>
     <div class="codigo">
-      <p class="codigo-arq">src/routes/+page.svelte</p>
       <div class="codigo-janela"><div class="codigo-rolo" data-rolo><div class="ln" data-l="11" data-src="src/routes/+page.svelte:11"><span class="n" aria-hidden="true">11</span><span class="c">  <span class="tk-kw">let</span> tarefas = <span class="tk-run">$state</span><span class="tk-tag">&lt;Tarefa</span>[]<span class="tk-tag">&gt;</span>([]);</span></div><div class="ln" data-l="12" data-src="src/routes/+page.svelte:12"><span class="n" aria-hidden="true">12</span><span class="c">  <span class="tk-kw">let</span> carregando = <span class="tk-run">$state</span>(<span class="tk-kw">true</span>);</span></div><div class="ln" data-l="13" data-src="src/routes/+page.svelte:13"><span class="n" aria-hidden="true">13</span><span class="c">  <span class="tk-kw">let</span> erro = <span class="tk-run">$state</span><span class="tk-tag">&lt;string</span> | <span class="tk-kw">null</span><span class="tk-tag">&gt;</span>(<span class="tk-kw">null</span>);</span></div><div class="ln-sep" aria-hidden="true">⋯</div><div class="ln" data-l="21" data-src="src/routes/+page.svelte:21"><span class="n" aria-hidden="true">21</span><span class="c">  <span class="tk-kw">async</span> <span class="tk-kw">function</span> carregarTarefas() {</span></div><div class="ln" data-l="22" data-src="src/routes/+page.svelte:22"><span class="n" aria-hidden="true">22</span><span class="c">    carregando = <span class="tk-kw">true</span>;</span></div><div class="ln" data-l="23" data-src="src/routes/+page.svelte:23"><span class="n" aria-hidden="true">23</span><span class="c">    erro = <span class="tk-kw">null</span>;</span></div><div class="ln" data-l="24" data-src="src/routes/+page.svelte:24"><span class="n" aria-hidden="true">24</span><span class="c">    <span class="tk-kw">try</span> {</span></div><div class="ln" data-l="25" data-src="src/routes/+page.svelte:25"><span class="n" aria-hidden="true">25</span><span class="c">      tarefas = <span class="tk-kw">await</span> listarTarefas();</span></div><div class="ln" data-l="26" data-src="src/routes/+page.svelte:26"><span class="n" aria-hidden="true">26</span><span class="c">    } <span class="tk-kw">catch</span> {</span></div><div class="ln" data-l="27" data-src="src/routes/+page.svelte:27"><span class="n" aria-hidden="true">27</span><span class="c">      erro = <span class="tk-str">"Não foi possível carregar as tarefas. Confira a conexão e tente novamente."</span>;</span></div><div class="ln" data-l="28" data-src="src/routes/+page.svelte:28"><span class="n" aria-hidden="true">28</span><span class="c">    } <span class="tk-kw">finally</span> {</span></div><div class="ln" data-l="29" data-src="src/routes/+page.svelte:29"><span class="n" aria-hidden="true">29</span><span class="c">      carregando = <span class="tk-kw">false</span>;</span></div><div class="ln" data-l="30" data-src="src/routes/+page.svelte:30"><span class="n" aria-hidden="true">30</span><span class="c">    }</span></div><div class="ln" data-l="31" data-src="src/routes/+page.svelte:31"><span class="n" aria-hidden="true">31</span><span class="c">  }</span></div><div class="ln-sep" aria-hidden="true">⋯</div><div class="ln" data-l="49" data-src="src/routes/+page.svelte:49"><span class="n" aria-hidden="true">49</span><span class="c">  <span class="tk-blk">{#if</span> carregando}</span></div><div class="ln" data-l="50" data-src="src/routes/+page.svelte:50"><span class="n" aria-hidden="true">50</span><span class="c">    <span class="tk-tag">&lt;p</span> role=<span class="tk-str">"status"</span><span class="tk-tag">&gt;</span>Carregando tarefas...<span class="tk-tag">&lt;/p</span><span class="tk-tag">&gt;</span></span></div><div class="ln" data-l="51" data-src="src/routes/+page.svelte:51"><span class="n" aria-hidden="true">51</span><span class="c">  <span class="tk-blk">{:else if</span> erro}</span></div><div class="ln" data-l="52" data-src="src/routes/+page.svelte:52"><span class="n" aria-hidden="true">52</span><span class="c">    <span class="tk-tag">&lt;p</span> role=<span class="tk-str">"alert"</span><span class="tk-tag">&gt;</span>{erro}<span class="tk-tag">&lt;/p</span><span class="tk-tag">&gt;</span></span></div><div class="ln" data-l="53" data-src="src/routes/+page.svelte:53"><span class="n" aria-hidden="true">53</span><span class="c">    <span class="tk-tag">&lt;button</span> type=<span class="tk-str">"button"</span> onclick={carregarTarefas}<span class="tk-tag">&gt;</span>Tentar novamente<span class="tk-tag">&lt;/button</span><span class="tk-tag">&gt;</span></span></div><div class="ln" data-l="54" data-src="src/routes/+page.svelte:54"><span class="n" aria-hidden="true">54</span><span class="c">  <span class="tk-blk">{:else</span>}</span></div><div class="ln" data-l="55" data-src="src/routes/+page.svelte:55"><span class="n" aria-hidden="true">55</span><span class="c">    <span class="tk-tag">&lt;FiltrosTarefas</span> total={tarefas.length} exibidas={visiveis.length} <span class="tk-tag">/&gt;</span></span></div></div></div>
     </div>
-    <div class="passos"><button type="button" class="btn-sim" data-ant>Anterior</button><p class="passo-txt" data-passo-txt><b data-passo-n>10 de 10</b> · <span data-passo-desc>{:else}: filtros e lista aparecem</span></p><button type="button" class="btn-sim" data-prox>Próximo</button></div>
+    <div class="passos"><button type="button" class="btn-sim" data-ant>Passo anterior</button><p class="passo-txt" data-passo-txt><b data-passo-n>10 de 10</b> · <span data-passo-desc>{:else}: filtros e lista aparecem</span></p><button type="button" class="btn-sim" data-prox>Próximo passo</button></div>
   </figure>
 </section>
 
@@ -804,7 +862,7 @@ ol,ul{padding:0;list-style:none}
     </dl>
     <p class="nota">Resultados conforme docs/marco-5/auditoria.md, para os cenários avaliados.</p>
   </div>
-  <figure class="sim" data-sim="a11y" aria-label="Simulação: o foco no diálogo e de volta ao botão, as mensagens com role status e alert, e os números da auditoria">
+  <figure class="sim" data-sim="a11y" data-foco-real aria-label="Simulação: o foco no diálogo e de volta ao botão, as mensagens com role status e alert, e os números da auditoria">
     <div class="app">
       <div class="app-top"><span class="app-marca" aria-hidden="true"><svg viewBox="0 0 16 16"><path d="M3 8.6 L6.4 12 L13 4.6" fill="none" stroke="#fffef9" stroke-width="2.6" stroke-linecap="square"/></svg></span><span>Gerenciador de Tarefas</span><span class="tecla" data-tecla aria-hidden="true">tecla <kbd data-kbd>Tab</kbd></span><span class="sim-tag">simulação</span></div>
       <div class="app-corpo" data-palco-sim>
@@ -814,17 +872,17 @@ ol,ul{padding:0;list-style:none}
             <div class="selos"><span class="selo s-afazer">A fazer</span><span class="selo p-alta">Prioridade alta</span></div>
             <button type="button" class="a-btn" data-abrir>Excluir tarefa</button>
           </article>
-          <div class="a-camada" data-camada>
-            <div class="a-dialogo" role="dialog" aria-labelledby="s7-dt">
-              <p class="a-dialogo-titulo" id="s7-dt">Excluir tarefa?</p>
-              <p>A tarefa <strong>Implementar layout responsivo com Flexbox e Grid</strong> será excluída. Esta ação não pode ser desfeita.</p>
-              <div class="a-acoes"><button type="button" class="a-btn foco" data-cancelar>Cancelar</button><span class="a-btn a-perigo">Excluir tarefa</span></div>
-            </div>
-          </div>
         </div>
         <div class="cena" data-cena="papeis" hidden>
           <div class="papel"><p class="a-status"><span class="a-barra" aria-hidden="true"></span>Carregando tarefas...</p><code data-src="src/routes/+page.svelte:50">&lt;p role="status"&gt;Carregando tarefas...&lt;/p&gt;</code></div>
           <div class="papel"><p class="a-alerta">Não foi possível carregar as tarefas. Confira a conexão e tente novamente.</p><code data-src="src/routes/+page.svelte:52">&lt;p role="alert"&gt;{erro}&lt;/p&gt;</code></div>
+        </div>
+        <div class="a-camada" data-camada>
+          <div class="a-dialogo" role="dialog" aria-labelledby="s7-dt" aria-describedby="s7-dd">
+            <p class="a-dialogo-titulo" id="s7-dt">Excluir tarefa?</p>
+            <p id="s7-dd">A tarefa <strong>Implementar layout responsivo com Flexbox e Grid</strong> será excluída. Esta ação não pode ser desfeita.</p>
+            <div class="a-acoes"><button type="button" class="a-btn foco" data-cancelar>Cancelar</button><button type="button" class="a-btn a-perigo" data-confirmar>Excluir tarefa</button></div>
+          </div>
         </div>
       </div>
     </div>
@@ -833,7 +891,7 @@ ol,ul{padding:0;list-style:none}
       <div class="met"><div class="telas" aria-hidden="true" data-telas><i class="ok"></i><i class="ok"></i><i class="ok"></i><i class="ok"></i><i class="ok"></i><i class="ok"></i><i class="ok"></i><i class="ok"></i><i class="ok"></i></div><p class="met-num">9 <small>rotas</small></p><p class="met-rot">320 px, 0 violações</p></div>
       <div class="met"><p class="met-num">36</p><p class="met-rot">testes aprovados</p></div>
     </div>
-    <p class="credito"><b>Issue #37</b> · PR #71 · Rayane Araujo Teles</p>
+    <p class="credito">Auditoria: <b>Issue #37</b> · PR #71 · Rayane Araujo Teles</p>
   </figure>
 </section>
 
@@ -1012,14 +1070,15 @@ const itensIndice = slides.map((s, i) => {
   b.type = 'button'; b.className = 'indice-item';
   b.innerHTML = `<span class="num">${dois(i + 1)}</span><span></span>`;
   b.lastChild.textContent = titulo(i);
-  b.addEventListener('click', () => { fechaIndice(); ir(i); });
+  b.addEventListener('click', () => { focoNoSlide = true; fechaIndice(); ir(i); });
   li.appendChild(b); dlgLista.appendChild(li);
   return b;
 });
-let voltaFoco = null;
+let voltaFoco = null, voltaVisivel = false, focoNoSlide = false;
+const focoVisivel = el => { try { return el.matches(':focus-visible'); } catch (e) { return true; } };
 function abreIndice() {
   if (dlg.open) { fechaIndice(); return; }
-  voltaFoco = D.activeElement;
+  voltaFoco = D.activeElement; voltaVisivel = !!voltaFoco && voltaFoco !== D.body && focoVisivel(voltaFoco);
   itensIndice.forEach((b, i) => b.setAttribute('aria-current', i === atual ? 'true' : 'false'));
   try { dlg.showModal(); } catch (e) { dlg.setAttribute('open', ''); }
   (itensIndice[atual] || itensIndice[0]).focus();
@@ -1028,10 +1087,13 @@ function fechaIndice() {
   if (!dlg.open) return;
   try { dlg.close(); } catch (e) { dlg.removeAttribute('open'); quandoFecha(); }
 }
+/* ao fechar: se escolheu um slide, ou se o índice foi aberto sem foco de teclado em nada,
+   o foco vai para o slide atual (Espaço avança dali); quem chegou pelo Tab volta ao seu botão */
 function quandoFecha() {
-  const v = voltaFoco; voltaFoco = null;
-  if (v && v.isConnected && v !== D.body && !v.closest('[hidden]')) v.focus({ preventScroll: true });
-  else palco.querySelector('[data-abre-indice]').focus({ preventScroll: true });
+  const v = voltaFoco, vis = voltaVisivel, escolheu = focoNoSlide;
+  voltaFoco = null; focoNoSlide = false;
+  if (!escolheu && v && vis && v.isConnected && !v.closest('[hidden]')) v.focus({ preventScroll: true });
+  else if (slides[atual]) slides[atual].focus({ preventScroll: true });
 }
 dlg.addEventListener('close', quandoFecha);
 dlg.querySelector('[data-fecha-indice]').addEventListener('click', fechaIndice);
@@ -1100,7 +1162,9 @@ function atualizaControles() {
     if (i === atual) b.setAttribute('aria-current', 'step'); else b.removeAttribute('aria-current');
   });
   contadorN.textContent = dois(atual + 1);
-  btAnt.disabled = atual === 0; btProx.disabled = atual === N - 1;
+  /* aria-disabled em vez de disabled: o botão continua focável e o foco não cai no body nos extremos */
+  btAnt.setAttribute('aria-disabled', atual === 0 ? 'true' : 'false');
+  btProx.setAttribute('aria-disabled', atual === N - 1 ? 'true' : 'false');
 }
 /* tom dos controles (claro ou escuro); na varredura, troca quando a faixa passa pelos botões */
 function aplicaTom(n) {
@@ -1243,13 +1307,19 @@ D.addEventListener('keydown', e => {
     return;
   }
   if (alvo.closest('input, textarea, select, [contenteditable="true"]')) return;
+  if (k === 'Escape') { const s = sims[atual]; if (s && s.esc()) e.preventDefault(); return; }
+  const noDialogo = !!alvo.closest('.a-camada');
   const emBotao = !!alvo.closest('button, a[href], [role="button"]');
   switch (k) {
     case 'ArrowRight': case 'PageDown': e.preventDefault(); ir(atual + 1); return;
     case 'ArrowLeft': case 'PageUp': e.preventDefault(); ir(atual - 1); return;
     case 'ArrowDown': if (movel()) return; e.preventDefault(); ir(atual + 1); return;
     case 'ArrowUp': if (movel()) return; e.preventDefault(); ir(atual - 1); return;
-    case ' ': case 'Spacebar': if (emBotao) return; e.preventDefault(); ir(atual + (e.shiftKey ? -1 : 1)); return;
+    /* Espaço: dentro do diálogo simulado nunca troca de slide; num botão focado (pelo teclado) aciona o botão.
+       Depois de um clique de mouse o botão solta o foco (ver abaixo), então Espaço volta a avançar. */
+    case ' ': case 'Spacebar':
+      if (noDialogo || emBotao) return;
+      e.preventDefault(); ir(atual + (e.shiftKey ? -1 : 1)); return;
     case 'Home': e.preventDefault(); ir(0); return;
     case 'End': e.preventDefault(); ir(N - 1); return;
   }
@@ -1257,6 +1327,15 @@ D.addEventListener('keydown', e => {
   if (l === 'i') { e.preventDefault(); abreIndice(); }
   else if (l === 'f') { e.preventDefault(); telaCheia(); }
   else if (l === 't') { e.preventDefault(); alternaCrono(); }
+});
+
+/* clique de mouse num botão (detail > 0; pelo teclado é 0): o botão não fica com o foco, para Espaço e as setas
+   continuarem trocando de slide. Quem apresenta com o teclado mantém o foco onde está. Os botões cujo tratador
+   move o foco de propósito (abrir o diálogo, Cancelar, Recomeçar) não são afetados: o alvo já não está focado. */
+D.addEventListener('click', e => {
+  if (!e.detail || !(e.target instanceof Element)) return;
+  const b = e.target.closest('button');
+  if (b && D.activeElement === b) b.blur();
 });
 
 /* bordas do palco e tarjas */
@@ -1279,15 +1358,20 @@ palco.addEventListener('pointerup', e => {
 palco.addEventListener('pointercancel', () => { toque = null; }, { passive: true });
 
 /* endereço: #slide-N e o voltar do navegador */
-addEventListener('popstate', () => { const n = lerHash(); ir(n < 0 ? 0 : n, { historico: true }); });
+addEventListener('popstate', () => {
+  const n = lerHash();
+  if (n >= 0) ir(n, { historico: true });
+  else if (!location.hash || location.hash === '#') ir(0, { historico: true });
+  /* hash que não é de slide (#slide-99, #notas): fica onde está */
+});
 addEventListener('hashchange', () => { const n = lerHash(); if (n >= 0) ir(n, { historico: true }); });
 
 /* ================= Simulações ================= */
 const FAB = {};
 function criaSim(f, slide) {
-  const api = { el: f, nome: f.dataset.sim, ativo: false, rodando: false };
+  const api = { el: f, nome: f.dataset.sim, ativo: false, rodando: false, emManual: false };
   const auto = new Set(), acoes = new Set();
-  let passo = 0, retomar = 0, def = null;
+  let passo = 0, pausado = false, def = null;
   const agenda = (conj, fn, t) => {
     const id = setTimeout(() => { conj.delete(id); if (api.ativo) fn(); }, t);
     conj.add(id); return id;
@@ -1297,8 +1381,14 @@ function criaSim(f, slide) {
   const limpa = conj => { conj.forEach(clearTimeout); conj.clear(); };
   api.limpaAcoes = () => limpa(acoes);
   const linhas = [...slide.querySelectorAll('.linha')];
-  api.linha = i => linhas.forEach((l, k) => l.classList.toggle('ativa', k === i));
+  /* a linha da esquerda só acende quando quem apresenta interage (nunca pelo loop automático) */
+  api.linha = i => { if (i >= 0 && api.rodando) return; linhas.forEach((l, k) => l.classList.toggle('ativa', k === i)); };
   api.foco = el => { f.querySelectorAll('.foco').forEach(x => x.classList.remove('foco')); if (el) el.classList.add('foco'); };
+  /* nas simulações de foco (3 e 7), o anel acompanha o foco de verdade, inclusive o que vem do mouse */
+  if (f.dataset.focoReal !== undefined) {
+    f.addEventListener('focusin', e => { const b = e.target.closest('button'); if (b && b.closest('.app')) api.foco(b); });
+    f.addEventListener('focusout', e => { if (e.target.classList && e.target.classList.contains('foco')) e.target.classList.remove('foco'); });
+  }
   /* ponteiro */
   const pont = f.querySelector('.ponteiro');
   const area = f.querySelector('[data-palco-sim]');
@@ -1332,21 +1422,33 @@ function criaSim(f, slide) {
     }, p[1]);
   };
   api.iniciar = () => {
-    api.parar();
+    api.parar(); api.emManual = false;
     if (!def.passos || reduz()) { if (def.final) def.final(); return; }
+    api.rodando = true; passo = 0;
     if (def.entrar) def.entrar();
     if (def.inicio) def.inicio();
-    api.rodando = true; passo = 0; roda();
+    roda();
   };
   api.parar = () => {
-    api.rodando = false; limpa(auto); limpa(acoes);
-    clearTimeout(retomar); retomar = 0; api.someP();
+    api.rodando = false; pausado = false; limpa(auto); limpa(acoes); api.someP();
   };
   api.final = () => { api.parar(); if (def.final) def.final(); };
+  /* quem apresenta clicou: o loop para e a cena fica como foi deixada até sair do slide
+     (não há retomada automática). Devolve se o loop estava rodando antes do clique. */
   api.manual = () => {
-    api.rodando = false; limpa(auto); clearTimeout(retomar); retomar = 0; api.someP();
-    if (def.passos && !reduz()) retomar = setTimeout(() => { retomar = 0; if (api.ativo && !D.hidden) api.iniciar(); }, 15000);
+    const rodava = api.rodando || pausado;
+    api.rodando = false; pausado = false; limpa(auto); api.someP(); api.emManual = true;
+    return rodava;
   };
+  /* aba escondida: o loop automático pausa no passo em que está e retoma dali; o modo manual não muda */
+  api.pausar = () => { if (!api.rodando) return; api.rodando = false; pausado = true; limpa(auto); };
+  api.retomar = () => {
+    if (!pausado) return;
+    pausado = false;
+    if (reduz()) { api.final(); return; }
+    api.rodando = true; roda();
+  };
+  api.esc = () => !!(def && def.esc && def.esc());
   def = (FAB[api.nome] || (() => ({})))(f, api);
   return api;
 }
@@ -1355,6 +1457,18 @@ const qa = (r, s) => [...r.querySelectorAll(s)];
 const cenas = (raiz, nome) => qa(raiz, ':scope > [data-cena]').forEach(c => { c.hidden = c.dataset.cena !== nome; });
 const subs = (raiz, nome) => qa(raiz, ':scope > [data-sub]').forEach(c => { c.hidden = c.dataset.sub !== nome; });
 const bloqueia = (bts, sim) => bts.forEach(b => { b.disabled = sim; b.classList.toggle('desab', sim); });
+/* diálogo simulado: Tab e Shift+Tab circulam só entre os botões do diálogo, como o <dialog> com showModal() do app */
+function prende(camada) {
+  camada.addEventListener('keydown', e => {
+    if (e.key !== 'Tab') return;
+    e.preventDefault();
+    const bts = qa(camada, 'button:not([disabled])').filter(b => b.offsetParent);
+    if (!bts.length) return;
+    const i = bts.indexOf(D.activeElement);
+    const k = i < 0 ? (e.shiftKey ? bts.length - 1 : 0) : (i + (e.shiftKey ? -1 : 1) + bts.length) % bts.length;
+    bts[k].focus({ preventScroll: true });
+  });
+}
 
 /* 1. Capa: a tela de tarefas passando pelos estados */
 FAB.capa = (f, api) => {
@@ -1421,18 +1535,19 @@ FAB.linha = (f, api) => {
   return {
     inicio() { marcaAntes(-1); sel(0, false); },
     passos,
-    final() { marcaAntes(-1); sel(PRS.length - 1, false); api.linha(-1); }
+    final() { sel(4, false); marcaAntes(0); api.linha(-1); }
   };
 };
 
 /* 3. Exclusão com confirmação */
 FAB.exclusao = (f, api) => {
-  const corpo = q(f, '[data-palco-sim]'), cartao = q(f, '[data-cartao]'), abrir = q(f, '[data-abrir]');
-  const camada = q(f, '[data-camada]'), cancelar = q(f, '[data-cancelar]'), confirmar = q(f, '[data-confirmar]');
+  const cartao = q(f, '[data-cartao]'), abrir = q(f, '[data-abrir]');
+  const camada = q(f, '[data-camada]'), dialogo = q(f, '.a-dialogo'), cancelar = q(f, '[data-cancelar]'), confirmar = q(f, '[data-confirmar]');
   const erro = q(f, '[data-erro]'), andamento = q(f, '[data-andamento]'), avisoOk = q(f, '[data-anuncio]');
-  const vazio = q(f, '[data-vazio]'), res = q(f, '[data-res]'), recomecar = q(f, '[data-recomecar]');
+  const res = q(f, '[data-res]'), recomecar = q(f, '[data-recomecar]');
   const modos = qa(f, '[data-modo]');
-  let modo = 'ok', fase = 'lista';
+  /* modo: '200' (o json-server 1.0.0-beta.15 do projeto responde 200 com o registro), '204' ou 'falha' */
+  let modo = '200', fase = 'lista', escolheu = false;
   const setRes = (tipo, txt) => { res.dataset.tipo = tipo; res.textContent = txt; };
   const setModo = m => { modo = m; modos.forEach(b => b.setAttribute('aria-pressed', b.dataset.modo === m ? 'true' : 'false')); };
   function reset() {
@@ -1440,7 +1555,7 @@ FAB.exclusao = (f, api) => {
     cartao.hidden = false; cartao.classList.remove('sai'); camada.hidden = true; erro.hidden = true;
     andamento.textContent = ''; confirmar.textContent = 'Excluir tarefa';
     bloqueia([cancelar, confirmar, abrir], false);
-    avisoOk.hidden = true; vazio.hidden = true; recomecar.hidden = true;
+    avisoOk.hidden = true; recomecar.hidden = true;
     setRes('vazio', '—'); api.foco(null); api.linha(-1);
   }
   function abre(real) {
@@ -1459,15 +1574,18 @@ FAB.exclusao = (f, api) => {
     if (fase !== 'confirmando' && fase !== 'erro') return;
     fase = 'excluindo'; erro.hidden = true;
     confirmar.textContent = 'Excluindo...'; andamento.textContent = 'Excluindo tarefa...';
+    /* o foco vai para o diálogo antes de desabilitar os botões: assim não cai no body (onde Espaço trocaria de slide) */
+    if (real) dialogo.focus({ preventScroll: true });
     bloqueia([cancelar, confirmar], true); api.foco(null);
     setRes('espera', 'aguardando'); api.linha(1);
     api.acao(() => {
-      if (modo === 'ok') {
-        setRes('ok', '204'); api.linha(2);
+      if (modo !== 'falha') {
+        setRes('ok', modo); api.linha(2);
         api.acao(() => {
           camada.hidden = true; cartao.classList.add('sai'); fase = 'excluida';
           api.acao(() => {
-            cartao.hidden = true; avisoOk.hidden = false; vazio.hidden = false; recomecar.hidden = false;
+            /* só o aviso: no app sobram as outras tarefas, a lista não fica vazia */
+            cartao.hidden = true; avisoOk.hidden = false; recomecar.hidden = false;
             if (real) recomecar.focus({ preventScroll: true });
           }, reduz() ? 0 : DUR.medio);
         }, 380);
@@ -1479,33 +1597,38 @@ FAB.exclusao = (f, api) => {
       }
     }, 1150);
   }
-  abrir.addEventListener('click', () => { api.manual(); abre(true); });
-  cancelar.addEventListener('click', () => { api.manual(); fecha(true); });
-  confirmar.addEventListener('click', () => { api.manual(); confirma(true); });
-  recomecar.addEventListener('click', () => { api.manual(); reset(); abrir.focus({ preventScroll: true }); });
-  modos.forEach(b => b.addEventListener('click', () => { api.manual(); setModo(b.dataset.modo); }));
-  camada.addEventListener('keydown', e => { if (e.key === 'Escape' && fase !== 'excluindo') { e.preventDefault(); api.manual(); fecha(true); } });
+  /* primeiro clique de quem apresenta: se o loop estava rodando e ninguém escolheu a resposta no seletor,
+     volta para o sucesso (200), para o clique não cair na falha que o loop deixou ligada */
+  const aoVivo = () => { if (api.manual() && !escolheu) setModo('200'); };
+  abrir.addEventListener('click', () => { aoVivo(); abre(true); });
+  cancelar.addEventListener('click', () => { aoVivo(); fecha(true); });
+  confirmar.addEventListener('click', () => { aoVivo(); confirma(true); });
+  recomecar.addEventListener('click', () => { aoVivo(); reset(); abrir.focus({ preventScroll: true }); });
+  modos.forEach(b => b.addEventListener('click', () => { api.manual(); escolheu = true; setModo(b.dataset.modo); }));
+  prende(camada);
   const P = [];
   const ciclo = m => {
     P.push([() => { reset(); setModo(m); api.repousa(false); }, 900]);
     P.push([() => api.aponta(abrir), 850]);
     P.push([() => { api.clica(abrir); abre(false); }, 1500]);
     P.push([() => api.aponta(confirmar), 850]);
-    P.push([() => { api.clica(confirmar); confirma(false); }, m === 'ok' ? 1250 : 1300]);
-    if (m === 'ok') P.push([() => { api.repousa(); }, 3200]);
+    P.push([() => { api.clica(confirmar); confirma(false); }, m !== 'falha' ? 1250 : 1300]);
+    if (m !== 'falha') P.push([() => { api.repousa(); }, 3200]);
     else {
       P.push([() => { api.repousa(); }, 2300]);
       P.push([() => api.aponta(cancelar), 850]);
       P.push([() => { api.clica(cancelar); fecha(false); }, 2200]);
     }
   };
-  ciclo('ok'); ciclo('falha');
+  ciclo('200'); ciclo('falha');
   return {
-    inicio() { reset(); setModo('ok'); },
+    inicio() { reset(); setModo('200'); escolheu = false; },
     passos: P,
+    esc() { if (fase !== 'confirmando' && fase !== 'erro') return false; aoVivo(); fecha(true); return true; },
+    /* parado (movimento reduzido): a confirmação aberta, foco em Cancelar e nenhum pedido enviado ainda */
     final() {
-      reset(); setModo('ok'); fase = 'confirmando'; camada.hidden = false; api.foco(cancelar);
-      setRes('ok', '204'); api.linha(-1);
+      reset(); setModo('200'); fase = 'confirmando'; camada.hidden = false; api.foco(cancelar);
+      setRes('vazio', '—'); api.linha(-1);
     }
   };
 };
@@ -1515,7 +1638,7 @@ FAB.vazios = (f, api) => {
   const corpo = q(f, '.app-corpo'), abas = qa(f, '.abas [data-ir]');
   const digitado = q(f, '[data-digitado]'), ph = q(f, '[data-ph]'), limpar = q(f, '[data-limpar]'), semRes = q(f, '[data-sem-resultado]');
   const TXT = 'título inexistente';
-  const LIN = { carregando: 0, lista: 2, projeto: 1, busca: 1 };
+  const LIN = { carregando: 0, lista: 1, projeto: 1, busca: 1 };
   const mostra = nome => { cenas(corpo, nome); abas.forEach(b => b.setAttribute('aria-pressed', b.dataset.ir === nome ? 'true' : 'false')); api.linha(LIN[nome]); };
   const busca = (txt, pronto) => { digitado.textContent = txt; ph.hidden = txt.length > 0; limpar.classList.toggle('desab', !txt.length); semRes.hidden = !pronto; };
   const digita = i => { busca(TXT.slice(0, i), false); if (i < TXT.length) api.depois(() => digita(i + 1), 80); else api.depois(() => busca(TXT, true), 380); };
@@ -1545,8 +1668,8 @@ FAB.falhas = (f, api) => {
   const salvando = () => { salvar.textContent = 'Salvando...'; bloqueia([salvar], true); erroSalvar.hidden = true; };
   const falhou = () => { erroSalvar.hidden = false; mantem.hidden = false; campos.forEach(c => c.classList.add('mantem')); salvar.textContent = 'Salvar alterações'; bloqueia([salvar], false); };
   const finais = {
-    consulta() { url.textContent = '/'; apiEst(true); subs(cC, 'ok'); },
-    inexistente() { url.textContent = '/projetos/999'; apiEst(true); subs(cI, 'projeto'); },
+    consulta() { url.textContent = '/'; apiEst(false); subs(cC, 'erro'); },
+    inexistente() { url.textContent = '/tarefas/999'; apiEst(true); subs(cI, 'tarefa'); },
     salvar() { url.textContent = '/tarefas/1/editar'; apiEst(false); falhou(); }
   };
   abas.forEach(b => b.addEventListener('click', () => { api.manual(); api.limpaAcoes(); vai(b.dataset.ir); finais[b.dataset.ir](); }));
@@ -1614,14 +1737,20 @@ FAB.svelte = (f, api) => {
     nomes.forEach((n, j) => { const el = V(n); if (el.textContent !== p.v[j]) { el.textContent = p.v[j]; if (anima) { el.classList.add('muda'); api.acao(() => el.classList.remove('muda'), 900); } } });
     nTxt.textContent = `${i + 1} de ${P.length}`; dTxt.textContent = p.d;
     api.linha(p.r);
-    const sel = lns.filter(l => l.classList.contains('on'));
-    if (sel.length) {
-      const topo = sel[0].offsetTop, fim = sel[sel.length - 1].offsetTop + sel[sel.length - 1].offsetHeight;
-      const h = janela.clientHeight, max = Math.max(0, rolo.scrollHeight - h);
-      const y = Math.max(0, Math.min(max, topo - (h - (fim - topo)) / 2));
-      rolo.style.transform = `translateY(${-y}px)`;
-    }
+    rola();
   }
+  /* centraliza as linhas destacadas na janela; é refeito no resize (tela cheia, projetor) */
+  function rola() {
+    const sel = lns.filter(l => l.classList.contains('on'));
+    if (!sel.length) return;
+    const topo = sel[0].offsetTop, fim = sel[sel.length - 1].offsetTop + sel[sel.length - 1].offsetHeight;
+    const h = janela.clientHeight, max = Math.max(0, rolo.scrollHeight - h);
+    const y = Math.max(0, Math.min(max, topo - (h - (fim - topo)) / 2));
+    rolo.style.transform = `translateY(${-y}px)`;
+  }
+  if (window.ResizeObserver) {
+    new ResizeObserver(() => { if (!janela.clientHeight) return; rolo.style.transition = 'none'; rola(); void rolo.offsetWidth; rolo.style.transition = ''; }).observe(janela);
+  } else addEventListener('resize', () => rola());
   q(f, '[data-ant]').addEventListener('click', () => { api.manual(); mostra(i - 1, true); });
   q(f, '[data-prox]').addEventListener('click', () => { api.manual(); mostra(i + 1, true); });
   return {
@@ -1633,7 +1762,7 @@ FAB.svelte = (f, api) => {
 
 /* 7. Acessibilidade: foco, papéis e auditoria */
 FAB.a11y = (f, api) => {
-  const corpo = q(f, '[data-palco-sim]'), btn = q(f, '[data-abrir]'), camada = q(f, '[data-camada]'), cancelar = q(f, '[data-cancelar]');
+  const corpo = q(f, '[data-palco-sim]'), btn = q(f, '[data-abrir]'), camada = q(f, '[data-camada]'), cancelar = q(f, '[data-cancelar]'), confirmar = q(f, '[data-confirmar]');
   const tecla = q(f, '[data-tecla]'), kbd = q(f, '[data-kbd]'), conta = q(f, '[data-conta]'), telas = qa(f, '[data-telas] i'), mets = q(f, '.metricas');
   const mostraTecla = k => { kbd.textContent = k; tecla.classList.add('on'); };
   function metricas(anima) {
@@ -1643,9 +1772,11 @@ FAB.a11y = (f, api) => {
     telas.forEach((t, k) => api.acao(() => t.classList.add('ok'), 500 + k * 160));
   }
   btn.addEventListener('click', () => { api.manual(); cenas(corpo, 'foco'); tecla.classList.remove('on'); camada.hidden = false; api.foco(null); cancelar.focus({ preventScroll: true }); api.linha(0); });
+  /* Cancelar, Esc ou o botão de confirmar fecham e devolvem o foco ao botão que abriu (a exclusão em si é a simulação do slide 3) */
   const fechaReal = () => { api.manual(); camada.hidden = true; api.foco(null); btn.focus({ preventScroll: true }); api.linha(0); };
   cancelar.addEventListener('click', fechaReal);
-  camada.addEventListener('keydown', e => { if (e.key === 'Escape') { e.preventDefault(); fechaReal(); } });
+  confirmar.addEventListener('click', fechaReal);
+  prende(camada);
   return {
     entrar() { metricas(true); },
     inicio() { cenas(corpo, 'foco'); camada.hidden = true; tecla.classList.remove('on'); api.foco(null); mets.classList.remove('on'); },
@@ -1656,6 +1787,7 @@ FAB.a11y = (f, api) => {
       [() => { tecla.classList.remove('on'); api.foco(null); cenas(corpo, 'papeis'); api.linha(1); }, 4400],
       [() => { cenas(corpo, 'foco'); api.linha(2); mets.classList.add('on'); }, 3000]
     ],
+    esc() { if (camada.hidden) return false; fechaReal(); return true; },
     final() { cenas(corpo, 'foco'); camada.hidden = false; api.foco(cancelar); tecla.classList.remove('on'); metricas(false); mets.classList.remove('on'); api.linha(-1); }
   };
 };
@@ -1720,12 +1852,12 @@ function saiSim(n) { const s = sims[n]; if (!s) return; s.ativo = false; s.parar
 /* aba escondida e preferência de movimento */
 D.addEventListener('visibilitychange', () => {
   const s = sims[atual];
-  if (D.hidden) { if (trans) trans.fim(); if (s) s.parar(); return; }
-  if (s && s.ativo) { if (reduz()) s.final(); else s.iniciar(); }
+  if (D.hidden) { if (trans) trans.fim(); if (s) s.pausar(); return; }
+  if (s && s.ativo) s.retomar();
   cRelogio();
 });
 const aoMudar = (mq, fn) => { if (mq.addEventListener) mq.addEventListener('change', fn); else if (mq.addListener) mq.addListener(fn); };
-aoMudar(mqReduz, () => { if (trans) trans.fim(); const s = sims[atual]; if (s && s.ativo) { if (reduz()) s.final(); else s.iniciar(); } });
+aoMudar(mqReduz, () => { if (trans) trans.fim(); const s = sims[atual]; if (s && s.ativo && !s.emManual) { if (reduz()) s.final(); else s.iniciar(); } });
 aoMudar(mqMovel, () => { if (trans) trans.fim(); });
 
 /* leitura para os testes e para quem quiser conferir no console */
@@ -1734,7 +1866,7 @@ window.marco5 = Object.freeze({
   total: N,
   ir: n => ir(Number(n) - 1),
   ocupado: () => !!trans,
-  sims: () => sims.map(s => (s ? { nome: s.nome, ativo: s.ativo, rodando: s.rodando } : null))
+  sims: () => sims.map(s => (s ? { nome: s.nome, ativo: s.ativo, rodando: s.rodando, manual: s.emManual } : null))
 });
 
 /* ================= Início ================= */
@@ -1745,6 +1877,10 @@ const comeca = () => {
   R.classList.add('pronto');
   const n0 = lerHash();
   ir(n0 < 0 ? 0 : n0, { inicial: true });
+  /* hash que não é de slide (#slide-99, #notas): abre a capa e corrige o endereço sem criar histórico (N3) */
+  if (n0 < 0 && location.hash && location.hash !== '#') {
+    try { history.replaceState(null, '', '#slide-1'); } catch (e) { /* sem endereço: segue sem hash */ }
+  }
 };
 const fontes = D.fonts && D.fonts.ready;
 if (fontes && fontes.then) { fontes.then(comeca, comeca); setTimeout(comeca, 1500); } else comeca();
