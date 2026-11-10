@@ -2,8 +2,9 @@ import type {
   Tarefa, Projeto, NovaTarefa, NovoProjeto, AtualizacaoTarefa, AtualizacaoProjeto,
 } from "../../tipos";
 
-// Endereço do json-server. No Marco 6 isso vira variável de ambiente.
-const API_URL = "http://localhost:3000";
+// Vite disponibiliza a variável no navegador; o Node a usa nos testes diretos.
+const API_URL = (import.meta.env?.VITE_API_URL ??
+  (typeof process !== "undefined" ? process.env.VITE_API_URL : ""))?.trim().replace(/\/+$/, "");
 
 export class ErroApi extends Error {
   status: number;
@@ -14,6 +15,7 @@ export class ErroApi extends Error {
 }
 
 async function requisitarResposta(caminho: string, opcoes?: RequestInit): Promise<Response> {
+  if (!API_URL) throw new Error("Configure VITE_API_URL para acessar a API.");
   const resposta = await fetch(`${API_URL}${caminho}`, opcoes);
   if (!resposta.ok) {
     throw new ErroApi(resposta.status, `Erro ${resposta.status} em ${caminho}`);
