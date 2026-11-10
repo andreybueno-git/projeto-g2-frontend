@@ -4,7 +4,7 @@ Projeto da G2 da disciplina de **Desenvolvimento Frontend**, semestre **2026.2**
 
 Todas as equipes da turma constroem a mesma aplicação, um gerenciador de tarefas com projetos e tarefas, em 6 marcos. Cada equipe usa um framework. A nossa usa **Svelte com TypeScript**.
 
-O repositório está no **Marco 1**: o projeto roda, o contrato de dados está definido e a API local responde. A página inicial ainda não busca dados da API. A listagem de tarefas é o Marco 2.
+O projeto já possui listagem, cadastro, filtros, quadro e tratamento de erros. No Marco 6, a configuração do endereço da API prepara a aplicação para a publicação.
 
 ## Equipe
 
@@ -61,11 +61,28 @@ Responde em <http://localhost:3000/projetos> e <http://localhost:3000/tarefas>.
 
 O atalho `npm run api` faz o mesmo que o comando do terminal 2. Para parar qualquer um dos dois, use `Ctrl + C`.
 
+### Endereço da API por ambiente
+
+O endereço é definido pela variável pública `VITE_API_URL`. No desenvolvimento, o arquivo versionado `.env.development` aponta para `http://localhost:3000`, onde o comando `npm run api` inicia o json-server. Para alterar o endereço apenas na sua máquina, crie um arquivo `.env.development.local` com `VITE_API_URL=http://localhost:OUTRA_PORTA` e reinicie o servidor de desenvolvimento.
+
+Para produção, configure `VITE_API_URL` na plataforma de hospedagem **antes do build**, com o endereço real da API hospedada. Como alternativa local, copie `.env.production.example` para `.env.production` e substitua o exemplo pelo endereço real. O domínio de exemplo não é uma API funcional. Não inclua uma barra final; caso exista, a aplicação a remove.
+
+O build sem essa variável falha com uma mensagem de configuração, evitando publicar uma versão sem endereço de API. Para testar o build localmente enquanto a API hospedada não existe, no PowerShell execute:
+
+```powershell
+$env:VITE_API_URL = 'http://localhost:3000'
+npm run build
+Remove-Item Env:VITE_API_URL
+```
+
+Essa configuração serve apenas ao teste local: `localhost` em uma aplicação publicada aponta para o dispositivo de cada visitante. O valor é incorporado ao código durante o build; alterá-lo depois exige gerar e publicar um novo build. Por ser uma variável `VITE_`, seu conteúdo fica visível no navegador: não coloque senhas ou chaves secretas nela. A hospedagem da API e a configuração de CORS ficam para a tarefa 40.
+
 ### Outros comandos
 
 | Comando | O que faz |
 | --- | --- |
 | `npm run check` | Confere os tipos do projeto com o `svelte-check` |
+| `npm run test:api` | Executa os testes da API com a configuração de teste |
 | `npm run build` | Compila a aplicação para produção. O adaptador de publicação ainda não foi escolhido, então o comando termina com um aviso sobre isso |
 | `npm run preview` | Abre em <http://localhost:4173> o que o `build` compilou |
 
