@@ -3,14 +3,14 @@ name: Verificar build estático
 on:
   pull_request:
   push:
-    branches: [main, andrey/marco6-publicacao-rotas]
+    branches: [main]
 
 permissions:
   contents: read
 
 jobs:
   verificar:
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-24.04
     timeout-minutes: 15
     env:
       # URL fictícia local interceptada nos testes. Este workflow não publica.
@@ -27,5 +27,7 @@ jobs:
       - run: npm run test:api
       - run: node --test tests/filtrarTarefas.test.mjs tests/projetos.test.mjs tests/validarObrigatorios.test.mjs
       - run: npm run build
-      - run: npx playwright install --with-deps chromium
+      # O runner Ubuntu já contém as bibliotecas compartilhadas do Chromium.
+      # Instale só o navegador, sem depender do apt para fontes extras.
+      - run: npx playwright install chromium
       - run: npm run test:publicacao
