@@ -1,4 +1,4 @@
-import adapter from '@sveltejs/adapter-auto';
+import adapter from '@sveltejs/adapter-static';
 import { sveltekit } from '@sveltejs/kit/vite';
 import { defineConfig, loadEnv } from 'vite';
 
@@ -20,10 +20,9 @@ export default defineConfig(({ command, mode }) => {
 					filename.split(/[/\\]/).includes('node_modules') ? undefined : true
 			},
 
-			// adapter-auto only supports some environments, see https://svelte.dev/docs/kit/adapter-auto for a list.
-			// If your environment is not supported, or you settled on a specific environment, switch out the adapter.
-			// See https://svelte.dev/docs/kit/adapters for more information about adapters.
-			adapter: adapter()
+			// A hospedagem entrega este arquivo também ao abrir uma rota interna.
+			// O roteador no navegador resolve a página e consulta a API configurada.
+			adapter: adapter({ fallback: '200.html' })
 		})
 	]
 	};

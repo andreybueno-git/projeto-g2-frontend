@@ -11,17 +11,19 @@
 		"build": "vite build",
 		"preview": "vite preview",
 		"api": "json-server db.json",
-		"test:api": "node --env-file=.env.test --test tests/api.test.mjs tests/api.integration.test.mjs tests/api.ambiente.test.mjs",
+		"test:api": "node scripts/test-api.mjs",
 		"prepare": "svelte-kit sync || echo ''",
 		"check": "svelte-kit sync && svelte-check --tsconfig ./tsconfig.json",
-		"check:watch": "svelte-kit sync && svelte-check --tsconfig ./tsconfig.json --watch"
+		"check:watch": "svelte-kit sync && svelte-check --tsconfig ./tsconfig.json --watch",
+		"test:publicacao": "node tests/publicacao.e2e.mjs"
 	},
 	"devDependencies": {
-		"@sveltejs/adapter-auto": "^8.0.0",
+		"@sveltejs/adapter-static": "^4.0.1",
 		"@sveltejs/kit": "^3.0.0",
 		"@sveltejs/vite-plugin-svelte": "^7.2.0",
 		"@types/node": "^24.19.2",
 		"json-server": "1.0.0-beta.15",
+		"playwright": "1.65.0",
 		"svelte": "^5.57.1",
 		"svelte-check": "^4.6.0",
 		"typescript": "^6.0.3",

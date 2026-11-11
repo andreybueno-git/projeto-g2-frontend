@@ -4,7 +4,7 @@ Projeto da G2 da disciplina de **Desenvolvimento Frontend**, semestre **2026.2**
 
 Todas as equipes da turma constroem a mesma aplicação, um gerenciador de tarefas com projetos e tarefas, em 6 marcos. Cada equipe usa um framework. A nossa usa **Svelte com TypeScript**.
 
-O projeto já possui listagem, cadastro, filtros, quadro e tratamento de erros. No Marco 6, a configuração do endereço da API prepara a aplicação para a publicação.
+O projeto já possui listagem, cadastro, filtros, quadro e tratamento de erros. No Marco 6, o build estático e o fallback de navegação preparam a publicação. A disponibilização online ainda depende da API hospedada e do deploy do frontend.
 
 ## Equipe
 
@@ -83,7 +83,8 @@ Essa configuração serve apenas ao teste local: `localhost` em uma aplicação 
 | --- | --- |
 | `npm run check` | Confere os tipos do projeto com o `svelte-check` |
 | `npm run test:api` | Executa os testes da API com a configuração de teste |
-| `npm run build` | Compila a aplicação para produção. O adaptador de publicação ainda não foi escolhido, então o comando termina com um aviso sobre isso |
+| `npm run build` | Gera a aplicação estática na pasta `build/`, com fallback `200.html` |
+| `npm run test:publicacao` | Testa o build estático em Chromium, incluindo acesso direto e recarga das rotas (veja abaixo) |
 | `npm run preview` | Abre em <http://localhost:4173> o que o `build` compilou |
 
 ## Contrato de dados
@@ -213,3 +214,95 @@ projeto-g2-frontend/
 - [ ] Quadro no GitHub Projects
 
 Critério de pronto do marco: qualquer integrante clona, roda `npm install`, `npm run dev` e `npx json-server db.json`, e tudo funciona.
+
+
+## Marco 6: publicação estática e rotas diretas (#42 e #43)
+
+A aplicação usa `@sveltejs/adapter-static`. O arquivo `src/routes/+layout.ts`
+desabilita a renderização no servidor, pois os dados vêm da API externa no
+navegador. O build contém HTML, JavaScript, CSS e fontes, sem exigir um servidor
+Node para o frontend. Isso não hospeda a API: ela continua sendo um serviço separado.
+
+### Publicação preparada para Netlify
+
+1. Conclua a hospedagem da API da tarefa #40 e confira `/projetos` e `/tarefas`.
+   Use HTTPS, preserve o contrato de dados e permita CORS para o domínio do frontend.
+   Não use `localhost` nem o domínio fictício de `.env.production.example`.
+2. No Netlify, importe este repositório com a branch de produção revisada. O arquivo
+   `netlify.toml` define Node 24, os comandos de verificação/build e a pasta `build`.
+   Esta configuração é uma opção preparada, não a confirmação de um site publicado.
+3. Configure `VITE_API_URL` com a URL real da API **antes** de gerar o build.
+   É um valor público, incorporado aos arquivos JavaScript, e não deve conter segredo.
+4. Publique e valide o site. Depois de confirmar o funcionamento, registre abaixo
+   a URL real e o commit publicado. Não considere a tarefa #42 concluída sem essa etapa.
+
+**Situação:** publicação online pendente. Nenhum link de produção foi confirmado.
+A branch `gh-pages` existente contém materiais de estudo e não deve ser sobrescrita
+com o build da aplicação.
+
+### Por que abrir `/tarefas/2` não deve dar 404 da hospedagem
+
+Em uma navegação interna o roteador do SvelteKit troca a tela. Em uma recarga ou
+link direto o navegador pede o endereço ao servidor estático. Por isso,
+`static/_redirects`, copiado para `build/_redirects`, define:
+
+```text
+/* /200.html 200
+```
+
+No Netlify, arquivos existentes são servidos primeiro. Os outros endereços recebem
+`200.html`, e o roteador abre a página correta no navegador. Isso também cobre
+IDs criados depois do build, como `/tarefas/123/editar` e `/projetos/456`.
+Uma tarefa inexistente continua mostrando a mensagem da aplicação. Uma rota
+inexistente mostra “Página não encontrada”, em vez do erro da hospedagem.
+
+Essa configuração assume a aplicação na raiz de um domínio. Outros provedores
+precisam de uma regra equivalente de reescrita; não basta copiar `_redirects`
+para GitHub Pages, que não lê esse arquivo.
+
+### Teste local do artefato publicado
+
+Instale as dependências e o navegador de teste uma vez:
+
+```sh
+npm ci
+npx playwright install chromium
+```
+
+Gere um build de teste. No PowerShell:
+
+```powershell
+$env:VITE_API_URL = 'http://localhost:3000'
+npm run build
+Remove-Item Env:VITE_API_URL
+npm run test:publicacao
+```
+
+No Bash:
+
+```sh
+VITE_API_URL=http://localhost:3000 npm run build
+npm run test:publicacao
+```
+
+O teste serve somente os arquivos de `build/`, sem Vite nem servidor SvelteKit,
+e reproduz a regra de fallback. Confere abertura direta e recarga das dez URLs,
+Cancelamento, Voltar/Avançar, endereços inexistentes e largura de celular/desktop.
+A API é interceptada com dados fictícios; nenhum dado local ou remoto é gravado.
+`PLAYWRIGHT_EXECUTABLE_PATH` permite usar um Chromium já instalado.
+Esse teste local não substitui a conferência da hospedagem e da API reais.
+O workflow `Verificar build estático` também executa essas verificações em pull
+requests e na branch principal. Ele usa dados fictícios e não faz deploy.
+
+### Checklist depois do deploy
+
+- [ ] URL real e commit do frontend registrados neste README.
+- [ ] API HTTPS funcionando com CORS, dados e persistência esperados (#40).
+- [ ] Listagem, cadastro, edição e exclusão testados com dados de demonstração.
+- [ ] `/tarefas/2` aberta em nova aba e recarregada sem 404 da hospedagem.
+- [ ] `/tarefas/2/editar`, `/projetos/1` e `/projetos/1/editar` abertas diretamente.
+- [ ] Rota de uma tarefa criada depois do build aberta diretamente.
+- [ ] “Tarefa não encontrada” e “Página não encontrada” exibidas nos casos corretos.
+- [ ] Layout e navegação conferidos no celular e no desktop.
+
+As tarefas #42 e #43 só devem ser encerradas depois dessa validação na URL pública.

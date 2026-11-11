@@ -1,0 +1,31 @@
+name: Verificar build estático
+
+on:
+  pull_request:
+  push:
+    branches: [main, andrey/marco6-publicacao-rotas]
+
+permissions:
+  contents: read
+
+jobs:
+  verificar:
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    env:
+      # URL fictícia local interceptada nos testes. Este workflow não publica.
+      VITE_API_URL: http://localhost:3000
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 24
+          cache: npm
+      - run: npm ci
+      - run: npm run check
+      - run: npx tsc --project tests/tsconfig.json
+      - run: npm run test:api
+      - run: node --test tests/filtrarTarefas.test.mjs tests/projetos.test.mjs tests/validarObrigatorios.test.mjs
+      - run: npm run build
+      - run: npx playwright install --with-deps chromium
+      - run: npm run test:publicacao
