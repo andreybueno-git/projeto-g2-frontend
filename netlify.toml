@@ -1,0 +1,9 @@
+[build]
+  command = "npm run check && npm run test:api && npm run build"
+  publish = "build"
+
+[build.environment]
+  NODE_VERSION = "24"
+
+# VITE_API_URL deve ser configurada na hospedagem antes do build.
+# Nunca coloque credenciais nela: variáveis VITE_ são públicas no navegador.

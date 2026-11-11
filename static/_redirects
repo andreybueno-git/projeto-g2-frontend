@@ -1,0 +1,2 @@
+# Arquivos existentes são servidos normalmente. As demais URLs usam o roteador.
+/* /200.html 200
