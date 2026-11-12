@@ -7,6 +7,8 @@
 
   import { acessibilidadeFormulario } from '../../../lib/utils/acessibilidadeFormulario';
   import { validarObrigatorios } from '../../../lib/utils/validarObrigatorios';
+  import { mensagemFalha } from '../../../lib/utils/mensagemFalha';
+  import { focarAoAparecer } from '../../../lib/utils/focarAoAparecer';
 
   let projetos = $state<Projeto[]>([]);
   let carregando = $state(true);
@@ -59,8 +61,8 @@
     try {
       await criarTarefa({ ...dados });
       tarefaCriada = true;
-    } catch {
-      erroSalvar = 'Não foi possível salvar a tarefa. Seus dados foram mantidos. Tente novamente.';
+    } catch (e) {
+      erroSalvar = mensagemFalha(e, 'salvar a tarefa', true);
     } finally {
       salvando = false;
     }
@@ -135,7 +137,7 @@
         <label for="prazo">Prazo</label>
         <input id="prazo" type="date" bind:value={dados.prazo} required />
 
-        {#if erroSalvar}<p class="erro" role="alert">{erroSalvar}</p>{/if}
+        {#if erroSalvar}<p class="erro" role="alert" tabindex="-1" use:focarAoAparecer>{erroSalvar}</p>{/if}
         <div class="acoes">
           <button type="submit" disabled={salvando}>{salvando ? 'Salvando...' : 'Salvar tarefa'}</button>
           <a href="/">Cancelar</a>

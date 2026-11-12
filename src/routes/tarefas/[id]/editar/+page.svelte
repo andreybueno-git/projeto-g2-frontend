@@ -8,12 +8,14 @@
   } from "../../../../lib/servicos/api";
   import type { Tarefa, NovaTarefa } from "../../../../tipos";
   import FormularioTarefa from "../../../../lib/componentes/FormularioTarefa.svelte";
+  import { mensagemFalha } from "../../../../lib/utils/mensagemFalha";
 
   let tarefa = $state<Tarefa | null>(null);
   let carregando = $state(true);
   let erro = $state<string | null>(null);
   let enviando = $state(false);
   let erroEnvio = $state<string | null>(null);
+  let salva = $state(false);
 
   // Busca de novo sempre que o id da URL muda.
   let tentativa = $state(0);
@@ -52,17 +54,25 @@
   });
 
   async function salvar(dados: NovaTarefa) {
-    if (!tarefa) return;
+    if (!tarefa || enviando || salva) return;
+    const id = tarefa.id;
 
     enviando = true;
     erroEnvio = null;
     try {
-      await atualizarTarefa(tarefa.id, dados);
-      await goto(`/tarefas/${tarefa.id}`);
-    } catch {
-      erroEnvio = "Não foi possível salvar as alterações. Tente de novo.";
+      await atualizarTarefa(id, dados);
+      salva = true;
+    } catch (e) {
+      // O formulário continua montado, então o que foi digitado é mantido.
+      erroEnvio = mensagemFalha(e, "salvar as alterações", true);
     } finally {
       enviando = false;
+    }
+
+    // Se a navegação falhar depois de salvar, o link abaixo leva à tarefa
+    // e não aparece um erro de "não salvou" para algo que já foi salvo.
+    if (salva) {
+      try { await goto(`/tarefas/${encodeURIComponent(id)}`); } catch { /* o link permite continuar */ }
     }
   }
 </script>
@@ -80,6 +90,8 @@
       <button type="button" onclick={() => tentativa++}>Tentar novamente</button>
     {/if}
     <a href="/">Voltar para as tarefas</a>
+  {:else if salva && tarefa}
+    <p role="status">Alterações salvas. <a href="/tarefas/{encodeURIComponent(tarefa.id)}">Ver tarefa</a></p>
   {:else if tarefa}
     <FormularioTarefa
       valorInicial={tarefa}

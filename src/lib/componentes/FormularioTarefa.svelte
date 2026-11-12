@@ -6,6 +6,7 @@
 
   import { acessibilidadeFormulario } from "../utils/acessibilidadeFormulario";
   import { validarObrigatorios } from "../utils/validarObrigatorios";
+  import { focarAoAparecer } from "../utils/focarAoAparecer";
 
   type Props = {
     // Valores de partida: vazio para criar, a tarefa atual para editar.
@@ -148,7 +149,7 @@
   </div>
 
   {#if erro}
-    <p class="mensagem-erro" role="alert">{erro}</p>
+    <p class="mensagem-erro" role="alert" tabindex="-1" use:focarAoAparecer>{erro}</p>
   {/if}
 
   <button type="submit" disabled={enviando || carregandoProjetos || Boolean(erroProjetos)}>
