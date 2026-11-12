@@ -85,6 +85,7 @@ Essa configuração serve apenas ao teste local: `localhost` em uma aplicação 
 | `npm run test:api` | Executa os testes da API com a configuração de teste |
 | `npm run build` | Gera a aplicação estática na pasta `build/`, com fallback `200.html` |
 | `npm run test:publicacao` | Testa o build estático em Chromium, incluindo acesso direto e recarga das rotas (veja abaixo) |
+| `npm run test:build-api` | Testa o build em Chromium com json-server e dados em memória |
 | `npm run preview` | Abre em <http://localhost:4173> o que o `build` compilou |
 
 ## Contrato de dados
@@ -276,6 +277,7 @@ $env:VITE_API_URL = 'http://localhost:3000'
 npm run build
 Remove-Item Env:VITE_API_URL
 npm run test:publicacao
+npm run test:build-api
 ```
 
 No Bash:
@@ -283,12 +285,16 @@ No Bash:
 ```sh
 VITE_API_URL=http://localhost:3000 npm run build
 npm run test:publicacao
+npm run test:build-api
 ```
 
 O teste serve somente os arquivos de `build/`, sem Vite nem servidor SvelteKit,
 e reproduz a regra de fallback. Confere abertura direta e recarga das dez URLs,
 Cancelamento, Voltar/Avançar, endereços inexistentes e largura de celular/desktop.
 A API é interceptada com dados fictícios; nenhum dado local ou remoto é gravado.
+O segundo teste usa uma API json-server real com dados exclusivamente em memória.
+Ele testa lista vazia, cadastro, mudança de status e exclusão sem modificar o
+`db.json`. A porta 3000 precisa estar livre; pare a API local antes de executá-lo.
 `PLAYWRIGHT_EXECUTABLE_PATH` permite usar um Chromium já instalado.
 Esse teste local não substitui a conferência da hospedagem e da API reais.
 O workflow `Verificar build estático` também executa essas verificações em pull

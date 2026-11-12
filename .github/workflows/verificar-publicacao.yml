@@ -31,3 +31,4 @@ jobs:
       # Instale só o navegador, sem depender do apt para fontes extras.
       - run: npx playwright install chromium
       - run: npm run test:publicacao
+      - run: npm run test:build-api
