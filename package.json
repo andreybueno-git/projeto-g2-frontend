@@ -15,7 +15,8 @@
 		"prepare": "svelte-kit sync || echo ''",
 		"check": "svelte-kit sync && svelte-check --tsconfig ./tsconfig.json",
 		"check:watch": "svelte-kit sync && svelte-check --tsconfig ./tsconfig.json --watch",
-		"test:publicacao": "node tests/publicacao.e2e.mjs"
+		"test:publicacao": "node tests/publicacao.e2e.mjs",
+		"test:build-api": "node tests/build-api.e2e.mjs"
 	},
 	"devDependencies": {
 		"@sveltejs/adapter-static": "^4.0.1",
