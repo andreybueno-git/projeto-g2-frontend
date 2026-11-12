@@ -4,7 +4,14 @@ Projeto da G2 da disciplina de **Desenvolvimento Frontend**, semestre **2026.2**
 
 Todas as equipes da turma constroem a mesma aplicação, um gerenciador de tarefas com projetos e tarefas, em 6 marcos. Cada equipe usa um framework. A nossa usa **Svelte com TypeScript**.
 
-O projeto já possui listagem, cadastro, filtros, quadro e tratamento de erros. No Marco 6, o build estático e o fallback de navegação preparam a publicação. A disponibilização online ainda depende da API hospedada e do deploy do frontend.
+O projeto já possui listagem, cadastro, filtros, quadro e tratamento de erros. No Marco 6, a aplicação foi publicada como site estático, com a API hospedada.
+
+## Aplicação publicada
+
+- **Aplicação:** https://mentalista-g2.netlify.app (Netlify, publicada a partir da branch `main`)
+- **API:** https://mentalista-api.onrender.com (json-server no Render, ex.: [`/tarefas`](https://mentalista-api.onrender.com/tarefas) e [`/projetos`](https://mentalista-api.onrender.com/projetos))
+
+A API usa o plano gratuito do Render: depois de cerca de 15 minutos sem uso ela dorme, e o primeiro acesso seguinte pode levar uns 50 segundos. O que for gravado vale até a API reiniciar; depois os dados voltam aos de exemplo do `db.json`. Detalhes na seção [Marco 6](#marco-6-publicação-estática-e-rotas-diretas-42-e-43).
 
 ## Equipe
 
@@ -65,9 +72,9 @@ O atalho `npm run api` faz o mesmo que o comando do terminal 2. Para parar qualq
 
 O endereço é definido pela variável pública `VITE_API_URL`. No desenvolvimento, o arquivo versionado `.env.development` aponta para `http://localhost:3000`, onde o comando `npm run api` inicia o json-server. Para alterar o endereço apenas na sua máquina, crie um arquivo `.env.development.local` com `VITE_API_URL=http://localhost:OUTRA_PORTA` e reinicie o servidor de desenvolvimento.
 
-Para produção, configure `VITE_API_URL` na plataforma de hospedagem **antes do build**, com o endereço real da API hospedada. Como alternativa local, copie `.env.production.example` para `.env.production` e substitua o exemplo pelo endereço real. O domínio de exemplo não é uma API funcional. Não inclua uma barra final; caso exista, a aplicação a remove.
+Para produção, configure `VITE_API_URL` na plataforma de hospedagem **antes do build**, com o endereço real da API hospedada. Como alternativa local, copie `.env.production.example` para `.env.production` e substitua o exemplo pelo endereço real. O domínio de exemplo não é uma API funcional. Não inclua uma barra final; caso exista, a aplicação a remove. Na publicação atual, o Netlify usa `VITE_API_URL=https://mentalista-api.onrender.com`.
 
-O build sem essa variável falha com uma mensagem de configuração, evitando publicar uma versão sem endereço de API. Para testar o build localmente enquanto a API hospedada não existe, no PowerShell execute:
+O build sem essa variável falha com uma mensagem de configuração, evitando publicar uma versão sem endereço de API. Para testar o build localmente com a API local, no PowerShell execute:
 
 ```powershell
 $env:VITE_API_URL = 'http://localhost:3000'
@@ -75,7 +82,7 @@ npm run build
 Remove-Item Env:VITE_API_URL
 ```
 
-Essa configuração serve apenas ao teste local: `localhost` em uma aplicação publicada aponta para o dispositivo de cada visitante. O valor é incorporado ao código durante o build; alterá-lo depois exige gerar e publicar um novo build. Por ser uma variável `VITE_`, seu conteúdo fica visível no navegador: não coloque senhas ou chaves secretas nela. A hospedagem da API e a configuração de CORS ficam para a tarefa 40.
+Essa configuração serve apenas ao teste local: `localhost` em uma aplicação publicada aponta para o dispositivo de cada visitante. O valor é incorporado ao código durante o build; alterá-lo depois exige gerar e publicar um novo build. Por ser uma variável `VITE_`, seu conteúdo fica visível no navegador: não coloque senhas ou chaves secretas nela. A API hospedada (tarefa #40) é o próprio json-server, que já libera CORS para qualquer origem.
 
 ### Outros comandos
 
@@ -224,20 +231,39 @@ desabilita a renderização no servidor, pois os dados vêm da API externa no
 navegador. O build contém HTML, JavaScript, CSS e fontes, sem exigir um servidor
 Node para o frontend. Isso não hospeda a API: ela continua sendo um serviço separado.
 
-### Publicação preparada para Netlify
+### API hospedada no Render (#40)
 
-1. Conclua a hospedagem da API da tarefa #40 e confira `/projetos` e `/tarefas`.
-   Use HTTPS, preserve o contrato de dados e permita CORS para o domínio do frontend.
-   Não use `localhost` nem o domínio fictício de `.env.production.example`.
-2. No Netlify, importe este repositório com a branch de produção revisada. O arquivo
-   `netlify.toml` define Node 24, os comandos de verificação/build e a pasta `build`.
-   Esta configuração é uma opção preparada, não a confirmação de um site publicado.
-3. Configure `VITE_API_URL` com a URL real da API **antes** de gerar o build.
-   É um valor público, incorporado aos arquivos JavaScript, e não deve conter segredo.
-4. Publique e valide o site. Depois de confirmar o funcionamento, registre abaixo
-   a URL real e o commit publicado. Não considere a tarefa #42 concluída sem essa etapa.
+A API é o mesmo `db.json` servido pelo json-server, num Web Service gratuito do
+Render criado a partir deste repositório público:
 
-**Situação:** publicação online pendente. Nenhum link de produção foi confirmado.
+| Campo | Valor |
+|---|---|
+| Build Command | `npm ci --include=dev` |
+| Start Command | `mkdir -p public && npx json-server db.json` |
+| Variável | `NODE_VERSION=24` |
+
+- `--include=dev`: o json-server está em `devDependencies`, que não são instaladas
+  quando `NODE_ENV=production`.
+- `mkdir -p public`: com `NODE_ENV=production`, o json-server 1.0.0-beta.15 encerra
+  na partida se a pasta `public/` não existir.
+- A porta vem da variável `PORT` do Render, que o json-server já lê.
+- O CORS já vem liberado pelo json-server (`Access-Control-Allow-Origin: *`).
+- Esse serviço não faz deploy automático: depois de mudar o `db.json`, use
+  "Manual Deploy" no painel do Render.
+
+### Publicação no Netlify (#42)
+
+1. A API precisa responder em HTTPS em `/projetos` e `/tarefas`. Não use
+   `localhost` nem o domínio fictício de `.env.production.example`.
+2. No Netlify, o projeto `mentalista-g2` importa este repositório pela branch `main`.
+   O arquivo `netlify.toml` define Node 24, os comandos de verificação/build e a
+   pasta `build`. Cada merge na `main` publica uma versão nova.
+3. `VITE_API_URL` fica configurada nas variáveis do projeto no Netlify, com a URL
+   da API, **antes** do build. É um valor público, incorporado aos arquivos
+   JavaScript, e não deve conter segredo.
+
+**Situação:** publicada em 12/11/2026 em https://mentalista-g2.netlify.app, a partir
+do commit `cfcf665`, com a API em https://mentalista-api.onrender.com.
 A branch `gh-pages` existente contém materiais de estudo e não deve ser sobrescrita
 com o build da aplicação.
 
@@ -302,13 +328,18 @@ requests e na branch principal. Ele usa dados fictícios e não faz deploy.
 
 ### Checklist depois do deploy
 
-- [ ] URL real e commit do frontend registrados neste README.
-- [ ] API HTTPS funcionando com CORS, dados e persistência esperados (#40).
-- [ ] Listagem, cadastro, edição e exclusão testados com dados de demonstração.
-- [ ] `/tarefas/2` aberta em nova aba e recarregada sem 404 da hospedagem.
-- [ ] `/tarefas/2/editar`, `/projetos/1` e `/projetos/1/editar` abertas diretamente.
-- [ ] Rota de uma tarefa criada depois do build aberta diretamente.
-- [ ] “Tarefa não encontrada” e “Página não encontrada” exibidas nos casos corretos.
-- [ ] Layout e navegação conferidos no celular e no desktop.
+Conferido em 12/11/2026 na URL pública, no Chromium e no WebKit (motor do Safari).
+As tarefas de teste foram criadas, editadas e excluídas pela própria tela; a API
+terminou com as 9 tarefas de exemplo.
 
-As tarefas #42 e #43 só devem ser encerradas depois dessa validação na URL pública.
+- [x] URL real e commit do frontend registrados neste README.
+- [x] API HTTPS funcionando com CORS e os mesmos dados do `db.json` (#40). As gravações
+      valem até a API reiniciar (plano gratuito do Render).
+- [x] Listagem, cadastro, edição e exclusão testados com dados de demonstração.
+- [x] `/tarefas/2` aberta em nova aba e recarregada sem 404 da hospedagem.
+- [x] `/tarefas/2/editar`, `/projetos/1` e `/projetos/1/editar` abertas diretamente.
+- [x] Rota de uma tarefa criada depois do build aberta diretamente e recarregada.
+- [x] “Tarefa não encontrada” e “Página não encontrada” exibidas nos casos corretos.
+- [x] Layout e navegação conferidos no celular (390 px, sem rolagem lateral) e no desktop.
+
+Com essa validação, as tarefas #40, #42 e #43 foram encerradas.
