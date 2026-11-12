@@ -2,6 +2,8 @@
   import { onDestroy, untrack } from 'svelte';
   import { goto } from '$app/navigation';
   import type { CamposProjeto } from '../utils/projetos';
+  import { mensagemFalha } from '../utils/mensagemFalha';
+  import { focarAoAparecer } from '../utils/focarAoAparecer';
 
   type Props = {
     inicial: CamposProjeto;
@@ -53,8 +55,8 @@
     try {
       destino = await aoSalvar(limpo);
       salvo = true;
-    } catch {
-      erroSalvar = 'Não foi possível salvar o projeto. Seus dados foram mantidos. Tente novamente.';
+    } catch (e) {
+      erroSalvar = mensagemFalha(e, 'salvar o projeto', true);
     } finally {
       salvando = false;
     }
@@ -105,7 +107,7 @@
       />
       {#if erros.disciplina}<p class="erro" id="erro-disciplina" role="alert">{erros.disciplina}</p>{/if}
 
-      {#if erroSalvar}<p class="erro" role="alert">{erroSalvar}</p>{/if}
+      {#if erroSalvar}<p class="erro" role="alert" tabindex="-1" use:focarAoAparecer>{erroSalvar}</p>{/if}
       <div class="acoes">
         <button type="submit">{salvando ? 'Salvando...' : rotuloSalvar}</button>
         <a href={hrefCancelar}>Cancelar</a>

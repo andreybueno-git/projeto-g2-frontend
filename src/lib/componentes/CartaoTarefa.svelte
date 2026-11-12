@@ -2,7 +2,8 @@
 <script lang="ts">
   import { onDestroy, tick } from "svelte";
   import type { Tarefa, Status } from "../../tipos";
-  import { atualizarTarefa, excluirTarefa } from "../servicos/api";
+  import { atualizarTarefa, excluirTarefa, ErroApi } from "../servicos/api";
+  import { mensagemFalha } from "../utils/mensagemFalha";
   import {
     ROTULOS_STATUS,
     ROTULOS_PRIORIDADE,
@@ -21,6 +22,7 @@
   let dialogo = $state<HTMLDialogElement>();
   let botaoExcluir = $state<HTMLButtonElement>();
   let botaoCancelar = $state<HTMLButtonElement>();
+  let botaoConfirmar = $state<HTMLButtonElement>();
   let confirmando = $state(false);
   let excluindo = $state(false);
   let erroExclusao = $state("");
@@ -54,11 +56,17 @@
     const excluida = tarefa;
     try {
       await excluirTarefa(excluida.id);
-    } catch {
+    } catch (e) {
       if (!ativo) return;
-      erroExclusao = "Não foi possível excluir a tarefa. Tente novamente.";
-      excluindo = false;
-      return;
+      // 404: outra pessoa já excluiu. O objetivo foi atingido, então segue como excluída.
+      if (!(e instanceof ErroApi && e.status === 404)) {
+        erroExclusao = `${mensagemFalha(e, "excluir a tarefa")} A tarefa continua na lista.`;
+        excluindo = false;
+        // O botão ficou desabilitado durante o pedido e perdeu o foco: devolve-o.
+        await tick();
+        botaoConfirmar?.focus();
+        return;
+      }
     }
 
     // O histórico do navegador pode desmontar o cartão durante o DELETE.
@@ -97,9 +105,13 @@
       const destino = document.getElementById(`status-tarefa-${tarefa.id}`)
         ?? document.getElementById("busca");
       destino?.focus();
-    } catch {
+    } catch (e) {
       seletor.value = tarefa.status;
-      erroStatus = "Não foi possível salvar o status. Tente novamente.";
+      erroStatus = `${mensagemFalha(e, "salvar o status")} O status anterior foi mantido.`;
+      // O seletor ficou desabilitado durante o pedido e perdeu o foco: devolve-o.
+      salvando = false;
+      await tick();
+      seletor.focus();
     } finally {
       salvando = false;
     }
@@ -177,7 +189,7 @@
       <p class="andamento-exclusao" role="status">{excluindo ? "Excluindo tarefa..." : ""}</p>
       <div class="acoes-exclusao">
         <button bind:this={botaoCancelar} type="button" onclick={cancelarExclusao} disabled={excluindo}>Cancelar</button>
-        <button class="confirmar-exclusao" type="button" onclick={confirmarExclusao} disabled={excluindo}>
+        <button bind:this={botaoConfirmar} class="confirmar-exclusao" type="button" onclick={confirmarExclusao} disabled={excluindo}>
           {excluindo ? "Excluindo..." : "Excluir tarefa"}
         </button>
       </div>
